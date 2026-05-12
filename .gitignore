@@ -1,0 +1,6 @@
+venv/
+back/venv/
+front/build/
+front/.dart_tool/
+front/ios/Pods/
+front/macos/Pods/

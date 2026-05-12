@@ -1,0 +1,71 @@
+
+include: package:flutter_lints/flutter.yaml
+analyzer: 
+  errors:
+    unnecessary_null_comparison: ignore
+    invalid_annotation_target: ignore
+    constant_identifier_names: ignore
+    avoid_types_as_parameter_names: ignore
+    deprecated_member_use: ignore
+    unintended_html_in_doc_comment: ignore
+    invalid_use_of_visible_for_testing_member: ignore
+    depend_on_referenced_packages: ignore
+  exclude:
+    - "**/*.arb"
+    - "**/*.g.dart"
+    - "lib/app/generated/**"
+    - "lib/app/l10n/**.dart"
+    - "test/**"
+    - build/**
+    - .dart_tool/**
+    - ios/Pods/**
+    - ios/Flutter/**
+    - android/.gradle/**
+    - android/.idea/**
+    - macos/Pods/**
+    - macos/Flutter/**
+    - windows/flutter/**
+    - packages/**/example/**
+linter:
+
+  rules:
+    # Type Safety & Clarity
+    always_specify_types: true
+    always_declare_return_types: true
+    avoid_dynamic_calls: true # Prevents calling methods on dynamic types, forcing explicit typing
+
+    # Error Prevention
+    avoid_empty_else: true # Disallows empty else blocks that serve no purpose
+    avoid_slow_async_io: true # Warns against slow async I/O operations like Directory.exists()
+    cancel_subscriptions: true # Ensures StreamSubscriptions are properly cancelled to prevent memory leaks
+    close_sinks: true # Ensures StreamControllers and similar resources are closed to prevent memory leaks
+    no_adjacent_strings_in_list: true # Catches accidental string concatenation (missing comma between strings)
+    test_types_in_equals: true # Ensures type checks before using == to avoid runtime errors
+    throw_in_finally: true # Prevents throwing exceptions in finally blocks (can hide original errors)
+
+    # Code Style & Consistency
+    prefer_const_constructors: true
+    prefer_const_literals_to_create_immutables: true
+    sort_constructors_first: true # Places constructors at the top of classes for better readability
+    sort_unnamed_constructors_first: true # Places default constructor before named constructors
+    use_super_parameters: true # Uses super parameters (Super.name) instead of passing to super() - cleaner code
+    prefer_final_fields: true # Encourages immutability by making fields final when possible
+    prefer_final_locals: true # Makes local variables final when they're not reassigned
+
+    # Modern Dart Features
+    use_build_context_synchronously: true # Prevents using BuildContext across async gaps (common Flutter bug)
+    use_colored_box: true # Suggests ColoredBox instead of Container(color:) for better performance
+    use_decorated_box: true # Suggests DecoratedBox instead of Container(decoration:) for better performance
+
+    # Best Practices
+    avoid_print: true # Use proper logging instead of print statements
+    avoid_returning_null_for_void: true # Don't return null in void functions
+    prefer_is_empty: true # Use .isEmpty instead of .length == 0 (more readable)
+    prefer_is_not_empty: true # Use .isNotEmpty instead of .length > 0 (more readable)
+    prefer_iterable_whereType: true # Use whereType<T>() instead of where((e) => e is T).cast<T>()
+    avoid_unnecessary_containers: true # Removes redundant Container widgets
+    sized_box_for_whitespace: true # Use SizedBox instead of Container for spacing (better performance)
+
+    # Documentation
+    public_member_api_docs: false # Would require docs for all public members - can enable later
+    lines_longer_than_80_chars: false # Modern screens can handle longer lines

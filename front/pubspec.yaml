@@ -1,0 +1,51 @@
+name: mind_track
+description: "A new Flutter project."
+publish_to: 'none'
+
+version: 1.0.0+1
+
+environment:
+  sdk: ^3.10.1
+
+dependencies:
+  flutter:
+    sdk: flutter
+  cupertino_icons: ^1.0.8
+  drift: ^2.7.0
+  drift_flutter: ^0.2.8
+  path_provider: ^2.0.14
+  sqlite3_flutter_libs: ^0.5.12
+  flutter_bloc: ^8.1.2
+  hydrated_bloc: ^9.1.5
+  get_it: ^8.0.3
+  google_fonts: ^6.2.1
+  form_builder_validators: ^11.1.1
+  flutter_form_builder: ^10.3.0+2
+  equatable: ^2.0.8
+  toastification: ^3.0.3
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  flutter_lints: ^6.0.0
+  build_runner: ^2.5.1
+  coverage: ^1.15.0
+  drift_dev: ^2.27.0
+  intl_utils: ^2.8.10
+  flutter_launcher_icons: ^0.13.1
+
+flutter_icons:
+  android: true
+  ios: true
+  image_path: assets/images/logo_app.png
+  adaptive_icon_foreground: assets/images/logo_app.png
+
+flutter:
+  generate: true
+  uses-material-design: true
+  assets:
+    - assets/images/
+flutter_intl:
+  enabled: true
+  arb_dir: lib/app/l10n
+  output_dir: lib/app/generated

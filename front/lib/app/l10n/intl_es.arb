@@ -172,5 +172,7 @@
   "home_weekday_sat": "SAB",
   "@home_weekday_sat": {},
   "home_weekday_sun": "DOM",
-  "@home_weekday_sun": {}
+  "@home_weekday_sun": {},
+  "home_mood_entry_title": "¿Cómo te sientes en este momento?",
+  "@home_mood_entry_title": {}
 }

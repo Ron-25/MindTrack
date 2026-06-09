@@ -172,5 +172,7 @@
   "home_weekday_sat": "SAT",
   "@home_weekday_sat": {},
   "home_weekday_sun": "SUN",
-  "@home_weekday_sun": {}
+  "@home_weekday_sun": {},
+  "home_mood_entry_title": "How are you feeling right now?",
+  "@home_mood_entry_title": {},
 }

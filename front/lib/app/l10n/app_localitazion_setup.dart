@@ -1,3 +1,4 @@
+# hardcore text
 import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:form_builder_validators/localization/l10n.dart';

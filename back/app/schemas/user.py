@@ -1,6 +1,7 @@
 from pydantic import BaseModel, EmailStr, Field
 from typing import Optional
 from datetime import time
+from uuid import UUID
 
 
 class UserUpdate(BaseModel):
@@ -29,7 +30,7 @@ class PreferencesOut(BaseModel):
 
 
 class UserProfileOut(BaseModel):
-    id: str
+    id: UUID
     name: str
     email: str
     avatar_url: Optional[str]

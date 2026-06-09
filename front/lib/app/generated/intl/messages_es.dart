@@ -24,7 +24,16 @@ class MessageLookup extends MessageLookupByLibrary {
 
   static String m1(name) => "Buenos dias, ${name}";
 
-  static String m2(step, total) =>
+  static String m2(name) => "Buenas tardes, ${name}";
+
+  static String m3(name) => "Buenas noches, ${name}";
+
+  static String m4(name) => "Buenos dias, ${name}";
+
+  static String m5(count, energy) =>
+      "Has registrado ${Intl.plural(count, one: '1 entrada', other: '${count} entradas')} hoy. Tu nivel promedio de energia es ${energy}.";
+
+  static String m6(step, total) =>
       "Paso ${step} de ${total} • Conciencia Emocional";
 
   final messages = _notInlinedMessages(_notInlinedMessages);
@@ -78,10 +87,36 @@ class MessageLookup extends MessageLookupByLibrary {
       "El nombre es requerido",
     ),
     "get_started": MessageLookupByLibrary.simpleMessage("Comenzar"),
+    "home_daily_habits_title": MessageLookupByLibrary.simpleMessage(
+      "Habitos diarios",
+    ),
+    "home_empty_entries_message": MessageLookupByLibrary.simpleMessage(
+      "Aun no hay emociones registradas.",
+    ),
+    "home_empty_habits_message": MessageLookupByLibrary.simpleMessage(
+      "Aun no tienes habitos activos.",
+    ),
+    "home_energy_balanced": MessageLookupByLibrary.simpleMessage("equilibrado"),
+    "home_energy_high": MessageLookupByLibrary.simpleMessage("alto"),
+    "home_energy_low": MessageLookupByLibrary.simpleMessage("bajo"),
+    "home_entry_no_note": MessageLookupByLibrary.simpleMessage(
+      "Sin nota adicional.",
+    ),
+    "home_entry_yesterday": MessageLookupByLibrary.simpleMessage("Ayer"),
     "home_greeting": m1,
+    "home_greeting_afternoon": m2,
+    "home_greeting_evening": m3,
+    "home_greeting_morning": m4,
     "home_log_emotion_button": MessageLookupByLibrary.simpleMessage(
       "Registrar mi emocion actual",
     ),
+    "home_logout_success": MessageLookupByLibrary.simpleMessage(
+      "Sesion cerrada correctamente.",
+    ),
+    "home_logout_tooltip": MessageLookupByLibrary.simpleMessage(
+      "Cerrar sesion",
+    ),
+    "home_manager_ai": MessageLookupByLibrary.simpleMessage("Manager IA"),
     "home_mood_primary_description": MessageLookupByLibrary.simpleMessage(
       "Has registrado 3 entradas hoy. Tu nivel promedio de energia es alto.",
     ),
@@ -94,6 +129,17 @@ class MessageLookup extends MessageLookupByLibrary {
     "home_nav_history": MessageLookupByLibrary.simpleMessage("HISTORIAL"),
     "home_nav_home": MessageLookupByLibrary.simpleMessage("INICIO"),
     "home_nav_profile": MessageLookupByLibrary.simpleMessage("PERFIL"),
+    "home_recent_entries_title": MessageLookupByLibrary.simpleMessage(
+      "Entradas recientes",
+    ),
+    "home_retry": MessageLookupByLibrary.simpleMessage("Reintentar"),
+    "home_section_soon_description": MessageLookupByLibrary.simpleMessage(
+      "Esta seccion estara disponible pronto.",
+    ),
+    "home_see_all": MessageLookupByLibrary.simpleMessage("Ver todo"),
+    "home_status_elevated": MessageLookupByLibrary.simpleMessage("ALTO"),
+    "home_status_gentle": MessageLookupByLibrary.simpleMessage("SUAVE"),
+    "home_status_new_day": MessageLookupByLibrary.simpleMessage("NUEVO DIA"),
     "home_subtitle_default": MessageLookupByLibrary.simpleMessage(
       "Como te sientes en este momento?",
     ),
@@ -103,6 +149,13 @@ class MessageLookup extends MessageLookupByLibrary {
     "home_subtitle_signed_up": MessageLookupByLibrary.simpleMessage(
       "Cuenta creada correctamente.",
     ),
+    "home_today_empty_description": MessageLookupByLibrary.simpleMessage(
+      "Empieza registrando como te sientes para construir tu tendencia diaria.",
+    ),
+    "home_today_empty_title": MessageLookupByLibrary.simpleMessage(
+      "Aun no hay entradas",
+    ),
+    "home_today_entries_description": m5,
     "home_today_mood_title": MessageLookupByLibrary.simpleMessage(
       "Estado de animo de hoy",
     ),
@@ -136,7 +189,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "onboarding_desc_3": MessageLookupByLibrary.simpleMessage(
       "Conecta tus rutinas diarias con tu bienestar emocional. Comienza tu camino hacia una vida más equilibrada.",
     ),
-    "onboarding_step": m2,
+    "onboarding_step": m6,
     "onboarding_title_1": MessageLookupByLibrary.simpleMessage(
       "Registra tus emociones diarias",
     ),
@@ -170,6 +223,30 @@ class MessageLookup extends MessageLookupByLibrary {
     "privacy_policy": MessageLookupByLibrary.simpleMessage(
       "Política de privacidad",
     ),
+    "profile_account_settings": MessageLookupByLibrary.simpleMessage(
+      "AJUSTES DE LA CUENTA",
+    ),
+    "profile_footer_caption": MessageLookupByLibrary.simpleMessage(
+      "MindTrack v2.4.0 • Hecho con mindfulness",
+    ),
+    "profile_intent_android_only": MessageLookupByLibrary.simpleMessage(
+      "Esta opcion esta disponible en los ajustes de Android.",
+    ),
+    "profile_intent_link_unavailable": MessageLookupByLibrary.simpleMessage(
+      "No hubo una app disponible para abrir este enlace.",
+    ),
+    "profile_language": MessageLookupByLibrary.simpleMessage("Idioma"),
+    "profile_language_english": MessageLookupByLibrary.simpleMessage("Ingles"),
+    "profile_language_spanish": MessageLookupByLibrary.simpleMessage("Español"),
+    "profile_logout": MessageLookupByLibrary.simpleMessage("Cerrar sesion"),
+    "profile_notification_settings": MessageLookupByLibrary.simpleMessage(
+      "Configuracion de notificaciones",
+    ),
+    "profile_preferences": MessageLookupByLibrary.simpleMessage("Preferencias"),
+    "profile_privacy_security": MessageLookupByLibrary.simpleMessage(
+      "Privacidad y seguridad",
+    ),
+    "profile_title": MessageLookupByLibrary.simpleMessage("Perfil"),
     "sign_in": MessageLookupByLibrary.simpleMessage("Iniciar sesión"),
     "sign_in_button": MessageLookupByLibrary.simpleMessage("Iniciar sesión"),
     "sign_up": MessageLookupByLibrary.simpleMessage("Regístrate"),

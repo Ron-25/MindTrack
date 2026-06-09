@@ -1,0 +1,14 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(flutter pub *)",
+      "Bash(ls /Volumes/Ojito/Repos/)",
+      "Read(//Volumes/Ojito/**)",
+      "Bash(flutter analyze *)",
+      "Bash(ls /Volumes/ && ls /Volumes/Ojito/ 2>/dev/null || echo \"Ojito not mounted\")",
+      "Read(//Volumes/**)",
+      "Bash(xargs cat -n)",
+      "Bash(dart run *)"
+    ]
+  }
+}

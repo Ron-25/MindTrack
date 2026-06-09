@@ -31,6 +31,21 @@ class SignUpSuccess extends LoginEvent {
   const SignUpSuccess();
 }
 
+class SignUpSubmitted extends LoginEvent {
+  const SignUpSubmitted({
+    required this.name,
+    required this.email,
+    required this.password,
+  });
+
+  final String name;
+  final String email;
+  final String password;
+
+  @override
+  List<Object?> get props => <Object?>[name, email, password];
+}
+
 class LoginSubmitted extends LoginEvent {}
 
 class LoginStatusReset extends LoginEvent {

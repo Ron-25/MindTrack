@@ -13,31 +13,36 @@ part 'app_database.g.dart';
 
 @DriftDatabase(
   tables: <Type>[
+    DailyMoods,
     EmotionEntries,
     Habits,
   ],
   daos: <Type>[
+    DailyMoodsDao,
     EmotionEntriesDao,
     HabitsDao,
   ],
 )
 class AppDatabase extends _$AppDatabase {
-
   AppDatabase() : super(_openConnection());
 
   @override
-  int get schemaVersion => 1;
+  int get schemaVersion => 2;
 
+  @override
+  MigrationStrategy get migration => MigrationStrategy(
+        onUpgrade: (Migrator m, int from, int to) async {
+          if (from < 2) {
+            await m.createTable(dailyMoods);
+          }
+        },
+      );
 }
 
 LazyDatabase _openConnection() {
   return LazyDatabase(() async {
-
     final Directory dbFolder = await getApplicationDocumentsDirectory();
-
     final File file = File(p.join(dbFolder.path, 'mindtrack.sqlite'));
-
     return NativeDatabase(file);
-
   });
 }

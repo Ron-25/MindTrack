@@ -172,5 +172,94 @@
   "home_weekday_sat": "SAB",
   "@home_weekday_sat": {},
   "home_weekday_sun": "DOM",
-  "@home_weekday_sun": {}
+  "@home_weekday_sun": {},
+  "home_greeting_morning": "Buenos dias, {name}",
+  "@home_greeting_morning": {
+    "placeholders": {
+      "name": {}
+    }
+  },
+  "home_greeting_afternoon": "Buenas tardes, {name}",
+  "@home_greeting_afternoon": {
+    "placeholders": {
+      "name": {}
+    }
+  },
+  "home_greeting_evening": "Buenas noches, {name}",
+  "@home_greeting_evening": {
+    "placeholders": {
+      "name": {}
+    }
+  },
+  "home_daily_habits_title": "Habitos diarios",
+  "@home_daily_habits_title": {},
+  "home_empty_habits_message": "Aun no tienes habitos activos.",
+  "@home_empty_habits_message": {},
+  "home_recent_entries_title": "Entradas recientes",
+  "@home_recent_entries_title": {},
+  "home_see_all": "Ver todo",
+  "@home_see_all": {},
+  "home_empty_entries_message": "Aun no hay emociones registradas.",
+  "@home_empty_entries_message": {},
+  "home_manager_ai": "Manager IA",
+  "@home_manager_ai": {},
+  "home_entry_no_note": "Sin nota adicional.",
+  "@home_entry_no_note": {},
+  "home_entry_yesterday": "Ayer",
+  "@home_entry_yesterday": {},
+  "home_retry": "Reintentar",
+  "@home_retry": {},
+  "home_section_soon_description": "Esta seccion estara disponible pronto.",
+  "@home_section_soon_description": {},
+  "home_logout_tooltip": "Cerrar sesion",
+  "@home_logout_tooltip": {},
+  "home_logout_success": "Sesion cerrada correctamente.",
+  "@home_logout_success": {},
+  "home_status_new_day": "NUEVO DIA",
+  "@home_status_new_day": {},
+  "home_status_elevated": "ALTO",
+  "@home_status_elevated": {},
+  "home_status_gentle": "SUAVE",
+  "@home_status_gentle": {},
+  "home_today_empty_title": "Aun no hay entradas",
+  "@home_today_empty_title": {},
+  "home_today_empty_description": "Empieza registrando como te sientes para construir tu tendencia diaria.",
+  "@home_today_empty_description": {},
+  "home_today_entries_description": "Has registrado {count, plural, one{1 entrada} other{{count} entradas}} hoy. Tu nivel promedio de energia es {energy}.",
+  "@home_today_entries_description": {
+    "placeholders": {
+      "count": {},
+      "energy": {}
+    }
+  },
+  "home_energy_high": "alto",
+  "@home_energy_high": {},
+  "home_energy_balanced": "equilibrado",
+  "@home_energy_balanced": {},
+  "home_energy_low": "bajo",
+  "@home_energy_low": {},
+  "profile_title": "Perfil",
+  "@profile_title": {},
+  "profile_account_settings": "AJUSTES DE LA CUENTA",
+  "@profile_account_settings": {},
+  "profile_preferences": "Preferencias",
+  "@profile_preferences": {},
+  "profile_notification_settings": "Configuracion de notificaciones",
+  "@profile_notification_settings": {},
+  "profile_language": "Idioma",
+  "@profile_language": {},
+  "profile_privacy_security": "Privacidad y seguridad",
+  "@profile_privacy_security": {},
+  "profile_logout": "Cerrar sesion",
+  "@profile_logout": {},
+  "profile_footer_caption": "MindTrack v2.4.0 • Hecho con mindfulness",
+  "@profile_footer_caption": {},
+  "profile_language_english": "Ingles",
+  "@profile_language_english": {},
+  "profile_language_spanish": "Español",
+  "@profile_language_spanish": {},
+  "profile_intent_android_only": "Esta opcion esta disponible en los ajustes de Android.",
+  "@profile_intent_android_only": {},
+  "profile_intent_link_unavailable": "No hubo una app disponible para abrir este enlace.",
+  "@profile_intent_link_unavailable": {}
 }

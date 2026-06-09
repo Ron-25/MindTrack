@@ -718,6 +718,336 @@ class S {
   String get home_weekday_sun {
     return Intl.message('SUN', name: 'home_weekday_sun', desc: '', args: []);
   }
+
+  /// `Good morning, {name}`
+  String home_greeting_morning(Object name) {
+    return Intl.message(
+      'Good morning, $name',
+      name: 'home_greeting_morning',
+      desc: '',
+      args: [name],
+    );
+  }
+
+  /// `Good afternoon, {name}`
+  String home_greeting_afternoon(Object name) {
+    return Intl.message(
+      'Good afternoon, $name',
+      name: 'home_greeting_afternoon',
+      desc: '',
+      args: [name],
+    );
+  }
+
+  /// `Good evening, {name}`
+  String home_greeting_evening(Object name) {
+    return Intl.message(
+      'Good evening, $name',
+      name: 'home_greeting_evening',
+      desc: '',
+      args: [name],
+    );
+  }
+
+  /// `Daily Habits`
+  String get home_daily_habits_title {
+    return Intl.message(
+      'Daily Habits',
+      name: 'home_daily_habits_title',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `You do not have active habits yet.`
+  String get home_empty_habits_message {
+    return Intl.message(
+      'You do not have active habits yet.',
+      name: 'home_empty_habits_message',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Recent Entries`
+  String get home_recent_entries_title {
+    return Intl.message(
+      'Recent Entries',
+      name: 'home_recent_entries_title',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `See all`
+  String get home_see_all {
+    return Intl.message('See all', name: 'home_see_all', desc: '', args: []);
+  }
+
+  /// `No emotions have been logged yet.`
+  String get home_empty_entries_message {
+    return Intl.message(
+      'No emotions have been logged yet.',
+      name: 'home_empty_entries_message',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `AI Manager`
+  String get home_manager_ai {
+    return Intl.message(
+      'AI Manager',
+      name: 'home_manager_ai',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `No additional notes.`
+  String get home_entry_no_note {
+    return Intl.message(
+      'No additional notes.',
+      name: 'home_entry_no_note',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Yesterday`
+  String get home_entry_yesterday {
+    return Intl.message(
+      'Yesterday',
+      name: 'home_entry_yesterday',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Retry`
+  String get home_retry {
+    return Intl.message('Retry', name: 'home_retry', desc: '', args: []);
+  }
+
+  /// `This section will be available soon.`
+  String get home_section_soon_description {
+    return Intl.message(
+      'This section will be available soon.',
+      name: 'home_section_soon_description',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Sign out`
+  String get home_logout_tooltip {
+    return Intl.message(
+      'Sign out',
+      name: 'home_logout_tooltip',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Signed out successfully.`
+  String get home_logout_success {
+    return Intl.message(
+      'Signed out successfully.',
+      name: 'home_logout_success',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `NEW DAY`
+  String get home_status_new_day {
+    return Intl.message(
+      'NEW DAY',
+      name: 'home_status_new_day',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `ELEVATED`
+  String get home_status_elevated {
+    return Intl.message(
+      'ELEVATED',
+      name: 'home_status_elevated',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `GENTLE`
+  String get home_status_gentle {
+    return Intl.message(
+      'GENTLE',
+      name: 'home_status_gentle',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `No entries yet`
+  String get home_today_empty_title {
+    return Intl.message(
+      'No entries yet',
+      name: 'home_today_empty_title',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Start by logging how you feel to build your daily trend.`
+  String get home_today_empty_description {
+    return Intl.message(
+      'Start by logging how you feel to build your daily trend.',
+      name: 'home_today_empty_description',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `You've logged {count, plural, one{1 entry} other{{count} entries}} today. Your average energy level is {energy}.`
+  String home_today_entries_description(num count, Object energy) {
+    return Intl.message(
+      'You\'ve logged ${Intl.plural(count, one: '1 entry', other: '$count entries')} today. Your average energy level is $energy.',
+      name: 'home_today_entries_description',
+      desc: '',
+      args: [count, energy],
+    );
+  }
+
+  /// `high`
+  String get home_energy_high {
+    return Intl.message('high', name: 'home_energy_high', desc: '', args: []);
+  }
+
+  /// `balanced`
+  String get home_energy_balanced {
+    return Intl.message(
+      'balanced',
+      name: 'home_energy_balanced',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `low`
+  String get home_energy_low {
+    return Intl.message('low', name: 'home_energy_low', desc: '', args: []);
+  }
+
+  /// `Profile`
+  String get profile_title {
+    return Intl.message('Profile', name: 'profile_title', desc: '', args: []);
+  }
+
+  /// `ACCOUNT SETTINGS`
+  String get profile_account_settings {
+    return Intl.message(
+      'ACCOUNT SETTINGS',
+      name: 'profile_account_settings',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Preferences`
+  String get profile_preferences {
+    return Intl.message(
+      'Preferences',
+      name: 'profile_preferences',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Notification Settings`
+  String get profile_notification_settings {
+    return Intl.message(
+      'Notification Settings',
+      name: 'profile_notification_settings',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Language`
+  String get profile_language {
+    return Intl.message(
+      'Language',
+      name: 'profile_language',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Privacy & Security`
+  String get profile_privacy_security {
+    return Intl.message(
+      'Privacy & Security',
+      name: 'profile_privacy_security',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Logout`
+  String get profile_logout {
+    return Intl.message('Logout', name: 'profile_logout', desc: '', args: []);
+  }
+
+  /// `MindTrack v2.4.0 • Made with mindfulness`
+  String get profile_footer_caption {
+    return Intl.message(
+      'MindTrack v2.4.0 • Made with mindfulness',
+      name: 'profile_footer_caption',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `English`
+  String get profile_language_english {
+    return Intl.message(
+      'English',
+      name: 'profile_language_english',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Spanish`
+  String get profile_language_spanish {
+    return Intl.message(
+      'Spanish',
+      name: 'profile_language_spanish',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `This option is available on Android settings.`
+  String get profile_intent_android_only {
+    return Intl.message(
+      'This option is available on Android settings.',
+      name: 'profile_intent_android_only',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `No app was available to open this link.`
+  String get profile_intent_link_unavailable {
+    return Intl.message(
+      'No app was available to open this link.',
+      name: 'profile_intent_link_unavailable',
+      desc: '',
+      args: [],
+    );
+  }
 }
 
 class AppLocalizationDelegate extends LocalizationsDelegate<S> {

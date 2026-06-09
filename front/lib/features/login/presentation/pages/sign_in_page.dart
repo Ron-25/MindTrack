@@ -4,12 +4,12 @@ import 'package:flutter/services.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:mind_track/app/generated/l10n.dart';
 import 'package:mind_track/app/injector.dart';
+import 'package:mind_track/app/routes/route_names.dart';
+import 'package:mind_track/core/utils/toast_utils.dart';
 import 'package:mind_track/app/theme/app_colors.dart';
-import 'package:mind_track/features/home/presentation/pages/home_page.dart';
 import 'package:mind_track/features/login/presentation/blocs/login_bloc.dart';
 import 'package:mind_track/features/login/presentation/blocs/login_event.dart';
 import 'package:mind_track/features/login/presentation/blocs/login_state.dart';
-import 'package:mind_track/features/login/presentation/pages/sign_up_page.dart';
 import 'package:mind_track/features/login/presentation/widgets/email_text_field.dart';
 import 'package:mind_track/features/login/presentation/widgets/password_text_field.dart';
 import 'package:mind_track/shared/widget/app_circle_icon.dart';
@@ -67,15 +67,20 @@ class _SignInPageState extends State<SignInPage> with WidgetsBindingObserver {
     return BlocListener<LoginBloc, LoginState>(
       bloc: loginBloc,
       listenWhen: (LoginState previous, LoginState current) {
-        return previous.logIn != current.logIn;
+        return previous.logIn != current.logIn ||
+            previous.errorMessage != current.errorMessage;
       },
       listener: (BuildContext context, LoginState state) {
         if (state.logIn) {
-          Navigator.pushReplacement(
-            context,
-            MaterialPageRoute<HomePage>(
-              builder: (BuildContext context) => const HomePage(),
-            ),
+          Navigator.of(context).pushReplacementNamed(RouteNames.home);
+        }
+        if (state.isFailure && state.errorMessage != null) {
+          ThToast.error(
+            context: context,
+            title: translations.error_title,
+            description: state.errorMessage!,
+            margin: const EdgeInsets.only(left: 60, right: 20),
+            applyBlurEffect: false,
           );
         }
       },
@@ -208,27 +213,33 @@ class _SignInPageState extends State<SignInPage> with WidgetsBindingObserver {
                                 translations.password_special_char_error,
                           ),
                           const SizedBox(height: 24),
-                          AppPrimaryButton(
-                            text: translations.sign_in_button,
-                            onPressed: () {
-                              if (_formKey.currentState?.saveAndValidate() ??
-                                  false) {
-                                final Map<String, dynamic> formData =
-                                    _formKey.currentState!.value;
-                                loginBloc.add(
-                                  LoginEmailChanged(
-                                    (formData['email'] as String?) ?? '',
-                                  ),
-                                );
-                                loginBloc.add(
-                                  LoginPasswordChanged(
-                                    (formData['password'] as String?) ?? '',
-                                  ),
-                                );
-                                loginBloc.add(LoginSubmitted());
-                              }
-                            },
-                            padding: EdgeInsets.zero,
+                          BlocBuilder<LoginBloc, LoginState>(
+                            bloc: loginBloc,
+                            buildWhen: (LoginState prev, LoginState curr) =>
+                                prev.isSubmitting != curr.isSubmitting,
+                            builder: (BuildContext context, LoginState state) =>
+                              AppPrimaryButton(
+                                text: translations.sign_in_button,
+                                isLoading: state.isSubmitting,
+                                onPressed: () {
+                                  if (_formKey.currentState?.saveAndValidate() ?? false) {
+                                    final Map<String, dynamic> formData =
+                                        _formKey.currentState!.value;
+                                    loginBloc.add(
+                                      LoginEmailChanged(
+                                        (formData['email'] as String?) ?? '',
+                                      ),
+                                    );
+                                    loginBloc.add(
+                                      LoginPasswordChanged(
+                                        (formData['password'] as String?) ?? '',
+                                      ),
+                                    );
+                                    loginBloc.add(LoginSubmitted());
+                                  }
+                                },
+                                padding: EdgeInsets.zero,
+                              ),
                           ),
                           const SizedBox(height: 20),
                           Row(
@@ -303,13 +314,7 @@ class _SignInPageState extends State<SignInPage> with WidgetsBindingObserver {
                         ),
                         GestureDetector(
                           onTap: () {
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute<SignUp>(
-                                builder: (BuildContext context) =>
-                                    const SignUp(),
-                              ),
-                            );
+                            Navigator.of(context).pushNamed(RouteNames.signUp);
                           },
                           child: Text(
                             translations.sign_up,

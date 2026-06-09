@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:mind_track/app/constants/assets.dart';
-import 'package:mind_track/features/login/presentation/pages/sign_in_page.dart';
-import 'package:mind_track/features/splash/presentation/pages/splash_page.dart';
+import 'package:mind_track/app/routes/route_names.dart';
 import 'package:mind_track/shared/widget/app_primary_button.dart';
 import '../../../../../shared/pages/app_background_page.dart';
 import 'package:mind_track/app/generated/l10n.dart';
@@ -33,9 +32,7 @@ class _OnboarningPageState extends State<OnboarningPage> {
         curve: Curves.ease,
       );
     } else {
-      Navigator.of(context).push(
-        MaterialPageRoute<void>(builder: (_) => const SignInPage()),
-      );
+      Navigator.of(context).pushNamed(RouteNames.signIn);
     }
   }
 
@@ -66,9 +63,7 @@ class _OnboarningPageState extends State<OnboarningPage> {
             children: <Widget>[
               TextButton.icon(
                 onPressed: () {
-                  Navigator.of(context).push(
-                    MaterialPageRoute<void>(builder: (_) => const SplashPage()),
-                  );
+                  Navigator.of(context).pop();
                 },
                 icon: const Icon(Icons.arrow_back, size: 18, color: Colors.black),
                 label: Text(
@@ -86,9 +81,7 @@ class _OnboarningPageState extends State<OnboarningPage> {
               ),
               TextButton(
                 onPressed: () {
-                  Navigator.of(context).push(
-                    MaterialPageRoute<void>(builder: (_) => const SignInPage()),
-                  );
+                  Navigator.of(context).pushNamed(RouteNames.signIn);
                 },
                 style: TextButton.styleFrom(
                   foregroundColor: Colors.black,

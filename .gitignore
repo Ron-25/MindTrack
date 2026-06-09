@@ -4,3 +4,8 @@ front/build/
 front/.dart_tool/
 front/ios/Pods/
 front/macos/Pods/
+
+# Variables de entorno (contienen secretos)
+.env
+back/.env
+front/.env

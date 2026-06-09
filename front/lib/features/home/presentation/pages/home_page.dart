@@ -1,10 +1,17 @@
+import 'dart:math' as math;
+
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:mind_track/app/generated/l10n.dart';
 import 'package:mind_track/app/injector.dart';
+import 'package:mind_track/app/routes/route_names.dart';
 import 'package:mind_track/app/theme/app_colors.dart';
+import 'package:mind_track/core/services/token_storage_service.dart';
 import 'package:mind_track/core/utils/toast_utils.dart';
+import 'package:mind_track/features/home/domain/entities/home_dashboard.dart';
+import 'package:mind_track/features/home/presentation/cubit/home_cubit.dart';
+import 'package:mind_track/features/home/presentation/cubit/home_state.dart';
 import 'package:mind_track/features/login/presentation/blocs/login_bloc.dart';
 import 'package:mind_track/features/login/presentation/blocs/login_event.dart';
 import 'package:mind_track/features/login/presentation/blocs/login_state.dart';
@@ -17,412 +24,697 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
-  int _selectedIndex = 0;
+  final HomeCubit _homeCubit = Injector.get<HomeCubit>();
   final LoginBloc _loginBloc = Injector.get<LoginBloc>();
+  final TokenStorageService _tokenStorage = Injector.get<TokenStorageService>();
+  int _selectedIndex = 0;
 
-  final List<double> _weeklyEnergy = <double>[40, 62, 50, 76, 68, 92, 82];
+  @override
+  void initState() {
+    super.initState();
+    _homeCubit.loadDashboard();
+  }
 
   @override
   Widget build(BuildContext context) {
     final S translations = S.of(context);
-    return BlocConsumer<LoginBloc, LoginState>(
-      bloc: _loginBloc,
-      listenWhen: (LoginState previous, LoginState current) {
-        return previous.isSuccess != current.isSuccess ||
-            previous.isFailure != current.isFailure ||
-            previous.logIn != current.logIn ||
-            previous.signUp != current.signUp;
-      },
-      listener: (BuildContext context, LoginState state) {
-      },
-      builder: (BuildContext context, LoginState state) {
-        final String subtitle = state.signUp
-            ? translations.home_subtitle_signed_up
-            : state.logIn
-            ? translations.home_subtitle_logged_in
-            : translations.home_subtitle_default;
-                if (state.isFailure) {
-          ThToast.error(
-            context: context,
-            title: translations.auth_error_title,
-            description: translations.auth_error_description,
-            applyBlurEffect: false,
-          );
-          _loginBloc.add(const LoginStatusReset());
-        }
 
-        if (state.signUp) {
-          ThToast.success(
-            context: context,
-            title: translations.auth_success_title,
-            description: translations.auth_signup_success_toast,
-            applyBlurEffect: false,
-          );
-          //_loginBloc.add(const LoginStatusReset());
-        }
+    return MultiBlocListener(
+      listeners: <BlocListenerBase<dynamic, dynamic>>[
+        BlocListener<LoginBloc, LoginState>(
+          bloc: _loginBloc,
+          listenWhen: (LoginState previous, LoginState current) {
+            return previous.isFailure != current.isFailure ||
+                previous.logIn != current.logIn ||
+                previous.signUp != current.signUp;
+          },
+          listener: (BuildContext context, LoginState state) {
+            if (state.isFailure) {
+              ThToast.error(
+                context: context,
+                title: translations.auth_error_title,
+                description:
+                    state.errorMessage ?? translations.auth_error_description,
+                applyBlurEffect: false,
+              );
+              _loginBloc.add(const LoginStatusReset());
+              return;
+            }
 
-        if (state.logIn || state.isSuccess) {
-          ThToast.success(
-            context: context,
-            title: translations.auth_success_title,
-            description: translations.auth_login_success_toast,
-            applyBlurEffect: false,
-          );
-         // _loginBloc.add(const LoginStatusReset());
-        }
-        return AnnotatedRegion<SystemUiOverlayStyle>(
-          value: const SystemUiOverlayStyle(
-            systemNavigationBarColor: Color(0xFFF3F5F7),
-            systemNavigationBarIconBrightness: Brightness.dark,
-            systemNavigationBarContrastEnforced: false,
-          ),
-          child: Scaffold(
-            backgroundColor: const Color(0xFFF3F5F7),
-            bottomNavigationBar: SafeArea(
-              top: false,
-              minimum: const EdgeInsets.fromLTRB(0, 0, 0, 12),
-              child: _buildBottomNav(),
-            ),
-            body: SafeArea(
-              child: SingleChildScrollView(
-                padding: const EdgeInsets.fromLTRB(18, 10, 18, 16),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: <Widget>[
-                    _buildHeader(),
-                    const SizedBox(height: 24),
-                    Text(
-                      translations.home_greeting('Alex'),
-                      style: const TextStyle(
-                        fontSize: 38,
-                        fontWeight: FontWeight.w800,
-                        letterSpacing: -1,
-                        color: AppColors.textPrimary,
+            if (state.signUp) {
+              ThToast.success(
+                context: context,
+                title: translations.auth_success_title,
+                description: translations.auth_signup_success_toast,
+                applyBlurEffect: false,
+              );
+              _loginBloc.add(const LoginStatusReset());
+              return;
+            }
+
+            if (state.logIn || state.isSuccess) {
+              ThToast.success(
+                context: context,
+                title: translations.auth_success_title,
+                description: translations.auth_login_success_toast,
+                applyBlurEffect: false,
+              );
+              _loginBloc.add(const LoginStatusReset());
+            }
+          },
+        ),
+      ],
+      child: AnnotatedRegion<SystemUiOverlayStyle>(
+        value: const SystemUiOverlayStyle(
+          systemNavigationBarColor: Colors.white,
+          systemNavigationBarIconBrightness: Brightness.dark,
+          systemNavigationBarContrastEnforced: false,
+        ),
+        child: Scaffold(
+          backgroundColor: const Color(0xFFF6F7F8),
+          bottomNavigationBar: _buildBottomArea(context),
+          floatingActionButton: _buildManagerIaButton(context),
+          floatingActionButtonLocation:
+              FloatingActionButtonLocation.centerFloat,
+          body: SafeArea(
+            child: BlocBuilder<HomeCubit, HomeState>(
+              bloc: _homeCubit,
+              builder: (BuildContext context, HomeState state) {
+                if (state.isLoading && state.dashboard == null) {
+                  return const Center(child: CircularProgressIndicator());
+                }
+
+                if (state.errorMessage != null && state.dashboard == null) {
+                  return _HomeErrorState(
+                    message: state.errorMessage!,
+                    onRetry: _homeCubit.loadDashboard,
+                  );
+                }
+
+                final HomeDashboard dashboard = state.dashboard!;
+                return RefreshIndicator(
+                  color: AppColors.primary,
+                  onRefresh: _homeCubit.loadDashboard,
+                  child: CustomScrollView(
+                    physics: const AlwaysScrollableScrollPhysics(),
+                    slivers: <Widget>[
+                      SliverPadding(
+                        padding: const EdgeInsets.fromLTRB(16, 10, 16, 172),
+                        sliver: SliverList(
+                          delegate: SliverChildListDelegate(<Widget>[
+                            _buildHeader(context),
+                            const SizedBox(height: 24),
+                            Text(
+                              _greetingForTime(context, dashboard.userName),
+                              style: const TextStyle(
+                                fontSize: 30,
+                                height: 1.25,
+                                fontWeight: FontWeight.w800,
+                                letterSpacing: -0.8,
+                                color: Color(0xFF1E293B),
+                              ),
+                            ),
+                            const SizedBox(height: 4),
+                            Text(
+                              _subtitleForLocale(context),
+                              style: const TextStyle(
+                                fontSize: 16,
+                                height: 1.5,
+                                color: AppColors.textSecondary,
+                              ),
+                            ),
+                            const SizedBox(height: 20),
+                            _buildLogEmotionButton(context, translations),
+                            const SizedBox(height: 24),
+                            _SectionCard(
+                              child: _buildTodayMoodSection(
+                                context,
+                                dashboard.todayMood,
+                                translations,
+                              ),
+                            ),
+                            const SizedBox(height: 20),
+                            _SectionCard(
+                              child: _buildWeeklyOverviewSection(
+                                context,
+                                dashboard.weeklyOverview,
+                                translations,
+                              ),
+                            ),
+                            const SizedBox(height: 20),
+                            _SectionCard(
+                              child: _buildHabitsSection(
+                                context,
+                                dashboard.habits,
+                              ),
+                            ),
+                            const SizedBox(height: 28),
+                            _buildRecentEntriesSection(
+                              context,
+                              dashboard.recentEntries,
+                            ),
+                          ]),
+                        ),
                       ),
-                    ),
-                    const SizedBox(height: 4),
-                    Text(
-                      subtitle,
-                      style: const TextStyle(
-                        fontSize: 18,
-                        color: AppColors.textSecondary,
-                      ),
-                    ),
-                    const SizedBox(height: 22),
-                    _buildMainButton(),
-                    const SizedBox(height: 22),
-                    _buildTodayMoodCard(translations),
-                    const SizedBox(height: 18),
-                    _buildWeeklyCard(translations),
-                    const SizedBox(height: 16),
-                  ],
-                ),
-              ),
+                    ],
+                  ),
+                );
+              },
             ),
           ),
-        );
-      },
+        ),
+      ),
     );
   }
 
-  Widget _buildHeader() {
+  Widget _buildHeader(BuildContext context) {
     return Row(
       children: <Widget>[
         Container(
-          width: 44,
-          height: 44,
-          decoration: BoxDecoration(
-            color: Colors.white,
-            borderRadius: BorderRadius.circular(14),
-            boxShadow: const <BoxShadow>[
-              BoxShadow(
-                color: Color(0x14000000),
-                blurRadius: 10,
-                offset: Offset(0, 5),
-              ),
-            ],
+          width: 40,
+          height: 40,
+          decoration: const BoxDecoration(
+            color: Color(0x335FA9D3),
+            shape: BoxShape.circle,
           ),
           child: const Icon(
-            Icons.favorite_border_rounded,
+            Icons.psychology_alt_rounded,
             color: AppColors.primary,
+            size: 20,
           ),
         ),
         const SizedBox(width: 12),
         Expanded(
           child: Text(
             S.of(context).title,
-            maxLines: 1,
-            overflow: TextOverflow.ellipsis,
             style: const TextStyle(
-              fontSize: 21,
+              fontSize: 18,
               fontWeight: FontWeight.w700,
-              color: AppColors.textPrimary,
+              letterSpacing: -0.4,
+              color: Color(0xFF0F172A),
             ),
           ),
         ),
-        IconButton(
-          onPressed: () {},
-          constraints: const BoxConstraints(minWidth: 40, minHeight: 40),
-          padding: EdgeInsets.zero,
-          icon: const Icon(Icons.search_rounded, color: AppColors.textPrimary),
+        _HeaderIconButton(
+          icon: Icons.search_rounded,
+          onTap: () => _showSoonToast(context),
         ),
-        IconButton(
-          onPressed: () {},
-          constraints: const BoxConstraints(minWidth: 40, minHeight: 40),
-          padding: EdgeInsets.zero,
-          icon: const Icon(
-            Icons.notifications_none_rounded,
-            color: AppColors.textPrimary,
+        const SizedBox(width: 8),
+        _HeaderIconButton(
+          icon: Icons.notifications_none_rounded,
+          onTap: () => _showSoonToast(context),
+        ),
+        const SizedBox(width: 8),
+        _HeaderIconButton(
+          icon: Icons.logout_rounded,
+          tooltip: S.of(context).home_logout_tooltip,
+          onTap: () => _handleLogout(context),
+        ),
+      ],
+    );
+  }
+
+  Future<void> _handleLogout(BuildContext context) async {
+    final S translations = S.of(context);
+    await _tokenStorage.clearTokens();
+    _loginBloc.add(const LoginStatusReset());
+    if (!context.mounted) {
+      return;
+    }
+    ThToast.success(
+      context: context,
+      title: translations.auth_success_title,
+      description: translations.home_logout_success,
+      applyBlurEffect: false,
+    );
+    Navigator.of(context).pushNamedAndRemoveUntil(
+      RouteNames.signIn,
+      (Route<dynamic> route) => false,
+    );
+  }
+
+  Widget _buildLogEmotionButton(BuildContext context, S translations) {
+    return SizedBox(
+      width: double.infinity,
+      child: ElevatedButton.icon(
+        onPressed: () {
+          Navigator.of(context).pushNamed(RouteNames.addEmotion);
+        },
+        icon: const Icon(Icons.add_circle_outline_rounded, size: 20),
+        label: Text(
+          translations.home_log_emotion_button,
+          style: const TextStyle(fontSize: 16, fontWeight: FontWeight.w600),
+        ),
+        style: ElevatedButton.styleFrom(
+          minimumSize: const Size(double.infinity, 56),
+          backgroundColor: AppColors.primary,
+          elevation: 0,
+          shadowColor: const Color(0x665FA9D3),
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(24),
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget _buildTodayMoodSection(
+    BuildContext context,
+    TodayMoodSummary mood,
+    S translations,
+  ) {
+    final Color accentColor = _colorFromHex(mood.colorHex, AppColors.primary);
+    final bool isEmptyMood = mood.totalEntries == 0;
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: <Widget>[
+        Row(
+          children: <Widget>[
+            Expanded(
+              child: Text(
+                translations.home_today_mood_title,
+                style: const TextStyle(
+                  fontSize: 18,
+                  fontWeight: FontWeight.w700,
+                  color: Color(0xFF0F172A),
+                ),
+              ),
+            ),
+            Container(
+              padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+              decoration: BoxDecoration(
+                color: _statusBackgroundColor(mood.statusLabel),
+                borderRadius: BorderRadius.circular(999),
+              ),
+              child: Text(
+                _localizedMoodStatus(
+                  translations,
+                  mood.statusLabel,
+                ).toUpperCase(),
+                style: TextStyle(
+                  fontSize: 12,
+                  fontWeight: FontWeight.w700,
+                  color: _statusForegroundColor(mood.statusLabel),
+                ),
+              ),
+            ),
+          ],
+        ),
+        const SizedBox(height: 16),
+        Row(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: <Widget>[
+            Container(
+              width: 56,
+              height: 56,
+              decoration: BoxDecoration(
+                color: accentColor.withValues(alpha: 0.12),
+                shape: BoxShape.circle,
+              ),
+              child: Icon(
+                _emotionIcon(mood.iconKey, mood.primaryEmotionName),
+                color: accentColor,
+                size: 30,
+              ),
+            ),
+            const SizedBox(width: 16),
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: <Widget>[
+                  Text(
+                    isEmptyMood
+                        ? translations.home_today_empty_title
+                        : mood.primaryEmotionName,
+                    style: const TextStyle(
+                      fontSize: 16,
+                      fontWeight: FontWeight.w600,
+                      color: AppColors.textPrimary,
+                    ),
+                  ),
+                  const SizedBox(height: 4),
+                  Text(
+                    isEmptyMood
+                        ? translations.home_today_empty_description
+                        : translations.home_today_entries_description(
+                            mood.totalEntries,
+                            _localizedEnergyLevel(
+                              translations,
+                              mood.energyLevelKey,
+                            ),
+                          ),
+                    style: const TextStyle(
+                      fontSize: 14,
+                      height: 1.45,
+                      color: AppColors.textSecondary,
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ],
+        ),
+        const SizedBox(height: 16),
+        SizedBox(
+          width: double.infinity,
+          child: FilledButton(
+            onPressed: () => setState(() => _selectedIndex = 2),
+            style: FilledButton.styleFrom(
+              backgroundColor: const Color(0xFFF3F6F8),
+              foregroundColor: AppColors.primary,
+              elevation: 0,
+              padding: const EdgeInsets.symmetric(vertical: 12),
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(16),
+              ),
+            ),
+            child: Text(translations.home_view_detailed_analysis),
           ),
         ),
       ],
     );
   }
 
-  Widget _buildMainButton() {
-    return SizedBox(
-      width: double.infinity,
-      child: ElevatedButton.icon(
-        style: ElevatedButton.styleFrom(
-          padding: const EdgeInsets.symmetric(vertical: 16),
-          backgroundColor: AppColors.primary,
-          foregroundColor: Colors.white,
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(20),
+  Widget _buildWeeklyOverviewSection(
+    BuildContext context,
+    WeeklyOverview overview,
+    S translations,
+  ) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: <Widget>[
+        Text(
+          translations.home_weekly_overview_title,
+          style: const TextStyle(
+            fontSize: 18,
+            fontWeight: FontWeight.w700,
+            color: Color(0xFF0F172A),
           ),
-          elevation: 0,
         ),
-        onPressed: () {},
-        icon: const Icon(Icons.add_circle_outline_rounded),
-        label: Text(
-          S.of(context).home_log_emotion_button,
-          style: const TextStyle(fontSize: 16, fontWeight: FontWeight.w600),
+        const SizedBox(height: 20),
+        SizedBox(
+          height: 120,
+          child: Row(
+            crossAxisAlignment: CrossAxisAlignment.end,
+            children: overview.bars.map((WeeklyOverviewBar bar) {
+              final double barHeight = math.max(24, bar.value);
+              return Expanded(
+                child: Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 3),
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.end,
+                    children: <Widget>[
+                      AnimatedContainer(
+                        duration: const Duration(milliseconds: 350),
+                        curve: Curves.easeOutCubic,
+                        height: barHeight,
+                        decoration: BoxDecoration(
+                          color: bar.isHighlighted
+                              ? AppColors.primary.withValues(alpha: 0.9)
+                              : AppColors.primary.withValues(alpha: 0.22),
+                          borderRadius: const BorderRadius.only(
+                            topLeft: Radius.circular(16),
+                            topRight: Radius.circular(16),
+                          ),
+                        ),
+                      ),
+                      const SizedBox(height: 12),
+                      Text(
+                        bar.label,
+                        style: const TextStyle(
+                          fontSize: 10,
+                          fontWeight: FontWeight.w500,
+                          letterSpacing: 0.5,
+                          color: Color(0xFF94A3B8),
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              );
+            }).toList(),
+          ),
         ),
-      ),
+        const SizedBox(height: 16),
+        Text(
+          overview.insightText,
+          style: const TextStyle(
+            fontSize: 14,
+            height: 1.45,
+            color: AppColors.textSecondary,
+          ),
+        ),
+      ],
     );
   }
 
-  Widget _buildTodayMoodCard(S translations) {
-    return Container(
-      width: double.infinity,
-      padding: const EdgeInsets.all(18),
-      decoration: _cardDecoration(),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: <Widget>[
-          Row(
-            children: <Widget>[
-              Expanded(
-                child: Text(
-                  translations.home_today_mood_title,
-                  maxLines: 1,
-                  overflow: TextOverflow.ellipsis,
-                  style: const TextStyle(
-                    fontSize: 24,
-                    fontWeight: FontWeight.w700,
-                    color: AppColors.textPrimary,
+  Widget _buildHabitsSection(BuildContext context, List<HabitOverview> habits) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: <Widget>[
+        Text(
+          S.of(context).home_daily_habits_title,
+          style: const TextStyle(
+            fontSize: 18,
+            fontWeight: FontWeight.w700,
+            color: Color(0xFF0F172A),
+          ),
+        ),
+        const SizedBox(height: 16),
+        if (habits.isEmpty)
+          Text(
+            S.of(context).home_empty_habits_message,
+            style: const TextStyle(
+              fontSize: 14,
+              color: AppColors.textSecondary,
+            ),
+          )
+        else
+          ...habits.map((HabitOverview habit) {
+            final Color accent = _colorFromHex(
+              habit.colorHex,
+              AppColors.primary,
+            );
+            return Padding(
+              padding: const EdgeInsets.only(bottom: 14),
+              child: Row(
+                children: <Widget>[
+                  Icon(
+                    _habitIcon(habit.iconKey, habit.name),
+                    color: accent,
+                    size: 18,
                   ),
+                  const SizedBox(width: 12),
+                  Expanded(
+                    child: Text(
+                      habit.name,
+                      style: const TextStyle(
+                        fontSize: 14,
+                        color: Color(0xFF0F172A),
+                      ),
+                    ),
+                  ),
+                  Icon(
+                    habit.isCompletedToday
+                        ? Icons.check_circle_rounded
+                        : Icons.radio_button_unchecked_rounded,
+                    color: habit.isCompletedToday
+                        ? AppColors.primary
+                        : const Color(0xFFD1D5DB),
+                    size: 20,
+                  ),
+                ],
+              ),
+            );
+          }),
+      ],
+    );
+  }
+
+  Widget _buildManagerIaButton(BuildContext context) {
+    final S translations = S.of(context);
+    return Material(
+      color: Colors.transparent,
+      child: InkWell(
+        onTap: () => _showSoonToast(context),
+        borderRadius: BorderRadius.circular(999),
+        child: Container(
+          width: 146,
+          height: 56,
+          decoration: BoxDecoration(
+            color: AppColors.primary,
+            borderRadius: BorderRadius.circular(999),
+            border: Border.all(color: const Color(0xFFF6F7F8), width: 4),
+            boxShadow: const <BoxShadow>[
+              BoxShadow(
+                color: Color(0x665FA9D3),
+                blurRadius: 18,
+                offset: Offset(0, 8),
+              ),
+            ],
+          ),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: <Widget>[
+              Text(
+                translations.home_manager_ai,
+                style: const TextStyle(
+                  fontSize: 16,
+                  fontWeight: FontWeight.w600,
+                  color: Colors.white,
                 ),
               ),
               const SizedBox(width: 8),
-              Container(
-                padding: const EdgeInsets.symmetric(
-                  horizontal: 10,
-                  vertical: 5,
-                ),
-                decoration: BoxDecoration(
-                  color: const Color(0xFFCEEFDA),
-                  borderRadius: BorderRadius.circular(14),
-                ),
-                child: Text(
-                  translations.home_mood_status_stable,
-                  style: const TextStyle(
-                    color: Color(0xFF0F9B44),
-                    fontSize: 12,
-                    fontWeight: FontWeight.w700,
-                  ),
-                ),
+              const Icon(
+                Icons.chat_bubble_rounded,
+                color: Colors.white,
+                size: 22,
               ),
             ],
           ),
-          const SizedBox(height: 16),
-          Row(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: <Widget>[
-              Container(
-                width: 54,
-                height: 54,
-                decoration: const BoxDecoration(
-                  color: Color(0xFFE7EDF1),
-                  shape: BoxShape.circle,
-                ),
-                child: const Icon(
-                  Icons.sentiment_satisfied_alt,
-                  color: AppColors.primary,
-                  size: 30,
-                ),
-              ),
-              const SizedBox(width: 12),
-              Expanded(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: <Widget>[
-                    Text(
-                      translations.home_mood_primary_title,
-                      style: const TextStyle(
-                        fontSize: 20,
-                        fontWeight: FontWeight.w700,
-                        color: AppColors.textPrimary,
-                      ),
-                    ),
-                    const SizedBox(height: 4),
-                    Text(
-                      translations.home_mood_primary_description,
-                      style: const TextStyle(
-                        fontSize: 14,
-                        height: 1.4,
-                        color: AppColors.textSecondary,
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-            ],
-          ),
-          const SizedBox(height: 14),
-          SizedBox(
-            width: double.infinity,
-            child: FilledButton(
-              style: FilledButton.styleFrom(
-                backgroundColor: const Color(0xFFE8EEF2),
-                foregroundColor: AppColors.primary,
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(16),
-                ),
-              ),
-              onPressed: () {},
-              child: Text(translations.home_view_detailed_analysis),
-            ),
-          ),
-        ],
+        ),
       ),
     );
   }
 
-  Widget _buildWeeklyCard(S translations) {
-    final List<String> weekLabels = <String>[
-      translations.home_weekday_mon,
-      translations.home_weekday_tue,
-      translations.home_weekday_wed,
-      translations.home_weekday_thu,
-      translations.home_weekday_fri,
-      translations.home_weekday_sat,
-      translations.home_weekday_sun,
-    ];
-
-    return Container(
-      width: double.infinity,
-      padding: const EdgeInsets.fromLTRB(18, 20, 18, 18),
-      decoration: _cardDecoration(),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: <Widget>[
-          Text(
-            translations.home_weekly_overview_title,
-            style: const TextStyle(
-              fontSize: 28,
-              fontWeight: FontWeight.w700,
-              color: AppColors.textPrimary,
+  Widget _buildRecentEntriesSection(
+    BuildContext context,
+    List<RecentEmotionEntry> entries,
+  ) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: <Widget>[
+        Row(
+          children: <Widget>[
+            Expanded(
+              child: Text(
+                S.of(context).home_recent_entries_title,
+                style: const TextStyle(
+                  fontSize: 18,
+                  fontWeight: FontWeight.w700,
+                  color: Color(0xFF0F172A),
+                ),
+              ),
             ),
-          ),
-          const SizedBox(height: 18),
-          SizedBox(
-            height: 170,
-            child: Row(
-              crossAxisAlignment: CrossAxisAlignment.end,
-              children: List<Widget>.generate(_weeklyEnergy.length, (
-                int index,
-              ) {
-                final double value = _weeklyEnergy[index];
-                final bool isWeekend = index >= 5;
-                return Expanded(
-                  child: Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 4),
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.end,
+            TextButton(
+              onPressed: () => _showSoonToast(context),
+              child: Text(
+                S.of(context).home_see_all,
+                style: const TextStyle(
+                  fontSize: 14,
+                  fontWeight: FontWeight.w600,
+                  color: AppColors.primary,
+                ),
+              ),
+            ),
+          ],
+        ),
+        const SizedBox(height: 8),
+        if (entries.isEmpty)
+          Padding(
+            padding: const EdgeInsets.only(top: 8),
+            child: Text(
+              S.of(context).home_empty_entries_message,
+              style: const TextStyle(
+                fontSize: 14,
+                color: AppColors.textSecondary,
+              ),
+            ),
+          )
+        else
+          ...entries.map((RecentEmotionEntry entry) {
+            final Color accent = _colorFromHex(
+              entry.colorHex,
+              AppColors.primary,
+            );
+            return Padding(
+              padding: const EdgeInsets.only(bottom: 12),
+              child: Material(
+                color: Colors.white,
+                borderRadius: BorderRadius.circular(24),
+                child: InkWell(
+                  borderRadius: BorderRadius.circular(24),
+                  onTap: () {
+                    Navigator.of(context).pushNamed(RouteNames.emotionDetail);
+                  },
+                  child: Container(
+                    padding: const EdgeInsets.all(16),
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(24),
+                      border: Border.all(color: const Color(0xFFF1F5F9)),
+                    ),
+                    child: Row(
                       children: <Widget>[
-                        AnimatedContainer(
-                          duration: const Duration(milliseconds: 350),
-                          curve: Curves.easeOutCubic,
-                          height: value,
+                        Container(
+                          width: 40,
+                          height: 40,
                           decoration: BoxDecoration(
-                            color: isWeekend
-                                ? AppColors.primary
-                                : const Color(0xFF9DC7DF),
-                            borderRadius: BorderRadius.circular(16),
+                            color: accent.withValues(alpha: 0.12),
+                            shape: BoxShape.circle,
+                          ),
+                          child: Icon(
+                            _emotionIcon(entry.iconKey, entry.emotionName),
+                            color: accent,
+                            size: 22,
                           ),
                         ),
-                        const SizedBox(height: 10),
-                        Text(
-                          weekLabels[index],
-                          style: const TextStyle(
-                            fontSize: 11,
-                            color: AppColors.textSecondary,
-                            fontWeight: FontWeight.w600,
+                        const SizedBox(width: 16),
+                        Expanded(
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: <Widget>[
+                              Text(
+                                '${entry.emotionName} • ${_entryTimeLabel(context, entry.loggedAt)}',
+                                style: const TextStyle(
+                                  fontSize: 14,
+                                  fontWeight: FontWeight.w600,
+                                  color: Color(0xFF0F172A),
+                                ),
+                              ),
+                              const SizedBox(height: 2),
+                              Text(
+                                _entryPreview(entry.note, context),
+                                maxLines: 1,
+                                overflow: TextOverflow.ellipsis,
+                                style: const TextStyle(
+                                  fontSize: 12,
+                                  color: AppColors.textSecondary,
+                                ),
+                              ),
+                            ],
                           ),
+                        ),
+                        const SizedBox(width: 8),
+                        const Icon(
+                          Icons.chevron_right_rounded,
+                          color: Color(0xFFCBD5E1),
                         ),
                       ],
                     ),
                   ),
-                );
-              }),
-            ),
-          ),
-          const SizedBox(height: 12),
-          Text(
-            translations.home_weekly_quote,
-            style: const TextStyle(
-              fontSize: 17,
-              fontStyle: FontStyle.italic,
-              color: AppColors.textSecondary,
-            ),
-          ),
-          const SizedBox(height: 14),
-          Align(
-            alignment: Alignment.centerRight,
-            child: Container(
-              width: 56,
-              height: 56,
-              decoration: const BoxDecoration(
-                color: AppColors.primary,
-                shape: BoxShape.circle,
+                ),
               ),
-              child: IconButton(
-                onPressed: () {},
-                icon: const Icon(Icons.edit_note_rounded, color: Colors.white),
-              ),
-            ),
-          ),
-        ],
-      ),
+            );
+          }),
+      ],
     );
   }
 
-  Widget _buildBottomNav() {
+  Widget _buildBottomArea(BuildContext context) {
     final S translations = S.of(context);
     final List<_NavItem> items = <_NavItem>[
-      _NavItem(label: translations.home_nav_home, icon: Icons.home_rounded),
+      _NavItem(label: translations.home_nav_home, icon: Icons.home_outlined),
       _NavItem(
         label: translations.home_nav_history,
-        icon: Icons.history_rounded,
+        icon: Icons.history_toggle_off_rounded,
       ),
       _NavItem(
         label: translations.home_nav_analytics,
-        icon: Icons.auto_graph_rounded,
+        icon: Icons.insights_outlined,
       ),
       _NavItem(
         label: translations.home_nav_habits,
-        icon: Icons.calendar_today_rounded,
+        icon: Icons.calendar_today_outlined,
       ),
       _NavItem(
         label: translations.home_nav_profile,
@@ -430,55 +722,310 @@ class _HomePageState extends State<HomePage> {
       ),
     ];
 
-    return Container(
-      padding: const EdgeInsets.symmetric(vertical: 10),
-      child: Row(
-        children: List<Widget>.generate(items.length, (int index) {
-          final bool selected = _selectedIndex == index;
-          final Color color = selected
-              ? AppColors.primary
-              : const Color(0xFF8C96A5);
-          return Expanded(
-            child: InkWell(
-              borderRadius: BorderRadius.circular(12),
-              onTap: () => setState(() => _selectedIndex = index),
-              child: Padding(
-                padding: const EdgeInsets.symmetric(vertical: 4),
-                child: Column(
-                  mainAxisSize: MainAxisSize.min,
-                  children: <Widget>[
-                    Icon(items[index].icon, color: color, size: 20),
-                    const SizedBox(height: 4),
-                    Text(
-                      items[index].label,
-                      style: TextStyle(
-                        fontSize: 10,
-                        fontWeight: FontWeight.w700,
-                        letterSpacing: 0.3,
-                        color: color,
+    return SafeArea(
+      top: false,
+      child: Container(
+        decoration: const BoxDecoration(
+          color: Colors.white,
+          border: Border(top: BorderSide(color: Color(0xFFE2E8F0))),
+          boxShadow: <BoxShadow>[
+            BoxShadow(
+              color: Color(0x1A000000),
+              blurRadius: 20,
+              offset: Offset(0, -6),
+            ),
+          ],
+        ),
+        padding: const EdgeInsets.fromLTRB(16, 12, 16, 12),
+        child: Row(
+          children: List<Widget>.generate(items.length, (int index) {
+            final bool isSelected = _selectedIndex == index;
+            final Color color = isSelected
+                ? AppColors.primary
+                : const Color(0xFF94A3B8);
+            return Expanded(
+              child: InkWell(
+                onTap: () => _onBottomNavTap(index),
+                borderRadius: BorderRadius.circular(16),
+                child: Padding(
+                  padding: const EdgeInsets.symmetric(vertical: 4),
+                  child: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    children: <Widget>[
+                      Icon(items[index].icon, size: 20, color: color),
+                      const SizedBox(height: 4),
+                      Text(
+                        items[index].label,
+                        textAlign: TextAlign.center,
+                        style: TextStyle(
+                          fontSize: 10,
+                          fontWeight: FontWeight.w700,
+                          letterSpacing: -0.3,
+                          color: color,
+                        ),
                       ),
-                    ),
-                  ],
+                    ],
+                  ),
                 ),
               ),
-            ),
-          );
-        }),
+            );
+          }),
+        ),
       ),
     );
   }
 
-  BoxDecoration _cardDecoration({double radius = 24}) {
-    return BoxDecoration(
-      color: Colors.white,
-      borderRadius: BorderRadius.circular(radius),
-      boxShadow: const <BoxShadow>[
-        BoxShadow(
-          color: Color(0x14000000),
-          blurRadius: 18,
-          offset: Offset(0, 8),
+  void _onBottomNavTap(int index) {
+    if (index == 1) {
+      Navigator.of(context).pushNamed(RouteNames.dailyMood);
+      return;
+    }
+    if (index == 4) {
+      Navigator.of(context).pushNamed(RouteNames.profile);
+      return;
+    }
+    setState(() => _selectedIndex = index);
+    if (index != 0) {
+      _showSoonToast(context);
+      setState(() => _selectedIndex = 0);
+    }
+  }
+
+  String _greetingForTime(BuildContext context, String userName) {
+    final S translations = S.of(context);
+    final int hour = DateTime.now().hour;
+    return switch (hour) {
+      < 12 => translations.home_greeting_morning(userName),
+      < 18 => translations.home_greeting_afternoon(userName),
+      _ => translations.home_greeting_evening(userName),
+    };
+  }
+
+  String _subtitleForLocale(BuildContext context) {
+    return S.of(context).home_subtitle_default;
+  }
+
+  String _entryPreview(String? note, BuildContext context) {
+    if (note != null && note.trim().isNotEmpty) {
+      return note.trim();
+    }
+    return S.of(context).home_entry_no_note;
+  }
+
+  String _entryTimeLabel(BuildContext context, DateTime dateTime) {
+    final DateTime now = DateTime.now();
+    final DateTime today = DateTime(now.year, now.month, now.day);
+    final DateTime date = DateTime(dateTime.year, dateTime.month, dateTime.day);
+    if (date == today) {
+      return MaterialLocalizations.of(context).formatTimeOfDay(
+        TimeOfDay.fromDateTime(dateTime),
+        alwaysUse24HourFormat: false,
+      );
+    }
+    if (date == today.subtract(const Duration(days: 1))) {
+      return S.of(context).home_entry_yesterday;
+    }
+    return '${date.month}/${date.day}';
+  }
+
+  String _localizedMoodStatus(S translations, String statusLabel) {
+    switch (statusLabel.toLowerCase()) {
+      case 'new_day':
+        return translations.home_status_new_day;
+      case 'elevated':
+        return translations.home_status_elevated;
+      case 'gentle':
+        return translations.home_status_gentle;
+      default:
+        return translations.home_mood_status_stable;
+    }
+  }
+
+  String _localizedEnergyLevel(S translations, String? energyLevelKey) {
+    switch (energyLevelKey) {
+      case 'high':
+        return translations.home_energy_high;
+      case 'low':
+        return translations.home_energy_low;
+      default:
+        return translations.home_energy_balanced;
+    }
+  }
+
+  Color _statusBackgroundColor(String statusLabel) {
+    switch (statusLabel.toLowerCase()) {
+      case 'elevated':
+        return const Color(0xFFFEE2E2);
+      case 'gentle':
+        return const Color(0xFFFEF3C7);
+      default:
+        return const Color(0xFFDCFCE7);
+    }
+  }
+
+  Color _statusForegroundColor(String statusLabel) {
+    switch (statusLabel.toLowerCase()) {
+      case 'elevated':
+        return const Color(0xFFDC2626);
+      case 'gentle':
+        return const Color(0xFFD97706);
+      default:
+        return const Color(0xFF16A34A);
+    }
+  }
+
+  Color _colorFromHex(String? hex, Color fallback) {
+    if (hex == null || hex.isEmpty) {
+      return fallback;
+    }
+    final String normalized = hex.replaceFirst('#', '');
+    if (normalized.length != 6) {
+      return fallback;
+    }
+    return Color(int.parse('FF$normalized', radix: 16));
+  }
+
+  IconData _emotionIcon(String? iconKey, String emotionName) {
+    final String value = '${iconKey ?? ''} ${emotionName.toLowerCase()}';
+    if (value.contains('joy') ||
+        value.contains('happy') ||
+        value.contains('feliz')) {
+      return Icons.wb_sunny_outlined;
+    }
+    if (value.contains('calm') ||
+        value.contains('peace') ||
+        value.contains('neutral')) {
+      return Icons.cloud_outlined;
+    }
+    if (value.contains('sad') || value.contains('triste')) {
+      return Icons.water_drop_outlined;
+    }
+    if (value.contains('angry') || value.contains('enoj')) {
+      return Icons.local_fire_department_outlined;
+    }
+    return Icons.mood_rounded;
+  }
+
+  IconData _habitIcon(String? iconKey, String habitName) {
+    final String value = '${iconKey ?? ''} ${habitName.toLowerCase()}';
+    if (value.contains('medit')) {
+      return Icons.self_improvement_rounded;
+    }
+    if (value.contains('water') || value.contains('hydr')) {
+      return Icons.water_drop_outlined;
+    }
+    if (value.contains('journal') || value.contains('write')) {
+      return Icons.menu_book_outlined;
+    }
+    if (value.contains('sleep')) {
+      return Icons.nightlight_round;
+    }
+    return Icons.checklist_rounded;
+  }
+
+  void _showSoonToast(BuildContext context) {
+    final S translations = S.of(context);
+    ThToast.info(
+      context: context,
+      title: 'MindTrack',
+      description: translations.home_section_soon_description,
+      applyBlurEffect: false,
+    );
+  }
+}
+
+class _SectionCard extends StatelessWidget {
+  const _SectionCard({required this.child});
+
+  final Widget child;
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      width: double.infinity,
+      padding: const EdgeInsets.all(20),
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(24),
+        border: Border.all(color: const Color(0xFFF1F5F9)),
+        boxShadow: const <BoxShadow>[
+          BoxShadow(
+            color: Color(0x0D0F172A),
+            blurRadius: 12,
+            offset: Offset(0, 4),
+          ),
+        ],
+      ),
+      child: child,
+    );
+  }
+}
+
+class _HeaderIconButton extends StatelessWidget {
+  const _HeaderIconButton({
+    required this.icon,
+    required this.onTap,
+    this.tooltip,
+  });
+
+  final IconData icon;
+  final VoidCallback onTap;
+  final String? tooltip;
+
+  @override
+  Widget build(BuildContext context) {
+    return Tooltip(
+      message: tooltip ?? '',
+      child: InkWell(
+        onTap: onTap,
+        borderRadius: BorderRadius.circular(999),
+        child: SizedBox(
+          width: 40,
+          height: 40,
+          child: Icon(icon, color: const Color(0xFF334155), size: 20),
         ),
-      ],
+      ),
+    );
+  }
+}
+
+class _HomeErrorState extends StatelessWidget {
+  const _HomeErrorState({required this.message, required this.onRetry});
+
+  final String message;
+  final Future<void> Function() onRetry;
+
+  @override
+  Widget build(BuildContext context) {
+    return Center(
+      child: Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 24),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: <Widget>[
+            const Icon(
+              Icons.cloud_off_rounded,
+              size: 52,
+              color: AppColors.textSecondary,
+            ),
+            const SizedBox(height: 16),
+            Text(
+              message,
+              textAlign: TextAlign.center,
+              style: const TextStyle(
+                fontSize: 15,
+                height: 1.5,
+                color: AppColors.textSecondary,
+              ),
+            ),
+            const SizedBox(height: 20),
+            ElevatedButton(
+              onPressed: onRetry,
+              child: Text(S.of(context).home_retry),
+            ),
+          ],
+        ),
+      ),
     );
   }
 }

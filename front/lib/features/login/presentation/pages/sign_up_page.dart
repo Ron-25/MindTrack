@@ -1,16 +1,17 @@
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:form_builder_validators/form_builder_validators.dart';
 import 'package:mind_track/app/generated/l10n.dart';
 import 'package:mind_track/app/injector.dart';
+import 'package:mind_track/app/routes/route_names.dart';
 import 'package:mind_track/app/theme/app_colors.dart';
 import 'package:mind_track/core/utils/toast_utils.dart';
-import 'package:mind_track/features/home/presentation/pages/home_page.dart';
 import 'package:mind_track/features/login/presentation/blocs/login_bloc.dart';
 import 'package:mind_track/features/login/presentation/blocs/login_event.dart';
-import 'package:mind_track/features/login/presentation/pages/sign_in_page.dart';
+import 'package:mind_track/features/login/presentation/blocs/login_state.dart';
 import 'package:mind_track/features/login/presentation/widgets/email_text_field.dart';
 import 'package:mind_track/features/login/presentation/widgets/password_text_field.dart';
 import 'package:mind_track/shared/widget/app_circle_icon.dart';
@@ -33,7 +34,26 @@ class _SignUpState extends State<SignUp> {
   @override
   Widget build(BuildContext context) {
     final S translations = S.of(context);
-    return AnnotatedRegion<SystemUiOverlayStyle>(
+    return BlocListener<LoginBloc, LoginState>(
+      bloc: loginBloc,
+      listenWhen: (LoginState previous, LoginState current) =>
+          previous.signUp != current.signUp ||
+          previous.errorMessage != current.errorMessage,
+      listener: (BuildContext context, LoginState state) {
+        if (state.signUp) {
+          Navigator.of(context).pushReplacementNamed(RouteNames.home);
+        }
+        if (state.isFailure && state.errorMessage != null) {
+          ThToast.error(
+            context: context,
+            title: translations.error_title,
+            description: state.errorMessage!,
+            margin: const EdgeInsets.only(left: 60, right: 20),
+            applyBlurEffect: false,
+          );
+        }
+      },
+      child: AnnotatedRegion<SystemUiOverlayStyle>(
       value: const SystemUiOverlayStyle(
         statusBarColor: Colors.transparent,
         statusBarIconBrightness: Brightness.dark,
@@ -273,32 +293,40 @@ class _SignUpState extends State<SignUp> {
                               ],
                             ),
                             const SizedBox(height: 24),
-                            AppPrimaryButton(
-                              text: translations.create_my_account,
-                              onPressed: () {
-                                if (!_acceptTerms) {
-                                  ThToast.error(
-                                    context: context,
-                                    title: translations.error_title,
-                                    description: translations.accept_terms_error,
-                                    margin: const EdgeInsets.only(left: 60, right: 20),
-                                    applyBlurEffect: false,
-                                  );
-                                  return;
-                                }
-                                if (_formKey.currentState?.saveAndValidate() ??
-                                    false) {
-                                  loginBloc.add(const SignUpSuccess());
-                                  Navigator.pushReplacement(
-                                    context,
-                                    MaterialPageRoute<HomePage>(
-                                      builder: (BuildContext context) => const HomePage(),
-                                    ),
-                                  );
-                                }
-                              },
-                              icon: Icons.arrow_forward,
-                              padding: EdgeInsets.zero,
+                            BlocBuilder<LoginBloc, LoginState>(
+                              bloc: loginBloc,
+                              buildWhen: (LoginState prev, LoginState curr) =>
+                                  prev.isSubmitting != curr.isSubmitting,
+                              builder: (BuildContext context, LoginState state) =>
+                                AppPrimaryButton(
+                                  text: translations.create_my_account,
+                                  isLoading: state.isSubmitting,
+                                  onPressed: () {
+                                    if (!_acceptTerms) {
+                                      ThToast.error(
+                                        context: context,
+                                        title: translations.error_title,
+                                        description: translations.accept_terms_error,
+                                        margin: const EdgeInsets.only(left: 60, right: 20),
+                                        applyBlurEffect: false,
+                                      );
+                                      return;
+                                    }
+                                    if (_formKey.currentState?.saveAndValidate() ?? false) {
+                                      final Map<String, dynamic> formData =
+                                          _formKey.currentState!.value;
+                                      loginBloc.add(
+                                        SignUpSubmitted(
+                                          name: (formData['full_name'] as String?) ?? '',
+                                          email: (formData['email'] as String?) ?? '',
+                                          password: (formData['password'] as String?) ?? '',
+                                        ),
+                                      );
+                                    }
+                                  },
+                                  icon: Icons.arrow_forward,
+                                  padding: EdgeInsets.zero,
+                                ),
                             ),
                             const SizedBox(height: 20),
                             Row(
@@ -375,13 +403,7 @@ class _SignUpState extends State<SignUp> {
                           ),
                           GestureDetector(
                             onTap: () {
-                              Navigator.push(
-                                context,
-                                MaterialPageRoute<SignInPage>(
-                                  builder: (BuildContext context) =>
-                                      const SignInPage(),
-                                ),
-                              );
+                              Navigator.of(context).pushNamed(RouteNames.signIn);
                             },
                             child: Text(
                               translations.log_in,
@@ -402,6 +424,7 @@ class _SignUpState extends State<SignUp> {
             ),
           ),
         ),
+      ),
       ),
     );
   }

@@ -1,0 +1,30 @@
+# ================================================================
+# MindTrack API — Dependencias de producción
+# Instalar con: pip install -r requirements.txt
+# ================================================================
+
+# Framework
+fastapi==0.135.2
+uvicorn[standard]==0.34.3
+
+# Validación
+pydantic[email]==2.12.5
+pydantic-settings==2.9.1
+
+# Base de datos
+sqlalchemy==2.0.41
+asyncpg==0.31.0
+alembic==1.16.1
+
+# Autenticación
+PyJWT==2.12.1
+pwdlib[argon2]==0.3.0
+
+# Redis
+redis==5.3.0
+
+# Variables de entorno
+python-dotenv==1.2.2
+
+# Tareas asíncronas
+celery==5.5.2

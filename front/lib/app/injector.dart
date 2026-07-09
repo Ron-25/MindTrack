@@ -9,6 +9,21 @@ import 'package:mind_track/features/daily_mood/data/datasources/daily_mood_local
 import 'package:mind_track/features/daily_mood/data/repositories/daily_mood_repository_impl.dart';
 import 'package:mind_track/features/daily_mood/domain/repositories/daily_mood_repository.dart';
 import 'package:mind_track/features/daily_mood/presentation/viewmodel/daily_mood_viewmodel.dart';
+import 'package:mind_track/features/analytics/data/datasources/analytics_remote_datasource.dart';
+import 'package:mind_track/features/analytics/data/repositories/analytics_repository_impl.dart';
+import 'package:mind_track/features/analytics/domain/repositories/analytics_repository.dart';
+import 'package:mind_track/features/analytics/presentation/cubit/analytics_cubit.dart';
+import 'package:mind_track/features/coach/data/datasources/coach_remote_datasource.dart';
+import 'package:mind_track/features/coach/data/repositories/coach_repository_impl.dart';
+import 'package:mind_track/features/coach/domain/repositories/coach_repository.dart';
+import 'package:mind_track/features/emotion_tracker/data/datasources/emotion_remote_data_source.dart';
+import 'package:mind_track/features/emotion_tracker/data/repositories/emotion_repository_impl.dart';
+import 'package:mind_track/features/emotion_tracker/domain/repositories/emotion_repository.dart';
+import 'package:mind_track/features/emotion_tracker/presentation/cubit/emotion_cubit.dart';
+import 'package:mind_track/features/habits/data/datasources/habit_remote_datasource.dart';
+import 'package:mind_track/features/habits/data/repositories/habit_repository_impl.dart';
+import 'package:mind_track/features/habits/domain/repositories/habit_repository.dart';
+import 'package:mind_track/features/habits/presentation/cubit/habit_cubit.dart';
 import 'package:mind_track/features/home/data/datasources/home_remote_datasource.dart';
 import 'package:mind_track/features/home/data/repositories/home_repository_impl.dart';
 import 'package:mind_track/features/home/domain/repositories/home_repository.dart';
@@ -88,6 +103,30 @@ class Injector {
     registerLazySingleton<HomeRemoteDataSource>(
       () => HomeRemoteDataSourceImpl(Injector.get<ApiClient>()),
     );
+    registerLazySingleton<AnalyticsRemoteDataSource>(
+      () => AnalyticsRemoteDataSourceImpl(Injector.get<ApiClient>()),
+    );
+    registerLazySingleton<CoachRemoteDataSource>(
+      () => CoachRemoteDataSourceImpl(Injector.get<ApiClient>()),
+    );
+    registerLazySingleton<EmotionRemoteDataSource>(
+      () => EmotionRemoteDataSourceImpl(Injector.get<ApiClient>()),
+    );
+    registerLazySingleton<HabitRemoteDataSource>(
+      () => HabitRemoteDataSourceImpl(Injector.get<ApiClient>()),
+    );
+    registerLazySingleton<AnalyticsRepository>(
+      () => AnalyticsRepositoryImpl(Injector.get<AnalyticsRemoteDataSource>()),
+    );
+    registerLazySingleton<CoachRepository>(
+      () => CoachRepositoryImpl(Injector.get<CoachRemoteDataSource>()),
+    );
+    registerLazySingleton<EmotionRepository>(
+      () => EmotionRepositoryImpl(Injector.get<EmotionRemoteDataSource>()),
+    );
+    registerLazySingleton<HabitRepository>(
+      () => HabitRepositoryImpl(Injector.get<HabitRemoteDataSource>()),
+    );
     registerLazySingleton<HomeRepository>(
       () => HomeRepositoryImpl(Injector.get<HomeRemoteDataSource>()),
     );
@@ -115,6 +154,17 @@ class Injector {
     );
     registerFactory<ProfileCubit>(
       () => ProfileCubit(profileRepository: Injector.get<ProfileRepository>()),
+    );
+    registerFactory<EmotionCubit>(
+      () => EmotionCubit(emotionRepository: Injector.get<EmotionRepository>()),
+    );
+    registerFactory<AnalyticsCubit>(
+      () => AnalyticsCubit(
+        analyticsRepository: Injector.get<AnalyticsRepository>(),
+      ),
+    );
+    registerFactory<HabitCubit>(
+      () => HabitCubit(habitRepository: Injector.get<HabitRepository>()),
     );
     registerFactory<DailyMoodViewModel>(
       () => DailyMoodViewModel(Injector.get<DailyMoodRepository>()),

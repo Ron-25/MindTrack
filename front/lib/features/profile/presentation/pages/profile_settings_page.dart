@@ -41,117 +41,171 @@ class _ProfileSettingsPageState extends State<ProfileSettingsPage> {
       backgroundColor: const Color(0xFFF6F7F8),
       bottomNavigationBar: _buildBottomArea(context),
       body: SafeArea(
-        child: BlocBuilder<ProfileCubit, ProfileState>(
+        child: BlocListener<ProfileCubit, ProfileState>(
           bloc: _profileCubit,
-          builder: (BuildContext context, ProfileState state) {
-            if (state.isLoading && state.profile == null) {
-              return const Center(child: CircularProgressIndicator());
-            }
-
-            if (state.errorMessage != null && state.profile == null) {
-              return _ProfileErrorState(
-                message: state.errorMessage!,
-                onRetry: _profileCubit.loadProfile,
+          listenWhen: (ProfileState previous, ProfileState current) {
+            return previous.errorMessage != current.errorMessage ||
+                previous.successMessage != current.successMessage;
+          },
+          listener: (BuildContext context, ProfileState state) {
+            if (state.errorMessage != null) {
+              ThToast.error(
+                context: context,
+                title: 'MindTrack',
+                description: state.errorMessage!,
+                applyBlurEffect: false,
               );
+              _profileCubit.clearFeedback();
+              return;
             }
+            if (state.successMessage != null) {
+              ThToast.success(
+                context: context,
+                title: 'MindTrack',
+                description: state.successMessage!,
+                applyBlurEffect: false,
+              );
+              _profileCubit.clearFeedback();
+            }
+          },
+          child: BlocBuilder<ProfileCubit, ProfileState>(
+            bloc: _profileCubit,
+            builder: (BuildContext context, ProfileState state) {
+              if (state.isLoading && state.profile == null) {
+                return const Center(child: CircularProgressIndicator());
+              }
 
-            final ProfileSettingsData profile = state.profile!;
-            return RefreshIndicator(
-              color: AppColors.primary,
-              onRefresh: _profileCubit.loadProfile,
-              child: CustomScrollView(
-                physics: const AlwaysScrollableScrollPhysics(),
-                slivers: <Widget>[
-                  SliverToBoxAdapter(
-                    child: _buildHeader(context, translations),
-                  ),
-                  SliverPadding(
-                    padding: const EdgeInsets.fromLTRB(16, 24, 16, 120),
-                    sliver: SliverList(
-                      delegate: SliverChildListDelegate(<Widget>[
-                        _buildProfileHero(context, profile),
-                        const SizedBox(height: 28),
-                        _buildSectionLabel(
-                          translations.profile_account_settings,
+              if (state.errorMessage != null && state.profile == null) {
+                return _ProfileErrorState(
+                  message: state.errorMessage!,
+                  onRetry: _profileCubit.loadProfile,
+                );
+              }
+
+              final ProfileSettingsData profile = state.profile!;
+              return Stack(
+                children: <Widget>[
+                  RefreshIndicator(
+                    color: AppColors.primary,
+                    onRefresh: _profileCubit.loadProfile,
+                    child: CustomScrollView(
+                      physics: const AlwaysScrollableScrollPhysics(),
+                      slivers: <Widget>[
+                        SliverToBoxAdapter(
+                          child: _buildHeader(context, translations, profile),
                         ),
-                        const SizedBox(height: 12),
-                        _SettingsCard(
-                          children: <Widget>[
-                            _SettingsTile(
-                              icon: Icons.tune_rounded,
-                              title: translations.profile_preferences,
-                              onTap: _showSoonToast,
-                            ),
-                            _SettingsTile(
-                              icon: Icons.notifications_none_rounded,
-                              title: translations.profile_notification_settings,
-                              onTap: _openNotificationSettings,
-                            ),
-                            _SettingsTile(
-                              icon: Icons.language_rounded,
-                              title: translations.profile_language,
-                              trailingText: _languageLabel(
-                                translations,
-                                profile.languageCode,
+                        SliverPadding(
+                          padding: const EdgeInsets.fromLTRB(16, 24, 16, 120),
+                          sliver: SliverList(
+                            delegate: SliverChildListDelegate(<Widget>[
+                              _buildProfileHero(context, profile),
+                              const SizedBox(height: 28),
+                              _buildSectionLabel(
+                                translations.profile_account_settings,
                               ),
-                              onTap: _openLanguageSettings,
-                            ),
-                            _SettingsTile(
-                              icon: Icons.lock_outline_rounded,
-                              title: translations.profile_privacy_security,
-                              onTap: _openPrivacyPolicy,
-                              isLast: true,
-                            ),
-                          ],
+                              const SizedBox(height: 12),
+                              _SettingsCard(
+                                children: <Widget>[
+                                  _SettingsTile(
+                                    icon: Icons.tune_rounded,
+                                    title: translations.profile_preferences,
+                                    onTap: () =>
+                                        _editPreferences(context, profile),
+                                  ),
+                                  _SettingsTile(
+                                    icon: Icons.notifications_none_rounded,
+                                    title: translations
+                                        .profile_notification_settings,
+                                    trailingText: profile.notificationsEnabled
+                                        ? 'Activadas'
+                                        : 'Desactivadas',
+                                    onTap: () => _toggleNotifications(profile),
+                                  ),
+                                  _SettingsTile(
+                                    icon: Icons.language_rounded,
+                                    title: translations.profile_language,
+                                    trailingText: _languageLabel(
+                                      translations,
+                                      profile.languageCode,
+                                    ),
+                                    onTap: () =>
+                                        _editPreferences(context, profile),
+                                  ),
+                                  _SettingsTile(
+                                    icon: Icons.lock_outline_rounded,
+                                    title:
+                                        translations.profile_privacy_security,
+                                    onTap: _openPrivacyPolicy,
+                                    isLast: true,
+                                  ),
+                                ],
+                              ),
+                              const SizedBox(height: 28),
+                              OutlinedButton.icon(
+                                onPressed: state.isSaving
+                                    ? null
+                                    : () => _handleLogout(context),
+                                icon: const Icon(
+                                  Icons.logout_rounded,
+                                  color: Color(0xFFEF4444),
+                                ),
+                                label: Text(
+                                  translations.profile_logout,
+                                  style: const TextStyle(
+                                    color: Color(0xFFEF4444),
+                                    fontSize: 16,
+                                    fontWeight: FontWeight.w600,
+                                  ),
+                                ),
+                                style: OutlinedButton.styleFrom(
+                                  minimumSize: const Size(double.infinity, 58),
+                                  side: const BorderSide(
+                                    color: Color(0xFFFECACA),
+                                  ),
+                                  backgroundColor: const Color(0x80FEF2F2),
+                                  shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(24),
+                                  ),
+                                ),
+                              ),
+                              const SizedBox(height: 24),
+                              Center(
+                                child: Text(
+                                  translations.profile_footer_caption,
+                                  textAlign: TextAlign.center,
+                                  style: const TextStyle(
+                                    fontSize: 12,
+                                    color: Color(0xFF94A3B8),
+                                  ),
+                                ),
+                              ),
+                            ]),
+                          ),
                         ),
-                        const SizedBox(height: 28),
-                        OutlinedButton.icon(
-                          onPressed: () => _handleLogout(context),
-                          icon: const Icon(
-                            Icons.logout_rounded,
-                            color: Color(0xFFEF4444),
-                          ),
-                          label: Text(
-                            translations.profile_logout,
-                            style: const TextStyle(
-                              color: Color(0xFFEF4444),
-                              fontSize: 16,
-                              fontWeight: FontWeight.w600,
-                            ),
-                          ),
-                          style: OutlinedButton.styleFrom(
-                            minimumSize: const Size(double.infinity, 58),
-                            side: const BorderSide(color: Color(0xFFFECACA)),
-                            backgroundColor: const Color(0x80FEF2F2),
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(24),
-                            ),
-                          ),
-                        ),
-                        const SizedBox(height: 24),
-                        Center(
-                          child: Text(
-                            translations.profile_footer_caption,
-                            textAlign: TextAlign.center,
-                            style: const TextStyle(
-                              fontSize: 12,
-                              color: Color(0xFF94A3B8),
-                            ),
-                          ),
-                        ),
-                      ]),
+                      ],
                     ),
                   ),
+                  if (state.isSaving)
+                    const Positioned.fill(
+                      child: ColoredBox(
+                        color: Color(0x660F172A),
+                        child: Center(child: CircularProgressIndicator()),
+                      ),
+                    ),
                 ],
-              ),
-            );
-          },
+              );
+            },
+          ),
         ),
       ),
     );
   }
 
-  Widget _buildHeader(BuildContext context, S translations) {
+  Widget _buildHeader(
+    BuildContext context,
+    S translations,
+    ProfileSettingsData profile,
+  ) {
     return Container(
       padding: const EdgeInsets.fromLTRB(16, 16, 16, 17),
       decoration: const BoxDecoration(
@@ -177,7 +231,10 @@ class _ProfileSettingsPageState extends State<ProfileSettingsPage> {
               ),
             ),
           ),
-          _HeaderButton(icon: Icons.settings_outlined, onTap: _showSoonToast),
+          _HeaderButton(
+            icon: Icons.settings_outlined,
+            onTap: () => _editPreferences(context, profile),
+          ),
         ],
       ),
     );
@@ -257,6 +314,17 @@ class _ProfileSettingsPageState extends State<ProfileSettingsPage> {
             fontSize: 14,
             fontWeight: FontWeight.w500,
             color: Color(0xFF64748B),
+          ),
+        ),
+        const SizedBox(height: 16),
+        OutlinedButton.icon(
+          onPressed: () => _editProfileName(context, profile),
+          icon: const Icon(Icons.edit_outlined),
+          label: const Text('Editar perfil'),
+          style: OutlinedButton.styleFrom(
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(18),
+            ),
           ),
         ),
       ],
@@ -362,7 +430,12 @@ class _ProfileSettingsPageState extends State<ProfileSettingsPage> {
       return;
     }
     setState(() => _selectedIndex = index);
-    _showSoonToast();
+    ThToast.info(
+      context: context,
+      title: 'MindTrack',
+      description: S.of(context).home_section_soon_description,
+      applyBlurEffect: false,
+    );
     setState(() => _selectedIndex = 4);
   }
 
@@ -385,34 +458,186 @@ class _ProfileSettingsPageState extends State<ProfileSettingsPage> {
     );
   }
 
-  void _showSoonToast() {
-    final S translations = S.of(context);
-    ThToast.info(
-      context: context,
-      title: 'MindTrack',
-      description: translations.home_section_soon_description,
-      applyBlurEffect: false,
+  Future<void> _toggleNotifications(ProfileSettingsData profile) async {
+    await _profileCubit.updatePreferences(
+      notificationsEnabled: !profile.notificationsEnabled,
     );
   }
 
-  Future<void> _openNotificationSettings() async {
-    final bool launched = await _deviceIntentService.openNotificationSettings();
-    if (!mounted) {
+  Future<void> _editProfileName(
+    BuildContext context,
+    ProfileSettingsData profile,
+  ) async {
+    final TextEditingController controller = TextEditingController(
+      text: profile.name,
+    );
+    final GlobalKey<FormState> formKey = GlobalKey<FormState>();
+    final String? result = await showModalBottomSheet<String>(
+      context: context,
+      isScrollControlled: true,
+      backgroundColor: Colors.white,
+      shape: const RoundedRectangleBorder(
+        borderRadius: BorderRadius.vertical(top: Radius.circular(28)),
+      ),
+      builder: (BuildContext context) {
+        return Padding(
+          padding: EdgeInsets.fromLTRB(
+            20,
+            20,
+            20,
+            MediaQuery.of(context).viewInsets.bottom + 20,
+          ),
+          child: Form(
+            key: formKey,
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: <Widget>[
+                const Text(
+                  'Editar nombre',
+                  style: TextStyle(fontSize: 20, fontWeight: FontWeight.w800),
+                ),
+                const SizedBox(height: 16),
+                TextFormField(
+                  controller: controller,
+                  decoration: const InputDecoration(
+                    labelText: 'Nombre',
+                    border: OutlineInputBorder(),
+                  ),
+                  validator: (String? value) {
+                    if (value == null || value.trim().isEmpty) {
+                      return 'Ingresa un nombre.';
+                    }
+                    return null;
+                  },
+                ),
+                const SizedBox(height: 16),
+                SizedBox(
+                  width: double.infinity,
+                  child: FilledButton(
+                    onPressed: () {
+                      if (formKey.currentState?.validate() != true) {
+                        return;
+                      }
+                      Navigator.of(context).pop(controller.text.trim());
+                    },
+                    child: const Text('Guardar'),
+                  ),
+                ),
+              ],
+            ),
+          ),
+        );
+      },
+    );
+    controller.dispose();
+    if (result == null || result == profile.name) {
       return;
     }
-    if (!launched) {
-      _showIntentUnavailableToast(S.of(context).profile_intent_android_only);
-    }
+    await _profileCubit.updateProfileName(result);
   }
 
-  Future<void> _openLanguageSettings() async {
-    final bool launched = await _deviceIntentService.openLanguageSettings();
-    if (!mounted) {
+  Future<void> _editPreferences(
+    BuildContext context,
+    ProfileSettingsData profile,
+  ) async {
+    String selectedLanguage = (profile.languageCode ?? 'en').toLowerCase();
+    bool notificationsEnabled = profile.notificationsEnabled;
+    final ({String languageCode, bool notificationsEnabled})? result =
+        await showModalBottomSheet<
+          ({String languageCode, bool notificationsEnabled})
+        >(
+          context: context,
+          isScrollControlled: true,
+          backgroundColor: Colors.white,
+          shape: const RoundedRectangleBorder(
+            borderRadius: BorderRadius.vertical(top: Radius.circular(28)),
+          ),
+          builder: (BuildContext context) {
+            return StatefulBuilder(
+              builder: (BuildContext context, StateSetter setModalState) {
+                return Padding(
+                  padding: EdgeInsets.fromLTRB(
+                    20,
+                    20,
+                    20,
+                    MediaQuery.of(context).viewInsets.bottom + 20,
+                  ),
+                  child: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: <Widget>[
+                      const Text(
+                        'Preferencias',
+                        style: TextStyle(
+                          fontSize: 20,
+                          fontWeight: FontWeight.w800,
+                        ),
+                      ),
+                      const SizedBox(height: 18),
+                      const Text(
+                        'Idioma',
+                        style: TextStyle(fontWeight: FontWeight.w700),
+                      ),
+                      RadioListTile<String>(
+                        value: 'es',
+                        groupValue: selectedLanguage,
+                        onChanged: (String? value) {
+                          if (value == null) {
+                            return;
+                          }
+                          setModalState(() => selectedLanguage = value);
+                        },
+                        title: const Text('Español'),
+                      ),
+                      RadioListTile<String>(
+                        value: 'en',
+                        groupValue: selectedLanguage,
+                        onChanged: (String? value) {
+                          if (value == null) {
+                            return;
+                          }
+                          setModalState(() => selectedLanguage = value);
+                        },
+                        title: const Text('English'),
+                      ),
+                      SwitchListTile(
+                        value: notificationsEnabled,
+                        onChanged: (bool value) {
+                          setModalState(() => notificationsEnabled = value);
+                        },
+                        title: const Text('Notificaciones'),
+                        subtitle: const Text(
+                          'Activa o desactiva recordatorios de la app.',
+                        ),
+                      ),
+                      const SizedBox(height: 12),
+                      SizedBox(
+                        width: double.infinity,
+                        child: FilledButton(
+                          onPressed: () {
+                            Navigator.of(context).pop((
+                              languageCode: selectedLanguage,
+                              notificationsEnabled: notificationsEnabled,
+                            ));
+                          },
+                          child: const Text('Guardar cambios'),
+                        ),
+                      ),
+                    ],
+                  ),
+                );
+              },
+            );
+          },
+        );
+    if (result == null) {
       return;
     }
-    if (!launched) {
-      _showIntentUnavailableToast(S.of(context).profile_intent_android_only);
-    }
+    await _profileCubit.updatePreferences(
+      languageCode: result.languageCode,
+      notificationsEnabled: result.notificationsEnabled,
+    );
   }
 
   Future<void> _openPrivacyPolicy() async {

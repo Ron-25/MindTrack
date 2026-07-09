@@ -15,6 +15,22 @@ class ProfileSettingsData extends Equatable {
   final String? languageCode;
   final bool notificationsEnabled;
 
+  ProfileSettingsData copyWith({
+    String? name,
+    String? email,
+    String? avatarUrl,
+    String? languageCode,
+    bool? notificationsEnabled,
+  }) {
+    return ProfileSettingsData(
+      name: name ?? this.name,
+      email: email ?? this.email,
+      avatarUrl: avatarUrl ?? this.avatarUrl,
+      languageCode: languageCode ?? this.languageCode,
+      notificationsEnabled: notificationsEnabled ?? this.notificationsEnabled,
+    );
+  }
+
   @override
   List<Object?> get props => <Object?>[
     name,

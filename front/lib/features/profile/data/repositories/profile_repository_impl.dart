@@ -11,4 +11,20 @@ class ProfileRepositoryImpl implements ProfileRepository {
   Future<ProfileSettingsData> fetchProfile() {
     return _remoteDataSource.fetchProfile();
   }
+
+  @override
+  Future<ProfileSettingsData> updateProfileName(String name) {
+    return _remoteDataSource.updateProfileName(name);
+  }
+
+  @override
+  Future<ProfileSettingsData> updatePreferences({
+    String? languageCode,
+    bool? notificationsEnabled,
+  }) {
+    return _remoteDataSource.updatePreferences(
+      languageCode: languageCode,
+      notificationsEnabled: notificationsEnabled,
+    );
+  }
 }

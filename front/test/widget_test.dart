@@ -1,30 +1,52 @@
-// This is a basic Flutter widget test.
-//
-// To perform an interaction with a widget in your test, use the WidgetTester
-// utility in the flutter_test package. For example, you can send tap and scroll
-// gestures. You can also use WidgetTester to find child widgets in the widget
-// tree, read text, and verify that the values of widget properties are correct.
-
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
-
-import 'package:mind_track/main.dart';
+import 'package:mind_track/app/routes/app_router.dart';
+import 'package:mind_track/app/routes/route_names.dart';
 
 void main() {
-  testWidgets('Counter increments smoke test', (WidgetTester tester) async {
-    // Build our app and trigger a frame.
-    await tester.pumpWidget(const MyApp());
+  group('AppRouter', () {
+    test('returns a route for the main application screens', () {
+      final List<String> routeNames = <String>[
+        RouteNames.splash,
+        RouteNames.onboarding,
+        RouteNames.signIn,
+        RouteNames.signUp,
+        RouteNames.home,
+        RouteNames.profile,
+        RouteNames.dailyMood,
+        RouteNames.analytics,
+        RouteNames.habits,
+        RouteNames.search,
+        RouteNames.notifications,
+        RouteNames.coach,
+        RouteNames.addEmotion,
+      ];
 
-    // Verify that our counter starts at 0.
-    expect(find.text('0'), findsOneWidget);
-    expect(find.text('1'), findsNothing);
+      for (final String routeName in routeNames) {
+        final Route<dynamic> route = AppRouter.onGenerateRoute(
+          RouteSettings(name: routeName),
+        );
+        expect(route, isA<PageRoute<dynamic>>(), reason: routeName);
+      }
+    });
 
-    // Tap the '+' icon and trigger a frame.
-    await tester.tap(find.byIcon(Icons.add));
-    await tester.pump();
+    test('returns the emotion detail route when an id is provided', () {
+      final Route<dynamic> route = AppRouter.onGenerateRoute(
+        const RouteSettings(
+          name: RouteNames.emotionDetail,
+          arguments: 'emotion-123',
+        ),
+      );
 
-    // Verify that our counter has incremented.
-    expect(find.text('0'), findsNothing);
-    expect(find.text('1'), findsOneWidget);
+      expect(route, isA<PageRoute<dynamic>>());
+    });
+
+    test('falls back to splash for unknown routes', () {
+      final Route<dynamic> route = AppRouter.onGenerateRoute(
+        const RouteSettings(name: '/missing'),
+      );
+
+      expect(route, isA<PageRoute<dynamic>>());
+    });
   });
 }

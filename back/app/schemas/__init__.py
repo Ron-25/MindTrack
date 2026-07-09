@@ -5,4 +5,5 @@ from app.schemas.tag import TagCreate, TagUpdate, TagOut
 from app.schemas.emotion import EmotionLogCreate, EmotionLogUpdate, EmotionLogOut
 from app.schemas.habit import HabitCreate, HabitUpdate, HabitOut, HabitLogCreate, HabitLogOut, HabitProgressOut
 from app.schemas.analytics import WeeklySummaryOut, FrequencyItemOut, CorrelationPointOut
+from app.schemas.coach import CoachInsightOut, CoachInsightsOut, CoachSummaryOut
 from app.schemas.user import UserUpdate, PreferencesUpdate, PreferencesOut, UserProfileOut

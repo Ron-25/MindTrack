@@ -263,5 +263,148 @@
   "profile_intent_android_only": "Esta opcion esta disponible en los ajustes de Android.",
   "@profile_intent_android_only": {},
   "profile_intent_link_unavailable": "No hubo una app disponible para abrir este enlace.",
-  "@profile_intent_link_unavailable": {}
+  "@profile_intent_link_unavailable": {},
+  "analytics_title": "Analiticas",
+  "@analytics_title": {},
+  "analytics_frequency_title": "Frecuencia emocional",
+  "@analytics_frequency_title": {},
+  "analytics_frequency_empty": "Todavia no hay suficientes registros para calcular frecuencia.",
+  "@analytics_frequency_empty": {},
+  "analytics_habits_mood_title": "Habitos vs animo",
+  "@analytics_habits_mood_title": {},
+  "analytics_view_habits": "Ver habitos",
+  "@analytics_view_habits": {},
+  "analytics_weekly_summary_title": "Resumen semanal",
+  "@analytics_weekly_summary_title": {},
+  "analytics_no_dominant_emotion": "Sin emocion dominante aun",
+  "@analytics_no_dominant_emotion": {},
+  "analytics_default_insight": "Sigue registrando emociones y habitos para descubrir patrones.",
+  "@analytics_default_insight": {},
+  "analytics_metric_logs": "Registros",
+  "@analytics_metric_logs": {},
+  "analytics_metric_intensity": "Intensidad",
+  "@analytics_metric_intensity": {},
+  "analytics_metric_habits": "Habitos",
+  "@analytics_metric_habits": {},
+  "analytics_records_count": "{count} registros",
+  "@analytics_records_count": {
+    "placeholders": {
+      "count": {}
+    }
+  },
+  "analytics_correlation_empty": "Todavia no hay suficientes datos para relacionar habitos y estado de animo.",
+  "@analytics_correlation_empty": {},
+  "habits_title": "Habitos",
+  "@habits_title": {},
+  "habits_new_button": "Nuevo habito",
+  "@habits_new_button": {},
+  "habits_empty_title": "Aun no tienes habitos activos.",
+  "@habits_empty_title": {},
+  "habits_empty_description": "Crea uno para empezar a medir constancia y su relacion con tu animo.",
+  "@habits_empty_description": {},
+  "habits_create_title": "Crear habito",
+  "@habits_create_title": {},
+  "habits_name_label": "Nombre",
+  "@habits_name_label": {},
+  "habits_name_error": "Ingresa un nombre.",
+  "@habits_name_error": {},
+  "habits_description_label": "Descripcion",
+  "@habits_description_label": {},
+  "habits_category_label": "Categoria",
+  "@habits_category_label": {},
+  "habits_days_per_week": "Dias por semana: {days}",
+  "@habits_days_per_week": {
+    "placeholders": {
+      "days": {}
+    }
+  },
+  "habits_save": "Guardar",
+  "@habits_save": {},
+  "habits_weekly_target": "Meta semanal: {days} dias",
+  "@habits_weekly_target": {
+    "placeholders": {
+      "days": {}
+    }
+  },
+  "search_title": "Buscar",
+  "@search_title": {},
+  "search_hint": "Busca emociones, notas o habitos",
+  "@search_hint": {},
+  "search_habits_title": "Habitos",
+  "@search_habits_title": {},
+  "search_habits_empty": "No se encontraron habitos que coincidan.",
+  "@search_habits_empty": {},
+  "search_emotions_title": "Emociones",
+  "@search_emotions_title": {},
+  "search_emotions_empty": "No se encontraron emociones que coincidan.",
+  "@search_emotions_empty": {},
+  "search_no_detail": "Sin detalle",
+  "@search_no_detail": {},
+  "notifications_title": "Notificaciones",
+  "@notifications_title": {},
+  "notifications_active_title": "Recordatorios activos",
+  "@notifications_active_title": {},
+  "notifications_active_description": "Tus recordatorios estan habilitados desde preferencias.",
+  "@notifications_active_description": {},
+  "notifications_inactive_title": "Recordatorios desactivados",
+  "@notifications_inactive_title": {},
+  "notifications_inactive_description": "Activa las notificaciones en tu perfil para recibir recordatorios.",
+  "@notifications_inactive_description": {},
+  "notifications_mood_logged_title": "Estado emocional al dia",
+  "@notifications_mood_logged_title": {},
+  "notifications_mood_missing_title": "Te falta registrar como te sientes hoy",
+  "@notifications_mood_missing_title": {},
+  "notifications_mood_logged_description": "Ya registraste al menos una emocion hoy. Buen trabajo.",
+  "@notifications_mood_logged_description": {},
+  "notifications_mood_missing_description": "Registrar una emocion hoy ayuda a mejorar tus insights semanales.",
+  "@notifications_mood_missing_description": {},
+  "notifications_habits_clear_title": "Todo en orden con tus habitos",
+  "@notifications_habits_clear_title": {},
+  "notifications_habits_clear_description": "No tienes habitos pendientes para hoy o ya completaste todos.",
+  "@notifications_habits_clear_description": {},
+  "notifications_pending_title": "Pendiente: {name}",
+  "@notifications_pending_title": {
+    "placeholders": {
+      "name": {}
+    }
+  },
+  "notifications_pending_description": "Aun no marcas este habito hoy. Llevas {completed}/{target} esta semana.",
+  "@notifications_pending_description": {
+    "placeholders": {
+      "completed": {},
+      "target": {}
+    }
+  },
+  "coach_title": "MindTrack Coach",
+  "@coach_title": {},
+  "coach_hero_label": "Coach IA",
+  "@coach_hero_label": {},
+  "coach_hero_description": "Sugerencias accionables basadas en tu actividad reciente.",
+  "@coach_hero_description": {},
+  "coach_insight_low_logs": "Esta semana todavia hay pocos registros. Intenta anotar al menos una emocion por la mañana y otra por la noche para mejorar tus patrones.",
+  "@coach_insight_low_logs": {},
+  "coach_insight_high_intensity": "Tu intensidad emocional promedio viene alta. Considera una pausa breve hoy: respiracion guiada, caminata corta o journaling.",
+  "@coach_insight_high_intensity": {},
+  "coach_insight_low_habits": "Tu constancia en habitos esta por debajo del 50%. Enfocate en completar solo un habito clave hoy para recuperar traccion.",
+  "@coach_insight_low_habits": {},
+  "coach_insight_pending_habits": "Aun tienes {count} habito(s) pendiente(s) hoy. El mas facil de completar ahora mismo puede darte un pequeño impulso de avance.",
+  "@coach_insight_pending_habits": {
+    "placeholders": {
+      "count": {}
+    }
+  },
+  "coach_insight_top_emotion": "La emocion mas frecuente recientemente es {name}. Vale la pena revisar que actividades o personas suelen aparecer junto a ella.",
+  "@coach_insight_top_emotion": {
+    "placeholders": {
+      "name": {}
+    }
+  },
+  "coach_insight_balanced": "Tus metricas se ven equilibradas. Mantén el ritmo y revisa tus habitos mas consistentes para reforzar lo que ya te funciona.",
+  "@coach_insight_balanced": {},
+  "coach_stat_logs": "Registros",
+  "@coach_stat_logs": {},
+  "coach_stat_intensity": "Intensidad",
+  "@coach_stat_intensity": {},
+  "coach_stat_habits": "Habitos",
+  "@coach_stat_habits": {}
 }

@@ -1048,6 +1048,551 @@ class S {
       args: [],
     );
   }
+
+  /// `Analytics`
+  String get analytics_title {
+    return Intl.message(
+      'Analytics',
+      name: 'analytics_title',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Emotional Frequency`
+  String get analytics_frequency_title {
+    return Intl.message(
+      'Emotional Frequency',
+      name: 'analytics_frequency_title',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `There is not enough data yet to calculate frequency.`
+  String get analytics_frequency_empty {
+    return Intl.message(
+      'There is not enough data yet to calculate frequency.',
+      name: 'analytics_frequency_empty',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Habits vs Mood`
+  String get analytics_habits_mood_title {
+    return Intl.message(
+      'Habits vs Mood',
+      name: 'analytics_habits_mood_title',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `View habits`
+  String get analytics_view_habits {
+    return Intl.message(
+      'View habits',
+      name: 'analytics_view_habits',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Weekly Summary`
+  String get analytics_weekly_summary_title {
+    return Intl.message(
+      'Weekly Summary',
+      name: 'analytics_weekly_summary_title',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `No dominant emotion yet`
+  String get analytics_no_dominant_emotion {
+    return Intl.message(
+      'No dominant emotion yet',
+      name: 'analytics_no_dominant_emotion',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Keep logging emotions and habits to uncover patterns.`
+  String get analytics_default_insight {
+    return Intl.message(
+      'Keep logging emotions and habits to uncover patterns.',
+      name: 'analytics_default_insight',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Logs`
+  String get analytics_metric_logs {
+    return Intl.message(
+      'Logs',
+      name: 'analytics_metric_logs',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Intensity`
+  String get analytics_metric_intensity {
+    return Intl.message(
+      'Intensity',
+      name: 'analytics_metric_intensity',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Habits`
+  String get analytics_metric_habits {
+    return Intl.message(
+      'Habits',
+      name: 'analytics_metric_habits',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `{count} logs`
+  String analytics_records_count(Object count) {
+    return Intl.message(
+      '$count logs',
+      name: 'analytics_records_count',
+      desc: '',
+      args: [count],
+    );
+  }
+
+  /// `There is not enough data to relate habits and mood yet.`
+  String get analytics_correlation_empty {
+    return Intl.message(
+      'There is not enough data to relate habits and mood yet.',
+      name: 'analytics_correlation_empty',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Habits`
+  String get habits_title {
+    return Intl.message('Habits', name: 'habits_title', desc: '', args: []);
+  }
+
+  /// `New habit`
+  String get habits_new_button {
+    return Intl.message(
+      'New habit',
+      name: 'habits_new_button',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `You do not have active habits yet.`
+  String get habits_empty_title {
+    return Intl.message(
+      'You do not have active habits yet.',
+      name: 'habits_empty_title',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Create one to start measuring consistency and its relationship with your mood.`
+  String get habits_empty_description {
+    return Intl.message(
+      'Create one to start measuring consistency and its relationship with your mood.',
+      name: 'habits_empty_description',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Create habit`
+  String get habits_create_title {
+    return Intl.message(
+      'Create habit',
+      name: 'habits_create_title',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Name`
+  String get habits_name_label {
+    return Intl.message('Name', name: 'habits_name_label', desc: '', args: []);
+  }
+
+  /// `Enter a name.`
+  String get habits_name_error {
+    return Intl.message(
+      'Enter a name.',
+      name: 'habits_name_error',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Description`
+  String get habits_description_label {
+    return Intl.message(
+      'Description',
+      name: 'habits_description_label',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Category`
+  String get habits_category_label {
+    return Intl.message(
+      'Category',
+      name: 'habits_category_label',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Days per week: {days}`
+  String habits_days_per_week(Object days) {
+    return Intl.message(
+      'Days per week: $days',
+      name: 'habits_days_per_week',
+      desc: '',
+      args: [days],
+    );
+  }
+
+  /// `Save`
+  String get habits_save {
+    return Intl.message('Save', name: 'habits_save', desc: '', args: []);
+  }
+
+  /// `Weekly target: {days} days`
+  String habits_weekly_target(Object days) {
+    return Intl.message(
+      'Weekly target: $days days',
+      name: 'habits_weekly_target',
+      desc: '',
+      args: [days],
+    );
+  }
+
+  /// `Search`
+  String get search_title {
+    return Intl.message('Search', name: 'search_title', desc: '', args: []);
+  }
+
+  /// `Search emotions, notes, or habits`
+  String get search_hint {
+    return Intl.message(
+      'Search emotions, notes, or habits',
+      name: 'search_hint',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Habits`
+  String get search_habits_title {
+    return Intl.message(
+      'Habits',
+      name: 'search_habits_title',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `No matching habits were found.`
+  String get search_habits_empty {
+    return Intl.message(
+      'No matching habits were found.',
+      name: 'search_habits_empty',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Emotions`
+  String get search_emotions_title {
+    return Intl.message(
+      'Emotions',
+      name: 'search_emotions_title',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `No matching emotions were found.`
+  String get search_emotions_empty {
+    return Intl.message(
+      'No matching emotions were found.',
+      name: 'search_emotions_empty',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `No detail`
+  String get search_no_detail {
+    return Intl.message(
+      'No detail',
+      name: 'search_no_detail',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Notifications`
+  String get notifications_title {
+    return Intl.message(
+      'Notifications',
+      name: 'notifications_title',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Reminders active`
+  String get notifications_active_title {
+    return Intl.message(
+      'Reminders active',
+      name: 'notifications_active_title',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Your reminders are enabled from preferences.`
+  String get notifications_active_description {
+    return Intl.message(
+      'Your reminders are enabled from preferences.',
+      name: 'notifications_active_description',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Reminders disabled`
+  String get notifications_inactive_title {
+    return Intl.message(
+      'Reminders disabled',
+      name: 'notifications_inactive_title',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Enable notifications in your profile to receive reminders.`
+  String get notifications_inactive_description {
+    return Intl.message(
+      'Enable notifications in your profile to receive reminders.',
+      name: 'notifications_inactive_description',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Mood log up to date`
+  String get notifications_mood_logged_title {
+    return Intl.message(
+      'Mood log up to date',
+      name: 'notifications_mood_logged_title',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `You still need to log how you feel today`
+  String get notifications_mood_missing_title {
+    return Intl.message(
+      'You still need to log how you feel today',
+      name: 'notifications_mood_missing_title',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `You already logged at least one emotion today. Nice work.`
+  String get notifications_mood_logged_description {
+    return Intl.message(
+      'You already logged at least one emotion today. Nice work.',
+      name: 'notifications_mood_logged_description',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Logging an emotion today helps improve your weekly insights.`
+  String get notifications_mood_missing_description {
+    return Intl.message(
+      'Logging an emotion today helps improve your weekly insights.',
+      name: 'notifications_mood_missing_description',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `All clear with your habits`
+  String get notifications_habits_clear_title {
+    return Intl.message(
+      'All clear with your habits',
+      name: 'notifications_habits_clear_title',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `You do not have habits pending today, or you already completed them all.`
+  String get notifications_habits_clear_description {
+    return Intl.message(
+      'You do not have habits pending today, or you already completed them all.',
+      name: 'notifications_habits_clear_description',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Pending: {name}`
+  String notifications_pending_title(Object name) {
+    return Intl.message(
+      'Pending: $name',
+      name: 'notifications_pending_title',
+      desc: '',
+      args: [name],
+    );
+  }
+
+  /// `You have not marked this habit today yet. You are at {completed}/{target} this week.`
+  String notifications_pending_description(Object completed, Object target) {
+    return Intl.message(
+      'You have not marked this habit today yet. You are at $completed/$target this week.',
+      name: 'notifications_pending_description',
+      desc: '',
+      args: [completed, target],
+    );
+  }
+
+  /// `MindTrack Coach`
+  String get coach_title {
+    return Intl.message(
+      'MindTrack Coach',
+      name: 'coach_title',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `AI Coach`
+  String get coach_hero_label {
+    return Intl.message(
+      'AI Coach',
+      name: 'coach_hero_label',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Actionable suggestions based on your recent activity.`
+  String get coach_hero_description {
+    return Intl.message(
+      'Actionable suggestions based on your recent activity.',
+      name: 'coach_hero_description',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `There are still few logs this week. Try noting at least one emotion in the morning and one at night to improve your patterns.`
+  String get coach_insight_low_logs {
+    return Intl.message(
+      'There are still few logs this week. Try noting at least one emotion in the morning and one at night to improve your patterns.',
+      name: 'coach_insight_low_logs',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Your average emotional intensity is trending high. Consider a short pause today: guided breathing, a short walk, or journaling.`
+  String get coach_insight_high_intensity {
+    return Intl.message(
+      'Your average emotional intensity is trending high. Consider a short pause today: guided breathing, a short walk, or journaling.',
+      name: 'coach_insight_high_intensity',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Your habit consistency is below 50%. Focus on completing just one key habit today to regain traction.`
+  String get coach_insight_low_habits {
+    return Intl.message(
+      'Your habit consistency is below 50%. Focus on completing just one key habit today to regain traction.',
+      name: 'coach_insight_low_habits',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `You still have {count} habit(s) pending today. The easiest one to complete right now may give you a useful momentum boost.`
+  String coach_insight_pending_habits(Object count) {
+    return Intl.message(
+      'You still have $count habit(s) pending today. The easiest one to complete right now may give you a useful momentum boost.',
+      name: 'coach_insight_pending_habits',
+      desc: '',
+      args: [count],
+    );
+  }
+
+  /// `Your most frequent recent emotion is {name}. It is worth checking what activities or people usually appear alongside it.`
+  String coach_insight_top_emotion(Object name) {
+    return Intl.message(
+      'Your most frequent recent emotion is $name. It is worth checking what activities or people usually appear alongside it.',
+      name: 'coach_insight_top_emotion',
+      desc: '',
+      args: [name],
+    );
+  }
+
+  /// `Your metrics look balanced. Keep the rhythm and review your most consistent habits to reinforce what is already working.`
+  String get coach_insight_balanced {
+    return Intl.message(
+      'Your metrics look balanced. Keep the rhythm and review your most consistent habits to reinforce what is already working.',
+      name: 'coach_insight_balanced',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Logs`
+  String get coach_stat_logs {
+    return Intl.message('Logs', name: 'coach_stat_logs', desc: '', args: []);
+  }
+
+  /// `Intensity`
+  String get coach_stat_intensity {
+    return Intl.message(
+      'Intensity',
+      name: 'coach_stat_intensity',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Habits`
+  String get coach_stat_habits {
+    return Intl.message(
+      'Habits',
+      name: 'coach_stat_habits',
+      desc: '',
+      args: [],
+    );
+  }
 }
 
 class AppLocalizationDelegate extends LocalizationsDelegate<S> {

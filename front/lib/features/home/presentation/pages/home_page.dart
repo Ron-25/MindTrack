@@ -217,12 +217,13 @@ class _HomePageState extends State<HomePage> {
         ),
         _HeaderIconButton(
           icon: Icons.search_rounded,
-          onTap: () => _showSoonToast(context),
+          onTap: () => Navigator.of(context).pushNamed(RouteNames.search),
         ),
         const SizedBox(width: 8),
         _HeaderIconButton(
           icon: Icons.notifications_none_rounded,
-          onTap: () => _showSoonToast(context),
+          onTap: () =>
+              Navigator.of(context).pushNamed(RouteNames.notifications),
         ),
         const SizedBox(width: 8),
         _HeaderIconButton(
@@ -378,7 +379,8 @@ class _HomePageState extends State<HomePage> {
         SizedBox(
           width: double.infinity,
           child: FilledButton(
-            onPressed: () => setState(() => _selectedIndex = 2),
+            onPressed: () =>
+                Navigator.of(context).pushNamed(RouteNames.analytics),
             style: FilledButton.styleFrom(
               backgroundColor: const Color(0xFFF3F6F8),
               foregroundColor: AppColors.primary,
@@ -536,7 +538,7 @@ class _HomePageState extends State<HomePage> {
     return Material(
       color: Colors.transparent,
       child: InkWell(
-        onTap: () => _showSoonToast(context),
+        onTap: () => Navigator.of(context).pushNamed(RouteNames.coach),
         borderRadius: BorderRadius.circular(999),
         child: Container(
           width: 146,
@@ -597,7 +599,8 @@ class _HomePageState extends State<HomePage> {
               ),
             ),
             TextButton(
-              onPressed: () => _showSoonToast(context),
+              onPressed: () =>
+                  Navigator.of(context).pushNamed(RouteNames.dailyMood),
               child: Text(
                 S.of(context).home_see_all,
                 style: const TextStyle(
@@ -635,7 +638,9 @@ class _HomePageState extends State<HomePage> {
                 child: InkWell(
                   borderRadius: BorderRadius.circular(24),
                   onTap: () {
-                    Navigator.of(context).pushNamed(RouteNames.emotionDetail);
+                    Navigator.of(
+                      context,
+                    ).pushNamed(RouteNames.emotionDetail, arguments: entry.id);
                   },
                   child: Container(
                     padding: const EdgeInsets.all(16),
@@ -782,6 +787,14 @@ class _HomePageState extends State<HomePage> {
     }
     if (index == 4) {
       Navigator.of(context).pushNamed(RouteNames.profile);
+      return;
+    }
+    if (index == 2) {
+      Navigator.of(context).pushNamed(RouteNames.analytics);
+      return;
+    }
+    if (index == 3) {
+      Navigator.of(context).pushNamed(RouteNames.habits);
       return;
     }
     setState(() => _selectedIndex = index);

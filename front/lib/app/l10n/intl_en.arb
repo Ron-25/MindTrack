@@ -263,5 +263,148 @@
   "profile_intent_android_only": "This option is available on Android settings.",
   "@profile_intent_android_only": {},
   "profile_intent_link_unavailable": "No app was available to open this link.",
-  "@profile_intent_link_unavailable": {}
+  "@profile_intent_link_unavailable": {},
+  "analytics_title": "Analytics",
+  "@analytics_title": {},
+  "analytics_frequency_title": "Emotional Frequency",
+  "@analytics_frequency_title": {},
+  "analytics_frequency_empty": "There is not enough data yet to calculate frequency.",
+  "@analytics_frequency_empty": {},
+  "analytics_habits_mood_title": "Habits vs Mood",
+  "@analytics_habits_mood_title": {},
+  "analytics_view_habits": "View habits",
+  "@analytics_view_habits": {},
+  "analytics_weekly_summary_title": "Weekly Summary",
+  "@analytics_weekly_summary_title": {},
+  "analytics_no_dominant_emotion": "No dominant emotion yet",
+  "@analytics_no_dominant_emotion": {},
+  "analytics_default_insight": "Keep logging emotions and habits to uncover patterns.",
+  "@analytics_default_insight": {},
+  "analytics_metric_logs": "Logs",
+  "@analytics_metric_logs": {},
+  "analytics_metric_intensity": "Intensity",
+  "@analytics_metric_intensity": {},
+  "analytics_metric_habits": "Habits",
+  "@analytics_metric_habits": {},
+  "analytics_records_count": "{count} logs",
+  "@analytics_records_count": {
+    "placeholders": {
+      "count": {}
+    }
+  },
+  "analytics_correlation_empty": "There is not enough data to relate habits and mood yet.",
+  "@analytics_correlation_empty": {},
+  "habits_title": "Habits",
+  "@habits_title": {},
+  "habits_new_button": "New habit",
+  "@habits_new_button": {},
+  "habits_empty_title": "You do not have active habits yet.",
+  "@habits_empty_title": {},
+  "habits_empty_description": "Create one to start measuring consistency and its relationship with your mood.",
+  "@habits_empty_description": {},
+  "habits_create_title": "Create habit",
+  "@habits_create_title": {},
+  "habits_name_label": "Name",
+  "@habits_name_label": {},
+  "habits_name_error": "Enter a name.",
+  "@habits_name_error": {},
+  "habits_description_label": "Description",
+  "@habits_description_label": {},
+  "habits_category_label": "Category",
+  "@habits_category_label": {},
+  "habits_days_per_week": "Days per week: {days}",
+  "@habits_days_per_week": {
+    "placeholders": {
+      "days": {}
+    }
+  },
+  "habits_save": "Save",
+  "@habits_save": {},
+  "habits_weekly_target": "Weekly target: {days} days",
+  "@habits_weekly_target": {
+    "placeholders": {
+      "days": {}
+    }
+  },
+  "search_title": "Search",
+  "@search_title": {},
+  "search_hint": "Search emotions, notes, or habits",
+  "@search_hint": {},
+  "search_habits_title": "Habits",
+  "@search_habits_title": {},
+  "search_habits_empty": "No matching habits were found.",
+  "@search_habits_empty": {},
+  "search_emotions_title": "Emotions",
+  "@search_emotions_title": {},
+  "search_emotions_empty": "No matching emotions were found.",
+  "@search_emotions_empty": {},
+  "search_no_detail": "No detail",
+  "@search_no_detail": {},
+  "notifications_title": "Notifications",
+  "@notifications_title": {},
+  "notifications_active_title": "Reminders active",
+  "@notifications_active_title": {},
+  "notifications_active_description": "Your reminders are enabled from preferences.",
+  "@notifications_active_description": {},
+  "notifications_inactive_title": "Reminders disabled",
+  "@notifications_inactive_title": {},
+  "notifications_inactive_description": "Enable notifications in your profile to receive reminders.",
+  "@notifications_inactive_description": {},
+  "notifications_mood_logged_title": "Mood log up to date",
+  "@notifications_mood_logged_title": {},
+  "notifications_mood_missing_title": "You still need to log how you feel today",
+  "@notifications_mood_missing_title": {},
+  "notifications_mood_logged_description": "You already logged at least one emotion today. Nice work.",
+  "@notifications_mood_logged_description": {},
+  "notifications_mood_missing_description": "Logging an emotion today helps improve your weekly insights.",
+  "@notifications_mood_missing_description": {},
+  "notifications_habits_clear_title": "All clear with your habits",
+  "@notifications_habits_clear_title": {},
+  "notifications_habits_clear_description": "You do not have habits pending today, or you already completed them all.",
+  "@notifications_habits_clear_description": {},
+  "notifications_pending_title": "Pending: {name}",
+  "@notifications_pending_title": {
+    "placeholders": {
+      "name": {}
+    }
+  },
+  "notifications_pending_description": "You have not marked this habit today yet. You are at {completed}/{target} this week.",
+  "@notifications_pending_description": {
+    "placeholders": {
+      "completed": {},
+      "target": {}
+    }
+  },
+  "coach_title": "MindTrack Coach",
+  "@coach_title": {},
+  "coach_hero_label": "AI Coach",
+  "@coach_hero_label": {},
+  "coach_hero_description": "Actionable suggestions based on your recent activity.",
+  "@coach_hero_description": {},
+  "coach_insight_low_logs": "There are still few logs this week. Try noting at least one emotion in the morning and one at night to improve your patterns.",
+  "@coach_insight_low_logs": {},
+  "coach_insight_high_intensity": "Your average emotional intensity is trending high. Consider a short pause today: guided breathing, a short walk, or journaling.",
+  "@coach_insight_high_intensity": {},
+  "coach_insight_low_habits": "Your habit consistency is below 50%. Focus on completing just one key habit today to regain traction.",
+  "@coach_insight_low_habits": {},
+  "coach_insight_pending_habits": "You still have {count} habit(s) pending today. The easiest one to complete right now may give you a useful momentum boost.",
+  "@coach_insight_pending_habits": {
+    "placeholders": {
+      "count": {}
+    }
+  },
+  "coach_insight_top_emotion": "Your most frequent recent emotion is {name}. It is worth checking what activities or people usually appear alongside it.",
+  "@coach_insight_top_emotion": {
+    "placeholders": {
+      "name": {}
+    }
+  },
+  "coach_insight_balanced": "Your metrics look balanced. Keep the rhythm and review your most consistent habits to reinforce what is already working.",
+  "@coach_insight_balanced": {},
+  "coach_stat_logs": "Logs",
+  "@coach_stat_logs": {},
+  "coach_stat_intensity": "Intensity",
+  "@coach_stat_intensity": {},
+  "coach_stat_habits": "Habits",
+  "@coach_stat_habits": {}
 }

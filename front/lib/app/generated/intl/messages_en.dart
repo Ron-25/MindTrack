@@ -22,18 +22,35 @@ class MessageLookup extends MessageLookupByLibrary {
 
   static String m0(terms, privacy) => "I agree to the ${terms} and ${privacy}.";
 
-  static String m1(name) => "Good morning, ${name}";
+  static String m1(count) => "${count} logs";
 
-  static String m2(name) => "Good afternoon, ${name}";
+  static String m2(count) =>
+      "You still have ${count} habit(s) pending today. The easiest one to complete right now may give you a useful momentum boost.";
 
-  static String m3(name) => "Good evening, ${name}";
+  static String m3(name) =>
+      "Your most frequent recent emotion is ${name}. It is worth checking what activities or people usually appear alongside it.";
 
-  static String m4(name) => "Good morning, ${name}";
+  static String m4(days) => "Days per week: ${days}";
 
-  static String m5(count, energy) =>
+  static String m5(days) => "Weekly target: ${days} days";
+
+  static String m6(name) => "Good morning, ${name}";
+
+  static String m7(name) => "Good afternoon, ${name}";
+
+  static String m8(name) => "Good evening, ${name}";
+
+  static String m9(name) => "Good morning, ${name}";
+
+  static String m10(count, energy) =>
       "You\'ve logged ${Intl.plural(count, one: '1 entry', other: '${count} entries')} today. Your average energy level is ${energy}.";
 
-  static String m6(step, total) =>
+  static String m11(completed, target) =>
+      "You have not marked this habit today yet. You are at ${completed}/${target} this week.";
+
+  static String m12(name) => "Pending: ${name}";
+
+  static String m13(step, total) =>
       "Step ${step} of ${total} • Emotional Awareness";
 
   final messages = _notInlinedMessages(_notInlinedMessages);
@@ -44,6 +61,37 @@ class MessageLookup extends MessageLookupByLibrary {
     ),
     "already_have_account": MessageLookupByLibrary.simpleMessage(
       "Already have an account? ",
+    ),
+    "analytics_correlation_empty": MessageLookupByLibrary.simpleMessage(
+      "There is not enough data to relate habits and mood yet.",
+    ),
+    "analytics_default_insight": MessageLookupByLibrary.simpleMessage(
+      "Keep logging emotions and habits to uncover patterns.",
+    ),
+    "analytics_frequency_empty": MessageLookupByLibrary.simpleMessage(
+      "There is not enough data yet to calculate frequency.",
+    ),
+    "analytics_frequency_title": MessageLookupByLibrary.simpleMessage(
+      "Emotional Frequency",
+    ),
+    "analytics_habits_mood_title": MessageLookupByLibrary.simpleMessage(
+      "Habits vs Mood",
+    ),
+    "analytics_metric_habits": MessageLookupByLibrary.simpleMessage("Habits"),
+    "analytics_metric_intensity": MessageLookupByLibrary.simpleMessage(
+      "Intensity",
+    ),
+    "analytics_metric_logs": MessageLookupByLibrary.simpleMessage("Logs"),
+    "analytics_no_dominant_emotion": MessageLookupByLibrary.simpleMessage(
+      "No dominant emotion yet",
+    ),
+    "analytics_records_count": m1,
+    "analytics_title": MessageLookupByLibrary.simpleMessage("Analytics"),
+    "analytics_view_habits": MessageLookupByLibrary.simpleMessage(
+      "View habits",
+    ),
+    "analytics_weekly_summary_title": MessageLookupByLibrary.simpleMessage(
+      "Weekly Summary",
     ),
     "auth_error_description": MessageLookupByLibrary.simpleMessage(
       "Unable to complete authentication.",
@@ -60,6 +108,28 @@ class MessageLookup extends MessageLookupByLibrary {
     "begin_your_journey": MessageLookupByLibrary.simpleMessage(
       "Begin Your Journey",
     ),
+    "coach_hero_description": MessageLookupByLibrary.simpleMessage(
+      "Actionable suggestions based on your recent activity.",
+    ),
+    "coach_hero_label": MessageLookupByLibrary.simpleMessage("AI Coach"),
+    "coach_insight_balanced": MessageLookupByLibrary.simpleMessage(
+      "Your metrics look balanced. Keep the rhythm and review your most consistent habits to reinforce what is already working.",
+    ),
+    "coach_insight_high_intensity": MessageLookupByLibrary.simpleMessage(
+      "Your average emotional intensity is trending high. Consider a short pause today: guided breathing, a short walk, or journaling.",
+    ),
+    "coach_insight_low_habits": MessageLookupByLibrary.simpleMessage(
+      "Your habit consistency is below 50%. Focus on completing just one key habit today to regain traction.",
+    ),
+    "coach_insight_low_logs": MessageLookupByLibrary.simpleMessage(
+      "There are still few logs this week. Try noting at least one emotion in the morning and one at night to improve your patterns.",
+    ),
+    "coach_insight_pending_habits": m2,
+    "coach_insight_top_emotion": m3,
+    "coach_stat_habits": MessageLookupByLibrary.simpleMessage("Habits"),
+    "coach_stat_intensity": MessageLookupByLibrary.simpleMessage("Intensity"),
+    "coach_stat_logs": MessageLookupByLibrary.simpleMessage("Logs"),
+    "coach_title": MessageLookupByLibrary.simpleMessage("MindTrack Coach"),
     "continue_with_google": MessageLookupByLibrary.simpleMessage(
       "Continue with Google",
     ),
@@ -85,6 +155,24 @@ class MessageLookup extends MessageLookupByLibrary {
       "Full name is required",
     ),
     "get_started": MessageLookupByLibrary.simpleMessage("Get started"),
+    "habits_category_label": MessageLookupByLibrary.simpleMessage("Category"),
+    "habits_create_title": MessageLookupByLibrary.simpleMessage("Create habit"),
+    "habits_days_per_week": m4,
+    "habits_description_label": MessageLookupByLibrary.simpleMessage(
+      "Description",
+    ),
+    "habits_empty_description": MessageLookupByLibrary.simpleMessage(
+      "Create one to start measuring consistency and its relationship with your mood.",
+    ),
+    "habits_empty_title": MessageLookupByLibrary.simpleMessage(
+      "You do not have active habits yet.",
+    ),
+    "habits_name_error": MessageLookupByLibrary.simpleMessage("Enter a name."),
+    "habits_name_label": MessageLookupByLibrary.simpleMessage("Name"),
+    "habits_new_button": MessageLookupByLibrary.simpleMessage("New habit"),
+    "habits_save": MessageLookupByLibrary.simpleMessage("Save"),
+    "habits_title": MessageLookupByLibrary.simpleMessage("Habits"),
+    "habits_weekly_target": m5,
     "home_daily_habits_title": MessageLookupByLibrary.simpleMessage(
       "Daily Habits",
     ),
@@ -101,10 +189,10 @@ class MessageLookup extends MessageLookupByLibrary {
       "No additional notes.",
     ),
     "home_entry_yesterday": MessageLookupByLibrary.simpleMessage("Yesterday"),
-    "home_greeting": m1,
-    "home_greeting_afternoon": m2,
-    "home_greeting_evening": m3,
-    "home_greeting_morning": m4,
+    "home_greeting": m6,
+    "home_greeting_afternoon": m7,
+    "home_greeting_evening": m8,
+    "home_greeting_morning": m9,
     "home_log_emotion_button": MessageLookupByLibrary.simpleMessage(
       "Log My Current Emotion",
     ),
@@ -151,7 +239,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "home_today_empty_title": MessageLookupByLibrary.simpleMessage(
       "No entries yet",
     ),
-    "home_today_entries_description": m5,
+    "home_today_entries_description": m10,
     "home_today_mood_title": MessageLookupByLibrary.simpleMessage(
       "Today\'s Mood",
     ),
@@ -176,6 +264,43 @@ class MessageLookup extends MessageLookupByLibrary {
       "Log in to continue your journey towards emotional wellness.",
     ),
     "next": MessageLookupByLibrary.simpleMessage("Next"),
+    "notifications_active_description": MessageLookupByLibrary.simpleMessage(
+      "Your reminders are enabled from preferences.",
+    ),
+    "notifications_active_title": MessageLookupByLibrary.simpleMessage(
+      "Reminders active",
+    ),
+    "notifications_habits_clear_description": MessageLookupByLibrary.simpleMessage(
+      "You do not have habits pending today, or you already completed them all.",
+    ),
+    "notifications_habits_clear_title": MessageLookupByLibrary.simpleMessage(
+      "All clear with your habits",
+    ),
+    "notifications_inactive_description": MessageLookupByLibrary.simpleMessage(
+      "Enable notifications in your profile to receive reminders.",
+    ),
+    "notifications_inactive_title": MessageLookupByLibrary.simpleMessage(
+      "Reminders disabled",
+    ),
+    "notifications_mood_logged_description":
+        MessageLookupByLibrary.simpleMessage(
+          "You already logged at least one emotion today. Nice work.",
+        ),
+    "notifications_mood_logged_title": MessageLookupByLibrary.simpleMessage(
+      "Mood log up to date",
+    ),
+    "notifications_mood_missing_description":
+        MessageLookupByLibrary.simpleMessage(
+          "Logging an emotion today helps improve your weekly insights.",
+        ),
+    "notifications_mood_missing_title": MessageLookupByLibrary.simpleMessage(
+      "You still need to log how you feel today",
+    ),
+    "notifications_pending_description": m11,
+    "notifications_pending_title": m12,
+    "notifications_title": MessageLookupByLibrary.simpleMessage(
+      "Notifications",
+    ),
     "onboarding_desc_1": MessageLookupByLibrary.simpleMessage(
       "Take a moment each day to reflect on how you feel. Logging your mood helps you build deep self-awareness.",
     ),
@@ -185,7 +310,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "onboarding_desc_3": MessageLookupByLibrary.simpleMessage(
       "Connect your daily routines with your emotional well-being. Start your journey towards a more balanced life.",
     ),
-    "onboarding_step": m6,
+    "onboarding_step": m13,
     "onboarding_title_1": MessageLookupByLibrary.simpleMessage(
       "Track your daily emotions",
     ),
@@ -243,6 +368,19 @@ class MessageLookup extends MessageLookupByLibrary {
       "Privacy & Security",
     ),
     "profile_title": MessageLookupByLibrary.simpleMessage("Profile"),
+    "search_emotions_empty": MessageLookupByLibrary.simpleMessage(
+      "No matching emotions were found.",
+    ),
+    "search_emotions_title": MessageLookupByLibrary.simpleMessage("Emotions"),
+    "search_habits_empty": MessageLookupByLibrary.simpleMessage(
+      "No matching habits were found.",
+    ),
+    "search_habits_title": MessageLookupByLibrary.simpleMessage("Habits"),
+    "search_hint": MessageLookupByLibrary.simpleMessage(
+      "Search emotions, notes, or habits",
+    ),
+    "search_no_detail": MessageLookupByLibrary.simpleMessage("No detail"),
+    "search_title": MessageLookupByLibrary.simpleMessage("Search"),
     "sign_in": MessageLookupByLibrary.simpleMessage("Sign In"),
     "sign_in_button": MessageLookupByLibrary.simpleMessage("Sign In"),
     "sign_up": MessageLookupByLibrary.simpleMessage("Sign Up"),

@@ -11,7 +11,7 @@ class ProfileCubit extends Cubit<ProfileState> {
   final ProfileRepository _profileRepository;
 
   Future<void> loadProfile() async {
-    emit(state.copyWith(isLoading: true, clearError: true));
+    emit(state.copyWith(isLoading: true, clearError: true, clearSuccess: true));
     try {
       final ProfileSettingsData profile = await _profileRepository
           .fetchProfile();
@@ -26,5 +26,63 @@ class ProfileCubit extends Cubit<ProfileState> {
         ),
       );
     }
+  }
+
+  Future<void> updateProfileName(String name) async {
+    emit(state.copyWith(isSaving: true, clearError: true, clearSuccess: true));
+    try {
+      final ProfileSettingsData profile = await _profileRepository
+          .updateProfileName(name);
+      emit(
+        state.copyWith(
+          isSaving: false,
+          profile: profile,
+          successMessage: 'Perfil actualizado correctamente.',
+          clearError: true,
+        ),
+      );
+    } catch (error) {
+      emit(
+        state.copyWith(
+          isSaving: false,
+          errorMessage: error.toString().replaceFirst('Exception: ', ''),
+          clearSuccess: true,
+        ),
+      );
+    }
+  }
+
+  Future<void> updatePreferences({
+    String? languageCode,
+    bool? notificationsEnabled,
+  }) async {
+    emit(state.copyWith(isSaving: true, clearError: true, clearSuccess: true));
+    try {
+      final ProfileSettingsData profile = await _profileRepository
+          .updatePreferences(
+            languageCode: languageCode,
+            notificationsEnabled: notificationsEnabled,
+          );
+      emit(
+        state.copyWith(
+          isSaving: false,
+          profile: profile,
+          successMessage: 'Preferencias actualizadas.',
+          clearError: true,
+        ),
+      );
+    } catch (error) {
+      emit(
+        state.copyWith(
+          isSaving: false,
+          errorMessage: error.toString().replaceFirst('Exception: ', ''),
+          clearSuccess: true,
+        ),
+      );
+    }
+  }
+
+  void clearFeedback() {
+    emit(state.copyWith(clearError: true, clearSuccess: true));
   }
 }

@@ -2,6 +2,7 @@ from fastapi import APIRouter
 
 from app.api.v1.endpoints import (
     auth,
+    coach,
     emotions,
     emotion_types,
     tags,
@@ -19,3 +20,4 @@ api_router.include_router(tags.router,           prefix="/tags",           tags=
 api_router.include_router(habits.router,         prefix="/habits",         tags=["Habits"])
 api_router.include_router(analytics.router,      prefix="/analytics",      tags=["Analytics"])
 api_router.include_router(users.router,          prefix="/users",          tags=["Users"])
+api_router.include_router(coach.router,          prefix="/coach",          tags=["Coach"])

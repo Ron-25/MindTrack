@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:mind_track/app/generated/l10n.dart';
 import 'package:mind_track/app/injector.dart';
+import 'package:mind_track/shared/widget/mindtrack_app_bar.dart';
 import 'package:mind_track/features/emotion_tracker/domain/entities/emotion_entry.dart';
 import 'package:mind_track/features/emotion_tracker/domain/repositories/emotion_repository.dart';
 import 'package:mind_track/features/habits/domain/entities/habit_tracker.dart';
@@ -84,10 +85,7 @@ class _NotificationsPageState extends State<NotificationsPage> {
 
     return Scaffold(
       backgroundColor: const Color(0xFFF8FAFC),
-      appBar: AppBar(
-        title: Text(S.of(context).notifications_title),
-        backgroundColor: const Color(0xFFF8FAFC),
-      ),
+      appBar: MindTrackAppBar(title: S.of(context).notifications_title),
       body: SafeArea(
         child: RefreshIndicator(
           onRefresh: _loadData,

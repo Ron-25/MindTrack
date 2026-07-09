@@ -7,6 +7,7 @@ import 'package:mind_track/app/theme/app_colors.dart';
 import 'package:mind_track/core/services/device_intent_service.dart';
 import 'package:mind_track/core/services/token_storage_service.dart';
 import 'package:mind_track/core/utils/toast_utils.dart';
+import 'package:mind_track/shared/widget/mindtrack_app_bar.dart';
 import 'package:mind_track/features/login/presentation/blocs/login_bloc.dart';
 import 'package:mind_track/features/login/presentation/blocs/login_event.dart';
 import 'package:mind_track/features/profile/domain/entities/profile_settings_data.dart';
@@ -39,6 +40,7 @@ class _ProfileSettingsPageState extends State<ProfileSettingsPage> {
     final S translations = S.of(context);
     return Scaffold(
       backgroundColor: const Color(0xFFF6F7F8),
+      appBar: MindTrackAppBar(title: translations.profile_title),
       bottomNavigationBar: _buildBottomArea(context),
       body: SafeArea(
         child: BlocListener<ProfileCubit, ProfileState>(

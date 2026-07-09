@@ -6,6 +6,7 @@ import 'package:mind_track/app/generated/l10n.dart';
 import 'package:mind_track/app/injector.dart';
 import 'package:mind_track/app/routes/route_names.dart';
 import 'package:mind_track/app/theme/app_colors.dart';
+import 'package:mind_track/shared/widget/mindtrack_app_bar.dart';
 import 'package:mind_track/features/analytics/domain/entities/analytics_snapshot.dart';
 import 'package:mind_track/features/analytics/presentation/cubit/analytics_cubit.dart';
 import 'package:mind_track/features/analytics/presentation/cubit/analytics_state.dart';
@@ -29,10 +30,7 @@ class _AnalyticsView extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: const Color(0xFFF8FAFC),
-      appBar: AppBar(
-        title: Text(S.of(context).analytics_title),
-        backgroundColor: const Color(0xFFF8FAFC),
-      ),
+      appBar: MindTrackAppBar(title: S.of(context).analytics_title),
       body: SafeArea(
         child: BlocBuilder<AnalyticsCubit, AnalyticsState>(
           builder: (BuildContext context, AnalyticsState state) {

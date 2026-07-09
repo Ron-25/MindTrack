@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:mind_track/app/generated/l10n.dart';
 import 'package:mind_track/app/injector.dart';
 import 'package:mind_track/app/theme/app_colors.dart';
+import 'package:mind_track/shared/widget/mindtrack_app_bar.dart';
 import 'package:mind_track/features/habits/domain/entities/habit_tracker.dart';
 import 'package:mind_track/features/habits/presentation/cubit/habit_cubit.dart';
 import 'package:mind_track/features/habits/presentation/cubit/habit_state.dart';
@@ -19,6 +20,29 @@ class HabitsPage extends StatelessWidget {
   }
 }
 
+const List<String> _habitCategories = <String>[
+  'health',
+  'mind',
+  'social',
+  'productivity',
+  'other',
+];
+
+String _habitCategoryLabel(S translations, String category) {
+  switch (category) {
+    case 'health':
+      return translations.habits_category_health;
+    case 'mind':
+      return translations.habits_category_mind;
+    case 'social':
+      return translations.habits_category_social;
+    case 'productivity':
+      return translations.habits_category_productivity;
+    default:
+      return translations.habits_category_other;
+  }
+}
+
 class _HabitsView extends StatelessWidget {
   const _HabitsView();
 
@@ -31,25 +55,36 @@ class _HabitsView extends StatelessWidget {
       },
       listener: (BuildContext context, HabitState state) {
         if (state.errorMessage != null) {
-          ScaffoldMessenger.of(
+          final ScaffoldMessengerState messenger = ScaffoldMessenger.of(
             context,
-          ).showSnackBar(SnackBar(content: Text(state.errorMessage!)));
-          context.read<HabitCubit>().clearFeedback();
+          );
+          messenger
+            ..hideCurrentSnackBar()
+            ..showSnackBar(SnackBar(content: Text(state.errorMessage!)));
+          WidgetsBinding.instance.addPostFrameCallback((_) {
+            if (context.mounted) {
+              context.read<HabitCubit>().clearFeedback();
+            }
+          });
           return;
         }
         if (state.successMessage != null) {
-          ScaffoldMessenger.of(
+          final ScaffoldMessengerState messenger = ScaffoldMessenger.of(
             context,
-          ).showSnackBar(SnackBar(content: Text(state.successMessage!)));
-          context.read<HabitCubit>().clearFeedback();
+          );
+          messenger
+            ..hideCurrentSnackBar()
+            ..showSnackBar(SnackBar(content: Text(state.successMessage!)));
+          WidgetsBinding.instance.addPostFrameCallback((_) {
+            if (context.mounted) {
+              context.read<HabitCubit>().clearFeedback();
+            }
+          });
         }
       },
       child: Scaffold(
         backgroundColor: const Color(0xFFF8FAFC),
-        appBar: AppBar(
-          title: Text(S.of(context).habits_title),
-          backgroundColor: const Color(0xFFF8FAFC),
-        ),
+        appBar: MindTrackAppBar(title: S.of(context).habits_title),
         floatingActionButton: FloatingActionButton.extended(
           onPressed: () => _openCreateHabit(context),
           backgroundColor: AppColors.primary,
@@ -143,9 +178,9 @@ class _HabitsView extends StatelessWidget {
     final S translations = S.of(context);
     final TextEditingController nameController = TextEditingController();
     final TextEditingController descriptionController = TextEditingController();
-    final TextEditingController categoryController = TextEditingController();
     final GlobalKey<FormState> formKey = GlobalKey<FormState>();
     double days = 3;
+    String category = _habitCategories.first;
 
     final CreateHabitInput? input =
         await showModalBottomSheet<CreateHabitInput>(
@@ -158,93 +193,111 @@ class _HabitsView extends StatelessWidget {
           builder: (BuildContext context) {
             return StatefulBuilder(
               builder: (BuildContext context, StateSetter setModalState) {
-                return Padding(
-                  padding: EdgeInsets.fromLTRB(
-                    20,
-                    20,
-                    20,
-                    MediaQuery.of(context).viewInsets.bottom + 20,
-                  ),
-                  child: Form(
-                    key: formKey,
-                    child: Column(
-                      mainAxisSize: MainAxisSize.min,
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: <Widget>[
-                        Text(
-                          translations.habits_create_title,
-                          style: const TextStyle(
-                            fontSize: 20,
-                            fontWeight: FontWeight.w800,
+                return SafeArea(
+                  child: SingleChildScrollView(
+                    padding: EdgeInsets.fromLTRB(
+                      20,
+                      20,
+                      20,
+                      MediaQuery.of(context).viewInsets.bottom + 20,
+                    ),
+                    child: Form(
+                      key: formKey,
+                      child: Column(
+                        mainAxisSize: MainAxisSize.min,
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: <Widget>[
+                          Text(
+                            translations.habits_create_title,
+                            style: const TextStyle(
+                              fontSize: 20,
+                              fontWeight: FontWeight.w800,
+                            ),
                           ),
-                        ),
-                        const SizedBox(height: 16),
-                        TextFormField(
-                          controller: nameController,
-                          decoration: InputDecoration(
-                            labelText: translations.habits_name_label,
-                            border: const OutlineInputBorder(),
-                          ),
-                          validator: (String? value) {
-                            if (value == null || value.trim().isEmpty) {
-                              return translations.habits_name_error;
-                            }
-                            return null;
-                          },
-                        ),
-                        const SizedBox(height: 12),
-                        TextField(
-                          controller: descriptionController,
-                          decoration: InputDecoration(
-                            labelText: translations.habits_description_label,
-                            border: const OutlineInputBorder(),
-                          ),
-                        ),
-                        const SizedBox(height: 12),
-                        TextField(
-                          controller: categoryController,
-                          decoration: InputDecoration(
-                            labelText: translations.habits_category_label,
-                            border: const OutlineInputBorder(),
-                          ),
-                        ),
-                        const SizedBox(height: 16),
-                        Text(
-                          translations.habits_days_per_week(days.round()),
-                          style: const TextStyle(fontWeight: FontWeight.w700),
-                        ),
-                        Slider(
-                          value: days,
-                          min: 1,
-                          max: 7,
-                          divisions: 6,
-                          activeColor: AppColors.primary,
-                          onChanged: (double value) {
-                            setModalState(() => days = value);
-                          },
-                        ),
-                        const SizedBox(height: 12),
-                        SizedBox(
-                          width: double.infinity,
-                          child: FilledButton(
-                            onPressed: () {
-                              if (formKey.currentState?.validate() != true) {
-                                return;
+                          const SizedBox(height: 16),
+                          TextFormField(
+                            controller: nameController,
+                            decoration: InputDecoration(
+                              labelText: translations.habits_name_label,
+                              border: const OutlineInputBorder(),
+                            ),
+                            validator: (String? value) {
+                              if (value == null || value.trim().isEmpty) {
+                                return translations.habits_name_error;
                               }
-                              Navigator.of(context).pop(
-                                CreateHabitInput(
-                                  name: nameController.text.trim(),
-                                  description: descriptionController.text
-                                      .trim(),
-                                  category: categoryController.text.trim(),
-                                  targetDaysWeek: days.round(),
-                                ),
-                              );
+                              return null;
                             },
-                            child: Text(translations.habits_save),
                           ),
-                        ),
-                      ],
+                          const SizedBox(height: 12),
+                          TextField(
+                            controller: descriptionController,
+                            decoration: InputDecoration(
+                              labelText: translations.habits_description_label,
+                              border: const OutlineInputBorder(),
+                            ),
+                            maxLines: 2,
+                          ),
+                          const SizedBox(height: 12),
+                          DropdownButtonFormField<String>(
+                            initialValue: category,
+                            decoration: InputDecoration(
+                              labelText: translations.habits_category_label,
+                              border: const OutlineInputBorder(),
+                            ),
+                            items: _habitCategories
+                                .map(
+                                  (String value) => DropdownMenuItem<String>(
+                                    value: value,
+                                    child: Text(
+                                      _habitCategoryLabel(translations, value),
+                                    ),
+                                  ),
+                                )
+                                .toList(),
+                            onChanged: (String? value) {
+                              if (value != null) {
+                                setModalState(() => category = value);
+                              }
+                            },
+                          ),
+                          const SizedBox(height: 16),
+                          Text(
+                            translations.habits_days_per_week(days.round()),
+                            style: const TextStyle(fontWeight: FontWeight.w700),
+                          ),
+                          Slider(
+                            value: days,
+                            min: 1,
+                            max: 7,
+                            divisions: 6,
+                            activeColor: AppColors.primary,
+                            onChanged: (double value) {
+                              setModalState(() => days = value);
+                            },
+                          ),
+                          const SizedBox(height: 12),
+                          SizedBox(
+                            width: double.infinity,
+                            child: FilledButton(
+                              onPressed: () {
+                                if (formKey.currentState?.validate() != true) {
+                                  return;
+                                }
+                                Navigator.of(context).pop(
+                                  CreateHabitInput(
+                                    name: nameController.text.trim(),
+                                    description: descriptionController.text
+                                        .trim(),
+                                    category: category,
+                                    targetDaysWeek: days.round(),
+                                  ),
+                                );
+                              },
+                              child: Text(translations.habits_save),
+                            ),
+                          ),
+                        ],
+                      ),
                     ),
                   ),
                 );
@@ -255,7 +308,6 @@ class _HabitsView extends StatelessWidget {
 
     nameController.dispose();
     descriptionController.dispose();
-    categoryController.dispose();
 
     if (input == null || !context.mounted) {
       return;

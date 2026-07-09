@@ -155,7 +155,14 @@ class MessageLookup extends MessageLookupByLibrary {
       "Full name is required",
     ),
     "get_started": MessageLookupByLibrary.simpleMessage("Get started"),
+    "habits_category_health": MessageLookupByLibrary.simpleMessage("Health"),
     "habits_category_label": MessageLookupByLibrary.simpleMessage("Category"),
+    "habits_category_mind": MessageLookupByLibrary.simpleMessage("Mind"),
+    "habits_category_other": MessageLookupByLibrary.simpleMessage("Other"),
+    "habits_category_productivity": MessageLookupByLibrary.simpleMessage(
+      "Productivity",
+    ),
+    "habits_category_social": MessageLookupByLibrary.simpleMessage("Social"),
     "habits_create_title": MessageLookupByLibrary.simpleMessage("Create habit"),
     "habits_days_per_week": m4,
     "habits_description_label": MessageLookupByLibrary.simpleMessage(
@@ -201,6 +208,9 @@ class MessageLookup extends MessageLookupByLibrary {
     ),
     "home_logout_tooltip": MessageLookupByLibrary.simpleMessage("Sign out"),
     "home_manager_ai": MessageLookupByLibrary.simpleMessage("AI Manager"),
+    "home_mood_entry_title": MessageLookupByLibrary.simpleMessage(
+      "How are you feeling right now?",
+    ),
     "home_mood_primary_description": MessageLookupByLibrary.simpleMessage(
       "You\'ve logged 3 entries today. Your average energy level is high.",
     ),

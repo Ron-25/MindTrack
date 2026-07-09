@@ -25,7 +25,7 @@ class EmotionRemoteDataSourceImpl implements EmotionRemoteDataSource {
   Future<List<EmotionEntry>> fetchEntries({int limit = 50}) async {
     try {
       final Response<dynamic> response = await _client.dio.get<dynamic>(
-        '/api/v1/emotions',
+        '/api/v1/emotions/',
         queryParameters: <String, dynamic>{'limit': limit},
       );
       final List<dynamic> json = response.data as List<dynamic>;
@@ -58,7 +58,7 @@ class EmotionRemoteDataSourceImpl implements EmotionRemoteDataSource {
   Future<List<EmotionTypeOption>> fetchEmotionTypes() async {
     try {
       final Response<dynamic> response = await _client.dio.get<dynamic>(
-        '/api/v1/emotion-types',
+        '/api/v1/emotion-types/',
       );
       final List<dynamic> json = response.data as List<dynamic>;
       return json
@@ -76,7 +76,7 @@ class EmotionRemoteDataSourceImpl implements EmotionRemoteDataSource {
   Future<List<EmotionTag>> fetchTags() async {
     try {
       final Response<dynamic> response = await _client.dio.get<dynamic>(
-        '/api/v1/tags',
+        '/api/v1/tags/',
       );
       final List<dynamic> json = response.data as List<dynamic>;
       return json
@@ -94,7 +94,7 @@ class EmotionRemoteDataSourceImpl implements EmotionRemoteDataSource {
   Future<EmotionEntry> createEntry(CreateEmotionEntryInput input) async {
     try {
       final Response<dynamic> response = await _client.dio.post<dynamic>(
-        '/api/v1/emotions',
+        '/api/v1/emotions/',
         data: <String, dynamic>{
           'emotion_type_id': input.emotionTypeId,
           'intensity': input.intensity,

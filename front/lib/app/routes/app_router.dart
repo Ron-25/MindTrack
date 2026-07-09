@@ -11,7 +11,6 @@ import 'package:mind_track/features/login/presentation/pages/sign_up_page.dart';
 import 'package:mind_track/features/notifications/presentation/pages/notifications_page.dart';
 import 'package:mind_track/features/onboarning/presentation/pages/onboarning_page.dart';
 import 'package:mind_track/features/profile/presentation/pages/profile_settings_page.dart';
-import 'package:mind_track/features/search/presentation/pages/search_page.dart';
 import 'package:mind_track/features/splash/presentation/pages/splash_page.dart';
 import 'route_names.dart';
 
@@ -39,7 +38,7 @@ class AppRouter {
       case RouteNames.habits:
         return _slide(const HabitsPage());
       case RouteNames.search:
-        return _slide(const SearchPage());
+        return _slide(const DailyMoodPage(searchMode: true));
       case RouteNames.notifications:
         return _slide(const NotificationsPage());
       case RouteNames.coach:

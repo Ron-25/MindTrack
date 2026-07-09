@@ -157,7 +157,14 @@ class MessageLookup extends MessageLookupByLibrary {
       "El nombre es requerido",
     ),
     "get_started": MessageLookupByLibrary.simpleMessage("Comenzar"),
+    "habits_category_health": MessageLookupByLibrary.simpleMessage("Salud"),
     "habits_category_label": MessageLookupByLibrary.simpleMessage("Categoria"),
+    "habits_category_mind": MessageLookupByLibrary.simpleMessage("Mente"),
+    "habits_category_other": MessageLookupByLibrary.simpleMessage("Otro"),
+    "habits_category_productivity": MessageLookupByLibrary.simpleMessage(
+      "Productividad",
+    ),
+    "habits_category_social": MessageLookupByLibrary.simpleMessage("Social"),
     "habits_create_title": MessageLookupByLibrary.simpleMessage("Crear habito"),
     "habits_days_per_week": m4,
     "habits_description_label": MessageLookupByLibrary.simpleMessage(
@@ -207,6 +214,9 @@ class MessageLookup extends MessageLookupByLibrary {
       "Cerrar sesion",
     ),
     "home_manager_ai": MessageLookupByLibrary.simpleMessage("Manager IA"),
+    "home_mood_entry_title": MessageLookupByLibrary.simpleMessage(
+      "¿Cómo te sientes en este momento?",
+    ),
     "home_mood_primary_description": MessageLookupByLibrary.simpleMessage(
       "Has registrado 3 entradas hoy. Tu nivel promedio de energia es alto.",
     ),

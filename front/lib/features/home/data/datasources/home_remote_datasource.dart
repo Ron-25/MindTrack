@@ -22,7 +22,7 @@ class HomeRemoteDataSourceImpl implements HomeRemoteDataSource {
         <Future<Response<dynamic>>>[
           _client.dio.get<dynamic>('/api/v1/auth/me'),
           _client.dio.get<dynamic>(
-            '/api/v1/emotions',
+            '/api/v1/emotions/',
             queryParameters: <String, dynamic>{
               'start_date': startOfToday.toIso8601String(),
               'end_date': now.toIso8601String(),
@@ -30,7 +30,7 @@ class HomeRemoteDataSourceImpl implements HomeRemoteDataSource {
             },
           ),
           _client.dio.get<dynamic>(
-            '/api/v1/emotions',
+            '/api/v1/emotions/',
             queryParameters: <String, dynamic>{'limit': 5},
           ),
           _client.dio.get<dynamic>(
@@ -43,7 +43,7 @@ class HomeRemoteDataSourceImpl implements HomeRemoteDataSource {
             '/api/v1/analytics/habits-mood',
             queryParameters: <String, dynamic>{'days': 7},
           ),
-          _client.dio.get<dynamic>('/api/v1/habits'),
+          _client.dio.get<dynamic>('/api/v1/habits/'),
         ],
       );
 

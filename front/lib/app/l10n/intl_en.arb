@@ -312,6 +312,16 @@
   "@habits_description_label": {},
   "habits_category_label": "Category",
   "@habits_category_label": {},
+  "habits_category_health": "Health",
+  "@habits_category_health": {},
+  "habits_category_mind": "Mind",
+  "@habits_category_mind": {},
+  "habits_category_social": "Social",
+  "@habits_category_social": {},
+  "habits_category_productivity": "Productivity",
+  "@habits_category_productivity": {},
+  "habits_category_other": "Other",
+  "@habits_category_other": {},
   "habits_days_per_week": "Days per week: {days}",
   "@habits_days_per_week": {
     "placeholders": {

@@ -1,26 +1,55 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:mind_track/app/generated/l10n.dart';
 import 'package:mind_track/app/injector.dart';
 import 'package:mind_track/app/routes/route_names.dart';
 import 'package:mind_track/app/theme/app_colors.dart';
+import 'package:mind_track/shared/widget/mindtrack_app_bar.dart';
 import 'package:mind_track/features/emotion_tracker/domain/entities/emotion_entry.dart';
 import 'package:mind_track/features/emotion_tracker/presentation/cubit/emotion_cubit.dart';
 import 'package:mind_track/features/emotion_tracker/presentation/cubit/emotion_state.dart';
 
 class DailyMoodPage extends StatelessWidget {
-  const DailyMoodPage({super.key});
+  const DailyMoodPage({super.key, this.searchMode = false});
+
+  final bool searchMode;
 
   @override
   Widget build(BuildContext context) {
     return BlocProvider<EmotionCubit>(
       create: (_) => Injector.get<EmotionCubit>()..loadEntries(),
-      child: const _DailyMoodView(),
+      child: _DailyMoodView(searchMode: searchMode),
     );
   }
 }
 
-class _DailyMoodView extends StatelessWidget {
-  const _DailyMoodView();
+class _DailyMoodView extends StatefulWidget {
+  const _DailyMoodView({required this.searchMode});
+
+  final bool searchMode;
+
+  @override
+  State<_DailyMoodView> createState() => _DailyMoodViewState();
+}
+
+class _DailyMoodViewState extends State<_DailyMoodView> {
+  late final TextEditingController _searchController;
+  String _query = '';
+
+  @override
+  void initState() {
+    super.initState();
+    _searchController = TextEditingController();
+    _searchController.addListener(() {
+      setState(() => _query = _searchController.text.trim().toLowerCase());
+    });
+  }
+
+  @override
+  void dispose() {
+    _searchController.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -46,9 +75,8 @@ class _DailyMoodView extends StatelessWidget {
       },
       child: Scaffold(
         backgroundColor: AppColors.background,
-        appBar: AppBar(
-          title: const Text('Historial emocional'),
-          backgroundColor: AppColors.background,
+        appBar: MindTrackAppBar(
+          title: widget.searchMode ? 'Buscar en historial' : 'Historial emocional',
         ),
         floatingActionButton: FloatingActionButton.extended(
           onPressed: () => _openComposer(context),
@@ -70,6 +98,10 @@ class _DailyMoodView extends StatelessWidget {
   }
 
   Widget _buildBody(BuildContext context, EmotionState state) {
+    final List<EmotionEntry> filteredEntries = state.entries
+        .where((EmotionEntry entry) => _matchesQuery(entry))
+        .toList(growable: false);
+
     if (state.isLoading && state.entries.isEmpty) {
       return const Center(child: CircularProgressIndicator());
     }
@@ -142,10 +174,18 @@ class _DailyMoodView extends StatelessWidget {
     return ListView.separated(
       physics: const AlwaysScrollableScrollPhysics(),
       padding: const EdgeInsets.fromLTRB(16, 16, 16, 120),
-      itemCount: state.entries.length,
+      itemCount: filteredEntries.length + 1,
       separatorBuilder: (_, _) => const SizedBox(height: 12),
       itemBuilder: (BuildContext context, int index) {
-        final EmotionEntry entry = state.entries[index];
+        if (index == 0) {
+          return _buildSearchBox(context, filteredEntries.length);
+        }
+
+        if (filteredEntries.isEmpty) {
+          return const SizedBox.shrink();
+        }
+
+        final EmotionEntry entry = filteredEntries[index - 1];
         return Dismissible(
           key: ValueKey<String>(entry.id),
           direction: DismissDirection.endToStart,
@@ -249,6 +289,76 @@ class _DailyMoodView extends StatelessWidget {
         );
       },
     );
+  }
+
+  Widget _buildSearchBox(BuildContext context, int resultCount) {
+    final S translations = S.of(context);
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: <Widget>[
+        TextField(
+          controller: _searchController,
+          autofocus: widget.searchMode,
+          decoration: InputDecoration(
+            hintText: widget.searchMode
+                ? translations.search_hint
+                : 'Buscar en historial emocional',
+            prefixIcon: const Icon(Icons.search_rounded),
+            suffixIcon: _query.isEmpty
+                ? null
+                : IconButton(
+                    onPressed: _searchController.clear,
+                    icon: const Icon(Icons.close_rounded),
+                  ),
+            filled: true,
+            fillColor: Colors.white,
+            border: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(18),
+              borderSide: BorderSide.none,
+            ),
+          ),
+        ),
+        const SizedBox(height: 12),
+        Text(
+          _query.isEmpty
+              ? 'Explora tu historial emocional'
+              : '$resultCount resultado(s)',
+          style: const TextStyle(
+            fontSize: 13,
+            color: Color(0xFF64748B),
+            fontWeight: FontWeight.w500,
+          ),
+        ),
+        if (_query.isNotEmpty && resultCount == 0) ...<Widget>[
+          const SizedBox(height: 28),
+          const Center(
+            child: Text(
+              'No encontramos emociones con esa busqueda.',
+              textAlign: TextAlign.center,
+              style: TextStyle(color: Color(0xFF64748B), height: 1.4),
+            ),
+          ),
+        ],
+      ],
+    );
+  }
+
+  bool _matchesQuery(EmotionEntry entry) {
+    if (_query.isEmpty) {
+      return true;
+    }
+
+    final String haystack = <String>[
+      entry.emotionName,
+      entry.emotionNameEs ?? '',
+      entry.note ?? '',
+      entry.contextActivity ?? '',
+      entry.contextPlace ?? '',
+      entry.contextPeople ?? '',
+      ...entry.tags.map((EmotionTag tag) => tag.name),
+    ].join(' ').toLowerCase();
+
+    return haystack.contains(_query);
   }
 
   Future<void> _openComposer(BuildContext context) async {

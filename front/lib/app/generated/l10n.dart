@@ -719,6 +719,16 @@ class S {
     return Intl.message('SUN', name: 'home_weekday_sun', desc: '', args: []);
   }
 
+  /// `How are you feeling right now?`
+  String get home_mood_entry_title {
+    return Intl.message(
+      'How are you feeling right now?',
+      name: 'home_mood_entry_title',
+      desc: '',
+      args: [],
+    );
+  }
+
   /// `Good morning, {name}`
   String home_greeting_morning(Object name) {
     return Intl.message(
@@ -1254,6 +1264,56 @@ class S {
     return Intl.message(
       'Category',
       name: 'habits_category_label',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Health`
+  String get habits_category_health {
+    return Intl.message(
+      'Health',
+      name: 'habits_category_health',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Mind`
+  String get habits_category_mind {
+    return Intl.message(
+      'Mind',
+      name: 'habits_category_mind',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Social`
+  String get habits_category_social {
+    return Intl.message(
+      'Social',
+      name: 'habits_category_social',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Productivity`
+  String get habits_category_productivity {
+    return Intl.message(
+      'Productivity',
+      name: 'habits_category_productivity',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Other`
+  String get habits_category_other {
+    return Intl.message(
+      'Other',
+      name: 'habits_category_other',
       desc: '',
       args: [],
     );

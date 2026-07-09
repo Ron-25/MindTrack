@@ -21,7 +21,7 @@ class HabitRemoteDataSourceImpl implements HabitRemoteDataSource {
       final DateTime now = DateTime.now();
       final DateTime weekStart = now.subtract(Duration(days: now.weekday - 1));
       final Response<dynamic> listResponse = await _client.dio.get<dynamic>(
-        '/api/v1/habits',
+        '/api/v1/habits/',
       );
       final List<Map<String, dynamic>> habits =
           (listResponse.data as List<dynamic>).cast<Map<String, dynamic>>();
@@ -98,7 +98,7 @@ class HabitRemoteDataSourceImpl implements HabitRemoteDataSource {
   Future<void> createHabit(CreateHabitInput input) async {
     try {
       await _client.dio.post<dynamic>(
-        '/api/v1/habits',
+        '/api/v1/habits/',
         data: <String, dynamic>{
           'name': input.name,
           'description': input.description?.trim().isEmpty == true

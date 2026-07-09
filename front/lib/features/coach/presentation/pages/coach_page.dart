@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:mind_track/app/generated/l10n.dart';
 import 'package:mind_track/app/injector.dart';
 import 'package:mind_track/app/theme/app_colors.dart';
+import 'package:mind_track/shared/widget/mindtrack_app_bar.dart';
 import 'package:mind_track/features/coach/domain/entities/coach_response.dart';
 import 'package:mind_track/features/coach/domain/repositories/coach_repository.dart';
 
@@ -57,10 +58,7 @@ class _CoachPageState extends State<CoachPage> {
 
     return Scaffold(
       backgroundColor: const Color(0xFFF8FAFC),
-      appBar: AppBar(
-        title: Text(S.of(context).coach_title),
-        backgroundColor: const Color(0xFFF8FAFC),
-      ),
+      appBar: MindTrackAppBar(title: S.of(context).coach_title),
       body: SafeArea(
         child: RefreshIndicator(
           onRefresh: _loadData,

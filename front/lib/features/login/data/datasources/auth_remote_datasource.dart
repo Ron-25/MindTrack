@@ -48,7 +48,11 @@ class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
     try {
       final Response<dynamic> response = await _client.dio.post<dynamic>(
         '/api/v1/auth/register',
-        data: <String, String>{'name': name, 'email': email, 'password': password},
+        data: <String, String>{
+          'name': name,
+          'email': email,
+          'password': password,
+        },
       );
       return AuthTokenModel.fromJson(response.data as Map<String, dynamic>);
     } on DioException catch (e) {

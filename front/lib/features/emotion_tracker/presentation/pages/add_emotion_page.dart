@@ -15,13 +15,13 @@ class AddEmotionPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return BlocProvider<EmotionCubit>(
       create: (_) => Injector.get<EmotionCubit>()..loadComposerData(),
-      child: _AddEmotionView(),
+      child: const _AddEmotionView(),
     );
   }
 }
 
 class _AddEmotionView extends StatefulWidget {
-  _AddEmotionView();
+  const _AddEmotionView();
 
   @override
   State<_AddEmotionView> createState() => _AddEmotionViewState();
@@ -71,7 +71,7 @@ class _AddEmotionViewState extends State<_AddEmotionView> {
       child: Scaffold(
         backgroundColor: Theme.of(context).scaffoldBackgroundColor,
         appBar: AppBar(
-          title: Text('Registrar emoción'),
+          title: const Text('Registrar emoción'),
           backgroundColor: Theme.of(context).scaffoldBackgroundColor,
         ),
         body: BlocBuilder<EmotionCubit, EmotionState>(
@@ -85,20 +85,20 @@ class _AddEmotionViewState extends State<_AddEmotionView> {
         bottomNavigationBar: SafeArea(
           top: false,
           child: Padding(
-            padding: EdgeInsets.fromLTRB(16, 12, 16, 16),
+            padding: const EdgeInsets.fromLTRB(16, 12, 16, 16),
             child: BlocBuilder<EmotionCubit, EmotionState>(
               builder: (BuildContext context, EmotionState state) {
                 return FilledButton(
                   onPressed: state.isLoading || state.isSaving ? null : _submit,
                   style: FilledButton.styleFrom(
-                    minimumSize: Size(double.infinity, 56),
+                    minimumSize: const Size(double.infinity, 56),
                     backgroundColor: AppColors.primary,
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(18),
                     ),
                   ),
                   child: state.isSaving
-                      ? SizedBox(
+                      ? const SizedBox(
                           width: 22,
                           height: 22,
                           child: CircularProgressIndicator(
@@ -106,7 +106,7 @@ class _AddEmotionViewState extends State<_AddEmotionView> {
                             color: Colors.white,
                           ),
                         )
-                      : Text('Guardar registro'),
+                      : const Text('Guardar registro'),
                 );
               },
             ),
@@ -118,23 +118,23 @@ class _AddEmotionViewState extends State<_AddEmotionView> {
 
   Widget _buildBody(BuildContext context, EmotionState state) {
     if (state.isLoading) {
-      return Center(child: CircularProgressIndicator());
+      return const Center(child: CircularProgressIndicator());
     }
     if (state.errorMessage != null &&
         state.emotionTypes.isEmpty &&
         state.tags.isEmpty) {
       return Center(
         child: Padding(
-          padding: EdgeInsets.all(24),
+          padding: const EdgeInsets.all(24),
           child: Column(
             mainAxisSize: MainAxisSize.min,
             children: <Widget>[
               Text(state.errorMessage!, textAlign: TextAlign.center),
-              SizedBox(height: 16),
+              const SizedBox(height: 16),
               FilledButton(
                 onPressed: () =>
                     context.read<EmotionCubit>().loadComposerData(),
-                child: Text('Reintentar'),
+                child: const Text('Reintentar'),
               ),
             ],
           ),
@@ -143,7 +143,7 @@ class _AddEmotionViewState extends State<_AddEmotionView> {
     }
 
     return ListView(
-      padding: EdgeInsets.fromLTRB(16, 12, 16, 24),
+      padding: const EdgeInsets.fromLTRB(16, 12, 16, 24),
       children: <Widget>[
         Text(
           '¿Qué emoción quieres registrar?',
@@ -153,12 +153,12 @@ class _AddEmotionViewState extends State<_AddEmotionView> {
             color: context.mtColors.textPrimary,
           ),
         ),
-        SizedBox(height: 8),
+        const SizedBox(height: 8),
         Text(
           'Completa los detalles para relacionar cómo te sentiste con el contexto.',
           style: TextStyle(color: context.mtColors.textSecondary, height: 1.45),
         ),
-        SizedBox(height: 20),
+        const SizedBox(height: 20),
         _SectionCard(
           title: 'Emoción principal',
           child: Wrap(
@@ -174,7 +174,9 @@ class _AddEmotionViewState extends State<_AddEmotionView> {
                     avatar: Icon(
                       _iconForEmotion(type),
                       size: 18,
-                      color: isSelected ? accent : context.mtColors.textSecondary,
+                      color: isSelected
+                          ? accent
+                          : context.mtColors.textSecondary,
                     ),
                     side: BorderSide(color: accent.withValues(alpha: 0.4)),
                     selectedColor: accent.withValues(alpha: 0.16),
@@ -184,7 +186,7 @@ class _AddEmotionViewState extends State<_AddEmotionView> {
                 .toList(growable: false),
           ),
         ),
-        SizedBox(height: 16),
+        const SizedBox(height: 16),
         _SectionCard(
           title: 'Intensidad',
           child: Column(
@@ -204,15 +206,15 @@ class _AddEmotionViewState extends State<_AddEmotionView> {
                     'Suave',
                     style: TextStyle(color: context.mtColors.textMuted),
                   ),
-                  Spacer(),
+                  const Spacer(),
                   Text(
                     '${_intensity.round()}/10',
-                    style: TextStyle(
+                    style: const TextStyle(
                       fontWeight: FontWeight.w700,
                       color: AppColors.primary,
                     ),
                   ),
-                  Spacer(),
+                  const Spacer(),
                   Text(
                     'Alta',
                     style: TextStyle(color: context.mtColors.textMuted),
@@ -222,7 +224,7 @@ class _AddEmotionViewState extends State<_AddEmotionView> {
             ],
           ),
         ),
-        SizedBox(height: 16),
+        const SizedBox(height: 16),
         _SectionCard(
           title: 'Contexto',
           child: Column(
@@ -233,14 +235,14 @@ class _AddEmotionViewState extends State<_AddEmotionView> {
                 hint: 'Ej. reunión, ejercicio, descanso',
                 icon: Icons.local_activity_outlined,
               ),
-              SizedBox(height: 12),
+              const SizedBox(height: 12),
               _AppField(
                 controller: _placeController,
                 label: 'Lugar',
                 hint: 'Ej. casa, oficina, universidad',
                 icon: Icons.place_outlined,
               ),
-              SizedBox(height: 12),
+              const SizedBox(height: 12),
               _AppField(
                 controller: _peopleController,
                 label: 'Personas',
@@ -250,20 +252,20 @@ class _AddEmotionViewState extends State<_AddEmotionView> {
             ],
           ),
         ),
-        SizedBox(height: 16),
+        const SizedBox(height: 16),
         _SectionCard(
           title: 'Nota',
           child: TextField(
             controller: _noteController,
             maxLines: 4,
-            decoration: InputDecoration(
+            decoration: const InputDecoration(
               hintText: 'Describe qué pasó o qué te disparó esta emoción.',
               border: OutlineInputBorder(),
             ),
           ),
         ),
         if (state.tags.isNotEmpty) ...<Widget>[
-          SizedBox(height: 16),
+          const SizedBox(height: 16),
           _SectionCard(
             title: 'Tags',
             child: Wrap(
@@ -301,7 +303,7 @@ class _AddEmotionViewState extends State<_AddEmotionView> {
   void _submit() {
     if (_selectedEmotion == null) {
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Selecciona una emoción para continuar.')),
+        const SnackBar(content: Text('Selecciona una emoción para continuar.')),
       );
       return;
     }
@@ -358,7 +360,7 @@ class _SectionCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding: EdgeInsets.all(16),
+      padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
         color: context.mtColors.card,
         borderRadius: BorderRadius.circular(24),
@@ -375,7 +377,7 @@ class _SectionCard extends StatelessWidget {
               color: context.mtColors.textPrimary,
             ),
           ),
-          SizedBox(height: 14),
+          const SizedBox(height: 14),
           child,
         ],
       ),
@@ -404,7 +406,7 @@ class _AppField extends StatelessWidget {
         labelText: label,
         hintText: hint,
         prefixIcon: Icon(icon),
-        border: OutlineInputBorder(),
+        border: const OutlineInputBorder(),
       ),
     );
   }

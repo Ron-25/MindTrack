@@ -10,9 +10,9 @@ class LoginBloc extends HydratedBloc<LoginEvent, LoginState> {
   LoginBloc({
     required AuthRepository authRepository,
     required TokenStorageService tokenStorageService,
-  })  : _authRepository = authRepository,
-        _tokenStorage = tokenStorageService,
-        super(const LoginState()) {
+  }) : _authRepository = authRepository,
+       _tokenStorage = tokenStorageService,
+       super(const LoginState()) {
     on<LoginEmailChanged>(_onEmailChanged);
     on<LoginPasswordChanged>(_onPasswordChanged);
     on<LoginSubmitted>(_onLoginSubmitted);
@@ -29,7 +29,10 @@ class LoginBloc extends HydratedBloc<LoginEvent, LoginState> {
     emit(state.copyWith(email: event.email));
   }
 
-  void _onPasswordChanged(LoginPasswordChanged event, Emitter<LoginState> emit) {
+  void _onPasswordChanged(
+    LoginPasswordChanged event,
+    Emitter<LoginState> emit,
+  ) {
     emit(state.copyWith(password: event.password));
   }
 
@@ -37,14 +40,16 @@ class LoginBloc extends HydratedBloc<LoginEvent, LoginState> {
     LoginSubmitted event,
     Emitter<LoginState> emit,
   ) async {
-    emit(state.copyWith(
-      isSubmitting: true,
-      isFailure: false,
-      isSuccess: false,
-      logIn: false,
-      signUp: false,
-      clearError: true,
-    ));
+    emit(
+      state.copyWith(
+        isSubmitting: true,
+        isFailure: false,
+        isSuccess: false,
+        logIn: false,
+        signUp: false,
+        clearError: true,
+      ),
+    );
     try {
       final AuthToken token = await _authRepository.login(
         email: state.email,
@@ -54,29 +59,35 @@ class LoginBloc extends HydratedBloc<LoginEvent, LoginState> {
         accessToken: token.accessToken,
         refreshToken: token.refreshToken,
       );
-      emit(state.copyWith(
-        isSubmitting: false,
-        isSuccess: true,
-        logIn: true,
-        signUp: false,
-        clearError: true,
-      ));
+      emit(
+        state.copyWith(
+          isSubmitting: false,
+          isSuccess: true,
+          logIn: true,
+          signUp: false,
+          clearError: true,
+        ),
+      );
     } on AuthException catch (e) {
-      emit(state.copyWith(
-        isSubmitting: false,
-        isFailure: true,
-        logIn: false,
-        signUp: false,
-        errorMessage: e.message,
-      ));
+      emit(
+        state.copyWith(
+          isSubmitting: false,
+          isFailure: true,
+          logIn: false,
+          signUp: false,
+          errorMessage: e.message,
+        ),
+      );
     } catch (_) {
-      emit(state.copyWith(
-        isSubmitting: false,
-        isFailure: true,
-        logIn: false,
-        signUp: false,
-        errorMessage: 'Error de conexión. Verifica tu red.',
-      ));
+      emit(
+        state.copyWith(
+          isSubmitting: false,
+          isFailure: true,
+          logIn: false,
+          signUp: false,
+          errorMessage: 'Error de conexión. Verifica tu red.',
+        ),
+      );
     }
   }
 
@@ -84,14 +95,16 @@ class LoginBloc extends HydratedBloc<LoginEvent, LoginState> {
     SignUpSubmitted event,
     Emitter<LoginState> emit,
   ) async {
-    emit(state.copyWith(
-      isSubmitting: true,
-      isFailure: false,
-      isSuccess: false,
-      logIn: false,
-      signUp: false,
-      clearError: true,
-    ));
+    emit(
+      state.copyWith(
+        isSubmitting: true,
+        isFailure: false,
+        isSuccess: false,
+        logIn: false,
+        signUp: false,
+        clearError: true,
+      ),
+    );
     try {
       final AuthToken token = await _authRepository.register(
         name: event.name,
@@ -102,29 +115,35 @@ class LoginBloc extends HydratedBloc<LoginEvent, LoginState> {
         accessToken: token.accessToken,
         refreshToken: token.refreshToken,
       );
-      emit(state.copyWith(
-        isSubmitting: false,
-        isSuccess: true,
-        signUp: true,
-        logIn: false,
-        clearError: true,
-      ));
+      emit(
+        state.copyWith(
+          isSubmitting: false,
+          isSuccess: true,
+          signUp: true,
+          logIn: false,
+          clearError: true,
+        ),
+      );
     } on AuthException catch (e) {
-      emit(state.copyWith(
-        isSubmitting: false,
-        isFailure: true,
-        logIn: false,
-        signUp: false,
-        errorMessage: e.message,
-      ));
+      emit(
+        state.copyWith(
+          isSubmitting: false,
+          isFailure: true,
+          logIn: false,
+          signUp: false,
+          errorMessage: e.message,
+        ),
+      );
     } catch (_) {
-      emit(state.copyWith(
-        isSubmitting: false,
-        isFailure: true,
-        logIn: false,
-        signUp: false,
-        errorMessage: 'Error de conexión. Verifica tu red.',
-      ));
+      emit(
+        state.copyWith(
+          isSubmitting: false,
+          isFailure: true,
+          logIn: false,
+          signUp: false,
+          errorMessage: 'Error de conexión. Verifica tu red.',
+        ),
+      );
     }
   }
 
@@ -132,13 +151,15 @@ class LoginBloc extends HydratedBloc<LoginEvent, LoginState> {
     SignUpSuccess event,
     Emitter<LoginState> emit,
   ) async {
-    emit(state.copyWith(
-      isSubmitting: false,
-      isSuccess: false,
-      isFailure: false,
-      logIn: false,
-      signUp: false,
-    ));
+    emit(
+      state.copyWith(
+        isSubmitting: false,
+        isSuccess: false,
+        isFailure: false,
+        logIn: false,
+        signUp: false,
+      ),
+    );
     await Future<void>.delayed(const Duration(milliseconds: 300));
     emit(state.copyWith(signUp: true, logIn: false));
   }
@@ -148,14 +169,16 @@ class LoginBloc extends HydratedBloc<LoginEvent, LoginState> {
   }
 
   void _onStatusReset(LoginStatusReset event, Emitter<LoginState> emit) {
-    emit(state.copyWith(
-      isSubmitting: false,
-      isSuccess: false,
-      isFailure: false,
-      logIn: false,
-      signUp: false,
-      clearError: true,
-    ));
+    emit(
+      state.copyWith(
+        isSubmitting: false,
+        isSuccess: false,
+        isFailure: false,
+        logIn: false,
+        signUp: false,
+        clearError: true,
+      ),
+    );
   }
 
   @override

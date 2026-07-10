@@ -173,10 +173,7 @@ class _ForgotPasswordPageState extends State<ForgotPasswordPage> {
             ),
             child: Text(
               translations.forgot_password_back_to_login,
-              style: const TextStyle(
-                fontSize: 16,
-                fontWeight: FontWeight.w600,
-              ),
+              style: const TextStyle(fontSize: 16, fontWeight: FontWeight.w600),
             ),
           ),
         ),
@@ -193,9 +190,7 @@ class _ForgotPasswordPageState extends State<ForgotPasswordPage> {
 
     setState(() => _isSending = true);
     try {
-      final String message = await _authRepository.forgotPassword(
-        email: email,
-      );
+      final String message = await _authRepository.forgotPassword(email: email);
       if (!mounted) {
         return;
       }

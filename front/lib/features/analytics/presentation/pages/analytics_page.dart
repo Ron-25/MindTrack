@@ -21,13 +21,13 @@ class AnalyticsPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return BlocProvider<AnalyticsCubit>(
       create: (_) => Injector.get<AnalyticsCubit>()..loadSnapshot(),
-      child: _AnalyticsView(),
+      child: const _AnalyticsView(),
     );
   }
 }
 
 class _AnalyticsView extends StatefulWidget {
-  _AnalyticsView();
+  const _AnalyticsView();
 
   @override
   State<_AnalyticsView> createState() => _AnalyticsViewState();
@@ -46,7 +46,7 @@ class _AnalyticsViewState extends State<_AnalyticsView> {
         child: BlocBuilder<AnalyticsCubit, AnalyticsState>(
           builder: (BuildContext context, AnalyticsState state) {
             if (state.isLoading && state.snapshot == null) {
-              return Center(child: CircularProgressIndicator());
+              return const Center(child: CircularProgressIndicator());
             }
             if (state.errorMessage != null && state.snapshot == null) {
               return _ErrorState(
@@ -60,23 +60,23 @@ class _AnalyticsViewState extends State<_AnalyticsView> {
               color: AppColors.primary,
               onRefresh: context.read<AnalyticsCubit>().loadSnapshot,
               child: ListView(
-                physics: AlwaysScrollableScrollPhysics(),
-                padding: EdgeInsets.fromLTRB(16, 24, 16, 32),
+                physics: const AlwaysScrollableScrollPhysics(),
+                padding: const EdgeInsets.fromLTRB(16, 24, 16, 32),
                 children: <Widget>[
                   _buildRangeSelector(translations),
-                  SizedBox(height: 32),
+                  const SizedBox(height: 32),
                   _TrendsSection(
                     summary: snapshot.weeklySummary,
                     points: snapshot.correlation,
                   ),
-                  SizedBox(height: 32),
+                  const SizedBox(height: 32),
                   _DistributionSection(frequency: snapshot.frequency),
-                  SizedBox(height: 32),
+                  const SizedBox(height: 32),
                   _PatternsSection(
                     summary: snapshot.weeklySummary,
                     points: snapshot.correlation,
                   ),
-                  SizedBox(height: 32),
+                  const SizedBox(height: 32),
                   _InsightCard(summary: snapshot.weeklySummary),
                 ],
               ),
@@ -94,7 +94,7 @@ class _AnalyticsViewState extends State<_AnalyticsView> {
       translations.analytics_range_year,
     ];
     return Container(
-      padding: EdgeInsets.all(4),
+      padding: const EdgeInsets.all(4),
       decoration: BoxDecoration(
         color: AppColors.primary.withValues(alpha: 0.05),
         borderRadius: BorderRadius.circular(24),
@@ -106,14 +106,14 @@ class _AnalyticsViewState extends State<_AnalyticsView> {
             child: GestureDetector(
               onTap: () => setState(() => _selectedRange = index),
               child: AnimatedContainer(
-                duration: Duration(milliseconds: 200),
-                padding: EdgeInsets.symmetric(vertical: 8),
+                duration: const Duration(milliseconds: 200),
+                padding: const EdgeInsets.symmetric(vertical: 8),
                 decoration: BoxDecoration(
                   color: isSelected ? Colors.white : Colors.transparent,
                   borderRadius: BorderRadius.circular(16),
                   boxShadow: isSelected
                       ? <BoxShadow>[
-                          BoxShadow(
+                          const BoxShadow(
                             color: Color(0x0D000000),
                             blurRadius: 1,
                             offset: Offset(0, 1),
@@ -172,14 +172,14 @@ class _TrendsSection extends StatelessWidget {
               ),
             ),
             Container(
-              padding: EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+              padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
               decoration: BoxDecoration(
-                color: Color(0xFFD1FAE5),
+                color: const Color(0xFFD1FAE5),
                 borderRadius: BorderRadius.circular(999),
               ),
               child: Text(
                 translations.analytics_records_count(summary.totalLogs),
-                style: TextStyle(
+                style: const TextStyle(
                   fontSize: 12,
                   fontWeight: FontWeight.w600,
                   color: Color(0xFF059669),
@@ -188,7 +188,7 @@ class _TrendsSection extends StatelessWidget {
             ),
           ],
         ),
-        SizedBox(height: 16),
+        const SizedBox(height: 16),
         _FigmaCard(
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
@@ -200,7 +200,7 @@ class _TrendsSection extends StatelessWidget {
                   color: context.mtColors.textSecondary,
                 ),
               ),
-              SizedBox(height: 8),
+              const SizedBox(height: 8),
               Text(
                 summary.dominantEmotionName ??
                     translations.analytics_no_dominant_emotion,
@@ -211,7 +211,7 @@ class _TrendsSection extends StatelessWidget {
                   color: context.mtColors.textPrimary,
                 ),
               ),
-              SizedBox(height: 6),
+              const SizedBox(height: 6),
               Text(
                 isFallback
                     ? translations.analytics_mood_flow_fallback_caption
@@ -222,7 +222,7 @@ class _TrendsSection extends StatelessWidget {
                   color: context.mtColors.textMuted,
                 ),
               ),
-              SizedBox(height: 24),
+              const SizedBox(height: 24),
               if (series == null)
                 SizedBox(
                   height: 152,
@@ -244,33 +244,38 @@ class _TrendsSection extends StatelessWidget {
                       values: series.values,
                       maxY: series.maxY,
                       color: moodColor,
+                      gridColor: context.mtColors.border,
+                      axisLabelColor: context.mtColors.textMuted,
+                      valueLabelColor: context.mtColors.textSecondary,
                     ),
                   ),
                 ),
-                SizedBox(height: 12),
+                const SizedBox(height: 12),
                 Padding(
-                  padding: EdgeInsets.only(
+                  padding: const EdgeInsets.only(
                     left: _MoodLinePainter.axisWidth,
                     right: 4,
                   ),
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: points.map((HabitMoodPoint point) {
-                      final bool isToday = _isSameDay(
-                        point.date,
-                        DateTime.now(),
-                      );
-                      return Text(
-                        _dayLetter(context, point.date),
-                        style: TextStyle(
-                          fontSize: 12,
-                          fontWeight: FontWeight.w700,
-                          color: isToday
-                              ? AppColors.primary
-                              : context.mtColors.textMuted,
-                        ),
-                      );
-                    }).toList(growable: false),
+                    children: points
+                        .map((HabitMoodPoint point) {
+                          final bool isToday = _isSameDay(
+                            point.date,
+                            DateTime.now(),
+                          );
+                          return Text(
+                            _dayLetter(context, point.date),
+                            style: TextStyle(
+                              fontSize: 12,
+                              fontWeight: FontWeight.w700,
+                              color: isToday
+                                  ? AppColors.primary
+                                  : context.mtColors.textMuted,
+                            ),
+                          );
+                        })
+                        .toList(growable: false),
                   ),
                 ),
               ],
@@ -289,9 +294,8 @@ class _TrendsSection extends StatelessWidget {
     }
     final List<double?> intensities = points
         .map(
-          (HabitMoodPoint point) => (point.avgIntensity ?? 0) > 0
-              ? point.avgIntensity
-              : null,
+          (HabitMoodPoint point) =>
+              (point.avgIntensity ?? 0) > 0 ? point.avgIntensity : null,
         )
         .toList(growable: false);
     if (intensities.whereType<double>().length >= 2) {
@@ -300,7 +304,9 @@ class _TrendsSection extends StatelessWidget {
 
     // Si no hay intensidades registradas, usa los habitos completados.
     final List<double?> habits = points
-        .map<double?>((HabitMoodPoint point) => point.habitsCompleted.toDouble())
+        .map<double?>(
+          (HabitMoodPoint point) => point.habitsCompleted.toDouble(),
+        )
         .toList(growable: false);
     if (habits.every((double? value) => value == 0)) {
       return null;
@@ -351,7 +357,7 @@ class _DistributionSection extends StatelessWidget {
             color: context.mtColors.textPrimary,
           ),
         ),
-        SizedBox(height: 16),
+        const SizedBox(height: 16),
         _FigmaCard(
           child: frequency.isEmpty
               ? Text(
@@ -391,6 +397,7 @@ class _DistributionSection extends StatelessWidget {
                       .map((EmotionFrequencyItem item) => item.percentage)
                       .toList(growable: false),
                   colors: colors,
+                  trackColor: context.mtColors.border,
                 ),
               ),
               Center(
@@ -421,7 +428,7 @@ class _DistributionSection extends StatelessWidget {
             ],
           ),
         ),
-        SizedBox(width: 32),
+        const SizedBox(width: 32),
         Expanded(
           child: Column(
             children: List<Widget>.generate(items.length, (int index) {
@@ -440,7 +447,7 @@ class _DistributionSection extends StatelessWidget {
                         shape: BoxShape.circle,
                       ),
                     ),
-                    SizedBox(width: 8),
+                    const SizedBox(width: 8),
                     Expanded(
                       child: Text(
                         item.name,
@@ -470,7 +477,6 @@ class _DistributionSection extends StatelessWidget {
       ],
     );
   }
-
 }
 
 Color _colorFromHex(String? hex, Color fallback) {
@@ -504,7 +510,7 @@ class _PatternsSection extends StatelessWidget {
             color: context.mtColors.textPrimary,
           ),
         ),
-        SizedBox(height: 16),
+        const SizedBox(height: 16),
         SizedBox(
           height: 130,
           child: Row(
@@ -519,13 +525,13 @@ class _PatternsSection extends StatelessWidget {
                   value: _topDayText(context, translations),
                 ),
               ),
-              SizedBox(width: 16),
+              const SizedBox(width: 16),
               Expanded(
                 child: _PatternCard(
-                  backgroundColor: Color(0xFFFEF3C7),
-                  borderColor: Color(0x80FDE68A),
+                  backgroundColor: const Color(0xFFFEF3C7),
+                  borderColor: const Color(0x80FDE68A),
                   icon: Icons.nightlight_round,
-                  iconColor: Color(0xFFD97706),
+                  iconColor: const Color(0xFFD97706),
                   label: translations.analytics_habits_card_label,
                   value: summary.habitsCompletionPct != null
                       ? translations.analytics_habits_card_value(
@@ -553,7 +559,8 @@ class _PatternsSection extends StatelessWidget {
     HabitMoodPoint? best;
     for (final HabitMoodPoint point in points) {
       final double intensity = point.avgIntensity ?? 0;
-      if (intensity > 0 && (best == null || intensity > (best.avgIntensity ?? 0))) {
+      if (intensity > 0 &&
+          (best == null || intensity > (best.avgIntensity ?? 0))) {
         best = point;
       }
     }
@@ -594,7 +601,7 @@ class _PatternCard extends StatelessWidget {
         onTap: onTap,
         borderRadius: BorderRadius.circular(24),
         child: Container(
-          padding: EdgeInsets.all(16),
+          padding: const EdgeInsets.all(16),
           decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(24),
             border: Border.all(color: borderColor),
@@ -603,7 +610,7 @@ class _PatternCard extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: <Widget>[
               Icon(icon, size: 22, color: iconColor),
-              SizedBox(height: 10),
+              const SizedBox(height: 10),
               Text(
                 label.toUpperCase(),
                 style: TextStyle(
@@ -613,7 +620,7 @@ class _PatternCard extends StatelessWidget {
                   color: context.mtColors.textSecondary,
                 ),
               ),
-              SizedBox(height: 2),
+              const SizedBox(height: 2),
               Expanded(
                 child: Text(
                   value,
@@ -647,7 +654,7 @@ class _InsightCard extends StatelessWidget {
         ? summary.insightText!
         : translations.analytics_default_insight;
     return Container(
-      padding: EdgeInsets.all(24),
+      padding: const EdgeInsets.all(24),
       decoration: BoxDecoration(
         color: context.mtColors.textPrimary,
         borderRadius: BorderRadius.circular(16),
@@ -664,16 +671,16 @@ class _InsightCard extends StatelessWidget {
                   color: AppColors.primary,
                   borderRadius: BorderRadius.circular(12),
                 ),
-                child: Icon(
+                child: const Icon(
                   Icons.lightbulb_outline_rounded,
                   size: 20,
                   color: Colors.white,
                 ),
               ),
-              SizedBox(width: 12),
+              const SizedBox(width: 12),
               Text(
                 translations.analytics_insight_title,
-                style: TextStyle(
+                style: const TextStyle(
                   fontSize: 18,
                   fontWeight: FontWeight.w700,
                   color: Colors.white,
@@ -681,7 +688,7 @@ class _InsightCard extends StatelessWidget {
               ),
             ],
           ),
-          SizedBox(height: 12),
+          const SizedBox(height: 12),
           Text(
             insight,
             style: TextStyle(
@@ -690,25 +697,25 @@ class _InsightCard extends StatelessWidget {
               color: context.mtColors.controlBorder,
             ),
           ),
-          SizedBox(height: 8),
+          const SizedBox(height: 8),
           InkWell(
             onTap: () => Navigator.of(context).pushNamed(RouteNames.coach),
             borderRadius: BorderRadius.circular(8),
             child: Padding(
-              padding: EdgeInsets.symmetric(vertical: 4),
+              padding: const EdgeInsets.symmetric(vertical: 4),
               child: Row(
                 mainAxisSize: MainAxisSize.min,
                 children: <Widget>[
                   Text(
                     translations.analytics_read_more,
-                    style: TextStyle(
+                    style: const TextStyle(
                       fontSize: 14,
                       fontWeight: FontWeight.w700,
                       color: AppColors.primary,
                     ),
                   ),
-                  SizedBox(width: 4),
-                  Icon(
+                  const SizedBox(width: 4),
+                  const Icon(
                     Icons.arrow_forward_rounded,
                     size: 14,
                     color: AppColors.primary,
@@ -732,12 +739,12 @@ class _FigmaCard extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       width: double.infinity,
-      padding: EdgeInsets.all(24),
+      padding: const EdgeInsets.all(24),
       decoration: BoxDecoration(
         color: context.mtColors.card,
         borderRadius: BorderRadius.circular(24),
         border: Border.all(color: AppColors.primary.withValues(alpha: 0.05)),
-        boxShadow: <BoxShadow>[
+        boxShadow: const <BoxShadow>[
           BoxShadow(
             color: Color(0x0D000000),
             blurRadius: 1,
@@ -768,11 +775,17 @@ class _MoodLinePainter extends CustomPainter {
     required this.values,
     required this.maxY,
     required this.color,
+    required this.gridColor,
+    required this.axisLabelColor,
+    required this.valueLabelColor,
   });
 
   final List<double?> values;
   final double maxY;
   final Color color;
+  final Color gridColor;
+  final Color axisLabelColor;
+  final Color valueLabelColor;
 
   /// Espacio reservado a la izquierda para las etiquetas del eje.
   static const double axisWidth = 26;
@@ -797,7 +810,7 @@ class _MoodLinePainter extends CustomPainter {
 
     // Líneas de referencia con su valor (0, mitad y máximo de la escala).
     final Paint gridPaint = Paint()
-      ..color = const Color(0xFFE2E8F0)
+      ..color = gridColor
       ..strokeWidth = 1;
     for (final double gridValue in <double>[0, maxY / 2, maxY]) {
       final double y = yFor(gridValue);
@@ -805,10 +818,10 @@ class _MoodLinePainter extends CustomPainter {
       final TextPainter axisLabel = TextPainter(
         text: TextSpan(
           text: _formatValue(gridValue),
-          style: const TextStyle(
+          style: TextStyle(
             fontSize: 10,
             fontWeight: FontWeight.w600,
-            color: Color(0xFF94A3B8),
+            color: axisLabelColor,
           ),
         ),
         textDirection: TextDirection.ltr,
@@ -911,7 +924,7 @@ class _MoodLinePainter extends CustomPainter {
           style: TextStyle(
             fontSize: 10,
             fontWeight: FontWeight.w700,
-            color: isLast ? color : const Color(0xFF475569),
+            color: isLast ? color : valueLabelColor,
           ),
         ),
         textDirection: TextDirection.ltr,
@@ -939,24 +952,31 @@ class _MoodLinePainter extends CustomPainter {
   bool shouldRepaint(_MoodLinePainter oldDelegate) {
     return oldDelegate.values != values ||
         oldDelegate.maxY != maxY ||
-        oldDelegate.color != color;
+        oldDelegate.color != color ||
+        oldDelegate.gridColor != gridColor;
   }
 }
 
 class _DonutPainter extends CustomPainter {
-  _DonutPainter({required this.percentages, required this.colors});
+  _DonutPainter({
+    required this.percentages,
+    required this.colors,
+    required this.trackColor,
+  });
 
   final List<double> percentages;
   final List<Color> colors;
+  final Color trackColor;
 
   @override
   void paint(Canvas canvas, Size size) {
     const double strokeWidth = 14;
-    final Rect rect = const Offset(strokeWidth / 2, strokeWidth / 2) &
+    final Rect rect =
+        const Offset(strokeWidth / 2, strokeWidth / 2) &
         Size(size.width - strokeWidth, size.height - strokeWidth);
 
     final Paint trackPaint = Paint()
-      ..color = const Color(0xFFE2E8F0)
+      ..color = trackColor
       ..style = PaintingStyle.stroke
       ..strokeWidth = strokeWidth;
     canvas.drawArc(rect, 0, math.pi * 2, false, trackPaint);
@@ -971,7 +991,8 @@ class _DonutPainter extends CustomPainter {
 
     double startAngle = -math.pi / 2;
     for (int i = 0; i < percentages.length; i++) {
-      final double sweep = (percentages[i] / math.max(total, 100)) * math.pi * 2;
+      final double sweep =
+          (percentages[i] / math.max(total, 100)) * math.pi * 2;
       if (sweep <= 0) {
         continue;
       }
@@ -1001,12 +1022,12 @@ class _ErrorState extends StatelessWidget {
   Widget build(BuildContext context) {
     return Center(
       child: Padding(
-        padding: EdgeInsets.all(24),
+        padding: const EdgeInsets.all(24),
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: <Widget>[
             Text(message, textAlign: TextAlign.center),
-            SizedBox(height: 16),
+            const SizedBox(height: 16),
             FilledButton(
               onPressed: onRetry,
               child: Text(S.of(context).home_retry),

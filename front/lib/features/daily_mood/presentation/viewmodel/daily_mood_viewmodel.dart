@@ -22,7 +22,9 @@ class DailyMoodViewModel extends Cubit<DailyMoodState> {
         emit(state.copyWith(status: DailyMoodStatus.success, entries: entries));
       },
       onError: (Object e) {
-        emit(state.copyWith(status: DailyMoodStatus.failure, error: e.toString()));
+        emit(
+          state.copyWith(status: DailyMoodStatus.failure, error: e.toString()),
+        );
       },
     );
   }

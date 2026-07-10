@@ -128,6 +128,10 @@ class AppTheme {
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(16),
           ),
+          // Debe ser idéntico al del tema claro: si un tema define textStyle
+          // y el otro no, el lerp de la animación de cambio de tema lanza
+          // "Failed to interpolate TextStyles with different inherit values".
+          textStyle: const TextStyle(fontSize: 16, fontWeight: FontWeight.w600),
         ),
       ),
       floatingActionButtonTheme: const FloatingActionButtonThemeData(

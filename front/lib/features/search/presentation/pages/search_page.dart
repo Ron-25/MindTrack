@@ -112,14 +112,14 @@ class _SearchPageState extends State<SearchPage> {
         child: RefreshIndicator(
           onRefresh: _loadData,
           child: ListView(
-            physics: AlwaysScrollableScrollPhysics(),
-            padding: EdgeInsets.fromLTRB(16, 16, 16, 24),
+            physics: const AlwaysScrollableScrollPhysics(),
+            padding: const EdgeInsets.fromLTRB(16, 16, 16, 24),
             children: <Widget>[
               TextField(
                 controller: _controller,
                 decoration: InputDecoration(
                   hintText: S.of(context).search_hint,
-                  prefixIcon: Icon(Icons.search_rounded),
+                  prefixIcon: const Icon(Icons.search_rounded),
                   filled: true,
                   fillColor: context.mtColors.card,
                   border: OutlineInputBorder(
@@ -128,9 +128,9 @@ class _SearchPageState extends State<SearchPage> {
                   ),
                 ),
               ),
-              SizedBox(height: 18),
+              const SizedBox(height: 18),
               if (_isLoading)
-                Padding(
+                const Padding(
                   padding: EdgeInsets.only(top: 80),
                   child: Center(child: CircularProgressIndicator()),
                 )
@@ -142,7 +142,9 @@ class _SearchPageState extends State<SearchPage> {
                   child: filteredHabits.isEmpty
                       ? Text(
                           S.of(context).search_habits_empty,
-                          style: TextStyle(color: context.mtColors.textSecondary),
+                          style: TextStyle(
+                            color: context.mtColors.textSecondary,
+                          ),
                         )
                       : Column(
                           children: filteredHabits
@@ -160,7 +162,7 @@ class _SearchPageState extends State<SearchPage> {
                                           true
                                       ? Text(habit.description!)
                                       : null,
-                                  trailing: Icon(
+                                  trailing: const Icon(
                                     Icons.chevron_right_rounded,
                                   ),
                                   onTap: () {
@@ -173,20 +175,22 @@ class _SearchPageState extends State<SearchPage> {
                               .toList(growable: false),
                         ),
                 ),
-                SizedBox(height: 16),
+                const SizedBox(height: 16),
                 _Section(
                   title: S.of(context).search_emotions_title,
                   child: filteredEntries.isEmpty
                       ? Text(
                           S.of(context).search_emotions_empty,
-                          style: TextStyle(color: context.mtColors.textSecondary),
+                          style: TextStyle(
+                            color: context.mtColors.textSecondary,
+                          ),
                         )
                       : Column(
                           children: filteredEntries
                               .map((EmotionEntry entry) {
                                 return ListTile(
                                   contentPadding: EdgeInsets.zero,
-                                  leading: Icon(Icons.mood_rounded),
+                                  leading: const Icon(Icons.mood_rounded),
                                   title: Text(entry.localizedName('es')),
                                   subtitle: Text(
                                     (entry.note?.trim().isNotEmpty == true
@@ -196,7 +200,7 @@ class _SearchPageState extends State<SearchPage> {
                                     maxLines: 1,
                                     overflow: TextOverflow.ellipsis,
                                   ),
-                                  trailing: Icon(
+                                  trailing: const Icon(
                                     Icons.chevron_right_rounded,
                                   ),
                                   onTap: () {
@@ -228,7 +232,7 @@ class _Section extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding: EdgeInsets.all(18),
+      padding: const EdgeInsets.all(18),
       decoration: BoxDecoration(
         color: context.mtColors.card,
         borderRadius: BorderRadius.circular(24),
@@ -245,7 +249,7 @@ class _Section extends StatelessWidget {
               color: context.mtColors.textPrimary,
             ),
           ),
-          SizedBox(height: 12),
+          const SizedBox(height: 12),
           child,
         ],
       ),
@@ -262,13 +266,13 @@ class _ErrorState extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: EdgeInsets.only(top: 60),
+      padding: const EdgeInsets.only(top: 60),
       child: Center(
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: <Widget>[
             Text(message, textAlign: TextAlign.center),
-            SizedBox(height: 16),
+            const SizedBox(height: 16),
             FilledButton(
               onPressed: onRetry,
               child: Text(S.of(context).home_retry),

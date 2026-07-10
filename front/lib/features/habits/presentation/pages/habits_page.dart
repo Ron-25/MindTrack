@@ -22,13 +22,13 @@ class HabitsPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return BlocProvider<HabitCubit>(
       create: (_) => Injector.get<HabitCubit>()..loadHabits(),
-      child: _HabitsView(),
+      child: const _HabitsView(),
     );
   }
 }
 
 class _HabitsView extends StatelessWidget {
-  _HabitsView();
+  const _HabitsView();
 
   @override
   Widget build(BuildContext context) {
@@ -74,7 +74,7 @@ class _HabitsView extends StatelessWidget {
           child: BlocBuilder<HabitCubit, HabitState>(
             builder: (BuildContext context, HabitState state) {
               if (state.isLoading && state.habits.isEmpty) {
-                return Center(child: CircularProgressIndicator());
+                return const Center(child: CircularProgressIndicator());
               }
               if (state.errorMessage != null && state.habits.isEmpty) {
                 return _ErrorState(
@@ -92,7 +92,7 @@ class _HabitsView extends StatelessWidget {
                         : _buildContent(context, state, translations),
                   ),
                   if (state.isSaving)
-                    Positioned.fill(
+                    const Positioned.fill(
                       child: IgnorePointer(
                         child: ColoredBox(
                           color: Color(0x440F172A),
@@ -111,24 +111,24 @@ class _HabitsView extends StatelessWidget {
 
   Widget _buildEmptyState(BuildContext context, S translations) {
     return ListView(
-      physics: AlwaysScrollableScrollPhysics(),
-      padding: EdgeInsets.all(24),
+      physics: const AlwaysScrollableScrollPhysics(),
+      padding: const EdgeInsets.all(24),
       children: <Widget>[
-        SizedBox(height: 120),
-        Icon(Icons.checklist_rounded, size: 56, color: AppColors.primary),
-        SizedBox(height: 16),
+        const SizedBox(height: 120),
+        const Icon(Icons.checklist_rounded, size: 56, color: AppColors.primary),
+        const SizedBox(height: 16),
         Text(
           translations.habits_empty_title,
           textAlign: TextAlign.center,
-          style: TextStyle(fontSize: 18, fontWeight: FontWeight.w700),
+          style: const TextStyle(fontSize: 18, fontWeight: FontWeight.w700),
         ),
-        SizedBox(height: 8),
+        const SizedBox(height: 8),
         Text(
           translations.habits_empty_description,
           textAlign: TextAlign.center,
           style: TextStyle(color: context.mtColors.textSecondary, height: 1.4),
         ),
-        SizedBox(height: 24),
+        const SizedBox(height: 24),
         Center(child: _AddHabitButton(onTap: () => _openCreateHabit(context))),
       ],
     );
@@ -142,8 +142,8 @@ class _HabitsView extends StatelessWidget {
     final String locale = Localizations.localeOf(context).languageCode;
 
     return ListView(
-      physics: AlwaysScrollableScrollPhysics(),
-      padding: EdgeInsets.fromLTRB(16, 16, 16, 32),
+      physics: const AlwaysScrollableScrollPhysics(),
+      padding: const EdgeInsets.fromLTRB(16, 16, 16, 32),
       children: <Widget>[
         _DailyProgressCard(
           completed: completed,
@@ -157,7 +157,7 @@ class _HabitsView extends StatelessWidget {
             Navigator.of(context).pushNamed(RouteNames.analytics);
           },
         ),
-        SizedBox(height: 24),
+        const SizedBox(height: 24),
         Row(
           children: <Widget>[
             Expanded(
@@ -173,7 +173,7 @@ class _HabitsView extends StatelessWidget {
             ),
             Text(
               DateFormat.yMMMMd(locale).format(DateTime.now()),
-              style: TextStyle(
+              style: const TextStyle(
                 fontSize: 14,
                 fontWeight: FontWeight.w500,
                 color: AppColors.primary,
@@ -181,10 +181,10 @@ class _HabitsView extends StatelessWidget {
             ),
           ],
         ),
-        SizedBox(height: 16),
+        const SizedBox(height: 16),
         ...state.habits.map(
           (HabitTracker habit) => Padding(
-            padding: EdgeInsets.only(bottom: 12),
+            padding: const EdgeInsets.only(bottom: 12),
             child: _HabitCard(
               habit: habit,
               onToggle: () async {
@@ -195,7 +195,7 @@ class _HabitsView extends StatelessWidget {
             ),
           ),
         ),
-        SizedBox(height: 4),
+        const SizedBox(height: 4),
         Center(child: _AddHabitButton(onTap: () => _openCreateHabit(context))),
       ],
     );
@@ -205,7 +205,7 @@ class _HabitsView extends StatelessWidget {
     final CreateHabitInput? input = await Navigator.of(context)
         .push<CreateHabitInput>(
           MaterialPageRoute<CreateHabitInput>(
-            builder: (_) => AddHabitPage(),
+            builder: (_) => const AddHabitPage(),
           ),
         );
 
@@ -266,7 +266,7 @@ class _DailyProgressCard extends StatelessWidget {
         color: context.mtColors.card,
         borderRadius: BorderRadius.circular(24),
         border: Border.all(color: AppColors.primary.withValues(alpha: 0.1)),
-        boxShadow: <BoxShadow>[
+        boxShadow: const <BoxShadow>[
           BoxShadow(
             color: Color(0x0D000000),
             blurRadius: 1,
@@ -280,7 +280,7 @@ class _DailyProgressCard extends StatelessWidget {
           AspectRatio(
             aspectRatio: 16 / 6,
             child: DecoratedBox(
-              decoration: BoxDecoration(
+              decoration: const BoxDecoration(
                 borderRadius: BorderRadius.vertical(top: Radius.circular(24)),
                 gradient: LinearGradient(
                   begin: Alignment.topLeft,
@@ -296,7 +296,7 @@ class _DailyProgressCard extends StatelessWidget {
                     color: context.mtColors.card.withValues(alpha: 0.3),
                     borderRadius: BorderRadius.circular(999),
                   ),
-                  child: Icon(
+                  child: const Icon(
                     Icons.trending_up_rounded,
                     color: Colors.white,
                     size: 26,
@@ -306,7 +306,7 @@ class _DailyProgressCard extends StatelessWidget {
             ),
           ),
           Padding(
-            padding: EdgeInsets.all(20),
+            padding: const EdgeInsets.all(20),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: <Widget>[
@@ -324,7 +324,7 @@ class _DailyProgressCard extends StatelessWidget {
                     ),
                     Text(
                       '${(progress * 100).round()}%',
-                      style: TextStyle(
+                      style: const TextStyle(
                         fontSize: 16,
                         fontWeight: FontWeight.w700,
                         color: AppColors.primary,
@@ -332,7 +332,7 @@ class _DailyProgressCard extends StatelessWidget {
                     ),
                   ],
                 ),
-                SizedBox(height: 8),
+                const SizedBox(height: 8),
                 ClipRRect(
                   borderRadius: BorderRadius.circular(999),
                   child: LinearProgressIndicator(
@@ -342,7 +342,7 @@ class _DailyProgressCard extends StatelessWidget {
                     backgroundColor: context.mtColors.borderSubtle,
                   ),
                 ),
-                SizedBox(height: 16),
+                const SizedBox(height: 16),
                 Row(
                   crossAxisAlignment: CrossAxisAlignment.end,
                   children: <Widget>[
@@ -361,7 +361,7 @@ class _DailyProgressCard extends StatelessWidget {
                               color: context.mtColors.textSecondary,
                             ),
                           ),
-                          SizedBox(height: 4),
+                          const SizedBox(height: 4),
                           Text(
                             translations.habits_daily_progress_subtitle,
                             style: TextStyle(
@@ -373,21 +373,21 @@ class _DailyProgressCard extends StatelessWidget {
                         ],
                       ),
                     ),
-                    SizedBox(width: 12),
+                    const SizedBox(width: 12),
                     FilledButton(
                       onPressed: onInsightsTap,
                       style: FilledButton.styleFrom(
                         backgroundColor: AppColors.primary,
                         foregroundColor: Colors.white,
-                        minimumSize: Size(84, 36),
-                        padding: EdgeInsets.symmetric(horizontal: 16),
+                        minimumSize: const Size(84, 36),
+                        padding: const EdgeInsets.symmetric(horizontal: 16),
                         shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(16),
                         ),
                       ),
                       child: Text(
                         translations.habits_insights_button,
-                        style: TextStyle(
+                        style: const TextStyle(
                           fontSize: 14,
                           fontWeight: FontWeight.w600,
                         ),
@@ -430,11 +430,11 @@ class _HabitCard extends StatelessWidget {
         onTap: onTap,
         borderRadius: BorderRadius.circular(24),
         child: Container(
-          padding: EdgeInsets.all(16),
+          padding: const EdgeInsets.all(16),
           decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(24),
             border: Border.all(color: context.mtColors.borderSubtle),
-            boxShadow: <BoxShadow>[
+            boxShadow: const <BoxShadow>[
               BoxShadow(
                 color: Color(0x0D000000),
                 blurRadius: 1,
@@ -453,7 +453,7 @@ class _HabitCard extends StatelessWidget {
                 ),
                 child: Icon(_habitIcon(habit), size: 22, color: accent),
               ),
-              SizedBox(width: 16),
+              const SizedBox(width: 16),
               Expanded(
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
@@ -466,7 +466,7 @@ class _HabitCard extends StatelessWidget {
                         color: context.mtColors.textPrimary,
                       ),
                     ),
-                    SizedBox(height: 2),
+                    const SizedBox(height: 2),
                     Text(
                       subtitle,
                       maxLines: 1,
@@ -479,12 +479,12 @@ class _HabitCard extends StatelessWidget {
                   ],
                 ),
               ),
-              SizedBox(width: 16),
+              const SizedBox(width: 16),
               InkWell(
                 onTap: onToggle,
-                customBorder: CircleBorder(),
+                customBorder: const CircleBorder(),
                 child: AnimatedContainer(
-                  duration: Duration(milliseconds: 150),
+                  duration: const Duration(milliseconds: 150),
                   width: 26,
                   height: 26,
                   decoration: BoxDecoration(
@@ -499,7 +499,7 @@ class _HabitCard extends StatelessWidget {
                     ),
                   ),
                   child: habit.completedToday
-                      ? Icon(
+                      ? const Icon(
                           Icons.check_rounded,
                           size: 16,
                           color: Colors.white,
@@ -558,14 +558,14 @@ class _AddHabitButton extends StatelessWidget {
   Widget build(BuildContext context) {
     return TextButton.icon(
       onPressed: onTap,
-      icon: Icon(
+      icon: const Icon(
         Icons.add_circle_outline_rounded,
         size: 20,
         color: AppColors.primary,
       ),
       label: Text(
         S.of(context).habits_new_button,
-        style: TextStyle(
+        style: const TextStyle(
           fontSize: 14,
           fontWeight: FontWeight.w600,
           color: AppColors.primary,
@@ -585,12 +585,12 @@ class _ErrorState extends StatelessWidget {
   Widget build(BuildContext context) {
     return Center(
       child: Padding(
-        padding: EdgeInsets.all(24),
+        padding: const EdgeInsets.all(24),
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: <Widget>[
             Text(message, textAlign: TextAlign.center),
-            SizedBox(height: 16),
+            const SizedBox(height: 16),
             FilledButton(
               onPressed: onRetry,
               child: Text(S.of(context).home_retry),

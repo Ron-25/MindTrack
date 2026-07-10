@@ -56,7 +56,7 @@ class _HomePageState extends State<HomePage> {
                     state.errorMessage ?? translations.auth_error_description,
                 applyBlurEffect: false,
               );
-              _loginBloc.add(LoginStatusReset());
+              _loginBloc.add(const LoginStatusReset());
               return;
             }
 
@@ -67,7 +67,7 @@ class _HomePageState extends State<HomePage> {
                 description: translations.auth_signup_success_toast,
                 applyBlurEffect: false,
               );
-              _loginBloc.add(LoginStatusReset());
+              _loginBloc.add(const LoginStatusReset());
               return;
             }
 
@@ -78,102 +78,101 @@ class _HomePageState extends State<HomePage> {
                 description: translations.auth_login_success_toast,
                 applyBlurEffect: false,
               );
-              _loginBloc.add(LoginStatusReset());
+              _loginBloc.add(const LoginStatusReset());
             }
           },
         ),
       ],
       child: Scaffold(
-          backgroundColor: Theme.of(context).scaffoldBackgroundColor,
-          appBar: MindTrackAppBar(title: S.of(context).title),
-          floatingActionButton: _buildManagerIaButton(context),
-          floatingActionButtonLocation:
-              FloatingActionButtonLocation.centerFloat,
-          body: SafeArea(
-            child: BlocBuilder<HomeCubit, HomeState>(
-              bloc: _homeCubit,
-              builder: (BuildContext context, HomeState state) {
-                if (state.isLoading && state.dashboard == null) {
-                  return Center(child: CircularProgressIndicator());
-                }
+        backgroundColor: Theme.of(context).scaffoldBackgroundColor,
+        appBar: MindTrackAppBar(title: S.of(context).title),
+        floatingActionButton: _buildManagerIaButton(context),
+        floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
+        body: SafeArea(
+          child: BlocBuilder<HomeCubit, HomeState>(
+            bloc: _homeCubit,
+            builder: (BuildContext context, HomeState state) {
+              if (state.isLoading && state.dashboard == null) {
+                return const Center(child: CircularProgressIndicator());
+              }
 
-                if (state.errorMessage != null && state.dashboard == null) {
-                  return _HomeErrorState(
-                    message: state.errorMessage!,
-                    onRetry: _homeCubit.loadDashboard,
-                  );
-                }
-
-                final HomeDashboard dashboard = state.dashboard!;
-                return RefreshIndicator(
-                  color: AppColors.primary,
-                  onRefresh: _homeCubit.loadDashboard,
-                  child: CustomScrollView(
-                    physics: AlwaysScrollableScrollPhysics(),
-                    slivers: <Widget>[
-                      SliverPadding(
-                        padding: EdgeInsets.fromLTRB(16, 10, 16, 172),
-                        sliver: SliverList(
-                          delegate: SliverChildListDelegate(<Widget>[
-                            Text(
-                              _greetingForTime(context, dashboard.userName),
-                              style: TextStyle(
-                                fontSize: 30,
-                                height: 1.25,
-                                fontWeight: FontWeight.w800,
-                                letterSpacing: -0.8,
-                                color: context.mtColors.textPrimary,
-                              ),
-                            ),
-                            SizedBox(height: 4),
-                            Text(
-                              _subtitleForLocale(context),
-                              style: TextStyle(
-                                fontSize: 16,
-                                height: 1.5,
-                                color: AppColors.textSecondary,
-                              ),
-                            ),
-                            SizedBox(height: 20),
-                            _buildLogEmotionButton(context, translations),
-                            SizedBox(height: 24),
-                            _SectionCard(
-                              child: _buildTodayMoodSection(
-                                context,
-                                dashboard.todayMood,
-                                translations,
-                              ),
-                            ),
-                            SizedBox(height: 20),
-                            _SectionCard(
-                              child: _buildWeeklyOverviewSection(
-                                context,
-                                dashboard.weeklyOverview,
-                                translations,
-                              ),
-                            ),
-                            SizedBox(height: 20),
-                            _SectionCard(
-                              child: _buildHabitsSection(
-                                context,
-                                dashboard.habits,
-                              ),
-                            ),
-                            SizedBox(height: 28),
-                            _buildRecentEntriesSection(
-                              context,
-                              dashboard.recentEntries,
-                            ),
-                          ]),
-                        ),
-                      ),
-                    ],
-                  ),
+              if (state.errorMessage != null && state.dashboard == null) {
+                return _HomeErrorState(
+                  message: state.errorMessage!,
+                  onRetry: _homeCubit.loadDashboard,
                 );
-              },
-            ),
+              }
+
+              final HomeDashboard dashboard = state.dashboard!;
+              return RefreshIndicator(
+                color: AppColors.primary,
+                onRefresh: _homeCubit.loadDashboard,
+                child: CustomScrollView(
+                  physics: const AlwaysScrollableScrollPhysics(),
+                  slivers: <Widget>[
+                    SliverPadding(
+                      padding: const EdgeInsets.fromLTRB(16, 10, 16, 172),
+                      sliver: SliverList(
+                        delegate: SliverChildListDelegate(<Widget>[
+                          Text(
+                            _greetingForTime(context, dashboard.userName),
+                            style: TextStyle(
+                              fontSize: 30,
+                              height: 1.25,
+                              fontWeight: FontWeight.w800,
+                              letterSpacing: -0.8,
+                              color: context.mtColors.textPrimary,
+                            ),
+                          ),
+                          const SizedBox(height: 4),
+                          Text(
+                            _subtitleForLocale(context),
+                            style: const TextStyle(
+                              fontSize: 16,
+                              height: 1.5,
+                              color: AppColors.textSecondary,
+                            ),
+                          ),
+                          const SizedBox(height: 20),
+                          _buildLogEmotionButton(context, translations),
+                          const SizedBox(height: 24),
+                          _SectionCard(
+                            child: _buildTodayMoodSection(
+                              context,
+                              dashboard.todayMood,
+                              translations,
+                            ),
+                          ),
+                          const SizedBox(height: 20),
+                          _SectionCard(
+                            child: _buildWeeklyOverviewSection(
+                              context,
+                              dashboard.weeklyOverview,
+                              translations,
+                            ),
+                          ),
+                          const SizedBox(height: 20),
+                          _SectionCard(
+                            child: _buildHabitsSection(
+                              context,
+                              dashboard.habits,
+                            ),
+                          ),
+                          const SizedBox(height: 28),
+                          _buildRecentEntriesSection(
+                            context,
+                            dashboard.recentEntries,
+                          ),
+                        ]),
+                      ),
+                    ),
+                  ],
+                ),
+              );
+            },
           ),
         ),
+      ),
     );
   }
 
@@ -184,16 +183,16 @@ class _HomePageState extends State<HomePage> {
         onPressed: () {
           Navigator.of(context).pushNamed(RouteNames.addEmotion);
         },
-        icon: Icon(Icons.add_circle_outline_rounded, size: 20),
+        icon: const Icon(Icons.add_circle_outline_rounded, size: 20),
         label: Text(
           translations.home_log_emotion_button,
-          style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600),
+          style: const TextStyle(fontSize: 16, fontWeight: FontWeight.w600),
         ),
         style: ElevatedButton.styleFrom(
-          minimumSize: Size(double.infinity, 56),
+          minimumSize: const Size(double.infinity, 56),
           backgroundColor: AppColors.primary,
           elevation: 0,
-          shadowColor: Color(0x665FA9D3),
+          shadowColor: const Color(0x665FA9D3),
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(24),
           ),
@@ -225,7 +224,7 @@ class _HomePageState extends State<HomePage> {
               ),
             ),
             Container(
-              padding: EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+              padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
               decoration: BoxDecoration(
                 color: _statusBackgroundColor(mood.statusLabel),
                 borderRadius: BorderRadius.circular(999),
@@ -244,7 +243,7 @@ class _HomePageState extends State<HomePage> {
             ),
           ],
         ),
-        SizedBox(height: 16),
+        const SizedBox(height: 16),
         Row(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: <Widget>[
@@ -261,7 +260,7 @@ class _HomePageState extends State<HomePage> {
                 size: 30,
               ),
             ),
-            SizedBox(width: 16),
+            const SizedBox(width: 16),
             Expanded(
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
@@ -270,13 +269,13 @@ class _HomePageState extends State<HomePage> {
                     isEmptyMood
                         ? translations.home_today_empty_title
                         : mood.primaryEmotionName,
-                    style: TextStyle(
+                    style: const TextStyle(
                       fontSize: 16,
                       fontWeight: FontWeight.w600,
                       color: AppColors.textPrimary,
                     ),
                   ),
-                  SizedBox(height: 4),
+                  const SizedBox(height: 4),
                   Text(
                     isEmptyMood
                         ? translations.home_today_empty_description
@@ -287,7 +286,7 @@ class _HomePageState extends State<HomePage> {
                               mood.energyLevelKey,
                             ),
                           ),
-                    style: TextStyle(
+                    style: const TextStyle(
                       fontSize: 14,
                       height: 1.45,
                       color: AppColors.textSecondary,
@@ -298,7 +297,7 @@ class _HomePageState extends State<HomePage> {
             ),
           ],
         ),
-        SizedBox(height: 16),
+        const SizedBox(height: 16),
         SizedBox(
           width: double.infinity,
           child: FilledButton(
@@ -307,7 +306,7 @@ class _HomePageState extends State<HomePage> {
               backgroundColor: context.mtColors.surfaceSubtle,
               foregroundColor: AppColors.primary,
               elevation: 0,
-              padding: EdgeInsets.symmetric(vertical: 12),
+              padding: const EdgeInsets.symmetric(vertical: 12),
               shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(16),
               ),
@@ -335,7 +334,7 @@ class _HomePageState extends State<HomePage> {
             color: context.mtColors.textPrimary,
           ),
         ),
-        SizedBox(height: 20),
+        const SizedBox(height: 20),
         SizedBox(
           height: 140,
           child: Row(
@@ -351,25 +350,25 @@ class _HomePageState extends State<HomePage> {
               final double alpha = 0.2 + 0.7 * (bar.value / maxValue);
               return Expanded(
                 child: Padding(
-                  padding: EdgeInsets.symmetric(horizontal: 3),
+                  padding: const EdgeInsets.symmetric(horizontal: 3),
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.end,
                     children: <Widget>[
                       AnimatedContainer(
-                        duration: Duration(milliseconds: 350),
+                        duration: const Duration(milliseconds: 350),
                         curve: Curves.easeOutCubic,
                         height: barHeight,
                         decoration: BoxDecoration(
                           color: AppColors.primary.withValues(
                             alpha: alpha.clamp(0.2, 0.9),
                           ),
-                          borderRadius: BorderRadius.only(
+                          borderRadius: const BorderRadius.only(
                             topLeft: Radius.circular(16),
                             topRight: Radius.circular(16),
                           ),
                         ),
                       ),
-                      SizedBox(height: 12),
+                      const SizedBox(height: 12),
                       Text(
                         bar.label.toUpperCase(),
                         style: TextStyle(
@@ -386,10 +385,10 @@ class _HomePageState extends State<HomePage> {
             }).toList(),
           ),
         ),
-        SizedBox(height: 16),
+        const SizedBox(height: 16),
         Text(
           overview.insightText,
-          style: TextStyle(
+          style: const TextStyle(
             fontSize: 14,
             height: 1.45,
             color: AppColors.textSecondary,
@@ -411,11 +410,11 @@ class _HomePageState extends State<HomePage> {
             color: context.mtColors.textPrimary,
           ),
         ),
-        SizedBox(height: 16),
+        const SizedBox(height: 16),
         if (habits.isEmpty)
           Text(
             S.of(context).home_empty_habits_message,
-            style: TextStyle(
+            style: const TextStyle(
               fontSize: 14,
               color: AppColors.textSecondary,
             ),
@@ -427,7 +426,7 @@ class _HomePageState extends State<HomePage> {
               AppColors.primary,
             );
             return Padding(
-              padding: EdgeInsets.only(bottom: 14),
+              padding: const EdgeInsets.only(bottom: 14),
               child: Row(
                 children: <Widget>[
                   Icon(
@@ -435,7 +434,7 @@ class _HomePageState extends State<HomePage> {
                     color: accent,
                     size: 18,
                   ),
-                  SizedBox(width: 12),
+                  const SizedBox(width: 12),
                   Expanded(
                     child: Text(
                       habit.name,
@@ -475,8 +474,11 @@ class _HomePageState extends State<HomePage> {
           decoration: BoxDecoration(
             color: AppColors.primary,
             borderRadius: BorderRadius.circular(999),
-            border: Border.all(color: Theme.of(context).scaffoldBackgroundColor, width: 4),
-            boxShadow: <BoxShadow>[
+            border: Border.all(
+              color: Theme.of(context).scaffoldBackgroundColor,
+              width: 4,
+            ),
+            boxShadow: const <BoxShadow>[
               BoxShadow(
                 color: Color(0x665FA9D3),
                 blurRadius: 18,
@@ -489,14 +491,14 @@ class _HomePageState extends State<HomePage> {
             children: <Widget>[
               Text(
                 translations.home_manager_ai,
-                style: TextStyle(
+                style: const TextStyle(
                   fontSize: 16,
                   fontWeight: FontWeight.w600,
                   color: Colors.white,
                 ),
               ),
-              SizedBox(width: 8),
-              Icon(
+              const SizedBox(width: 8),
+              const Icon(
                 Icons.chat_bubble_rounded,
                 color: Colors.white,
                 size: 22,
@@ -531,7 +533,7 @@ class _HomePageState extends State<HomePage> {
               onPressed: () => _goToTab(context, MainShellPage.historyTab),
               child: Text(
                 S.of(context).home_see_all,
-                style: TextStyle(
+                style: const TextStyle(
                   fontSize: 14,
                   fontWeight: FontWeight.w600,
                   color: AppColors.primary,
@@ -540,13 +542,13 @@ class _HomePageState extends State<HomePage> {
             ),
           ],
         ),
-        SizedBox(height: 8),
+        const SizedBox(height: 8),
         if (entries.isEmpty)
           Padding(
-            padding: EdgeInsets.only(top: 8),
+            padding: const EdgeInsets.only(top: 8),
             child: Text(
               S.of(context).home_empty_entries_message,
-              style: TextStyle(
+              style: const TextStyle(
                 fontSize: 14,
                 color: AppColors.textSecondary,
               ),
@@ -559,7 +561,7 @@ class _HomePageState extends State<HomePage> {
               AppColors.primary,
             );
             return Padding(
-              padding: EdgeInsets.only(bottom: 12),
+              padding: const EdgeInsets.only(bottom: 12),
               child: Material(
                 color: context.mtColors.card,
                 borderRadius: BorderRadius.circular(24),
@@ -571,7 +573,7 @@ class _HomePageState extends State<HomePage> {
                     ).pushNamed(RouteNames.emotionDetail, arguments: entry.id);
                   },
                   child: Container(
-                    padding: EdgeInsets.all(16),
+                    padding: const EdgeInsets.all(16),
                     decoration: BoxDecoration(
                       borderRadius: BorderRadius.circular(24),
                       border: Border.all(color: context.mtColors.borderSubtle),
@@ -591,7 +593,7 @@ class _HomePageState extends State<HomePage> {
                             size: 22,
                           ),
                         ),
-                        SizedBox(width: 16),
+                        const SizedBox(width: 16),
                         Expanded(
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
@@ -604,12 +606,12 @@ class _HomePageState extends State<HomePage> {
                                   color: context.mtColors.textPrimary,
                                 ),
                               ),
-                              SizedBox(height: 2),
+                              const SizedBox(height: 2),
                               Text(
                                 _entryPreview(entry.note, context),
                                 maxLines: 1,
                                 overflow: TextOverflow.ellipsis,
-                                style: TextStyle(
+                                style: const TextStyle(
                                   fontSize: 12,
                                   color: AppColors.textSecondary,
                                 ),
@@ -617,7 +619,7 @@ class _HomePageState extends State<HomePage> {
                             ],
                           ),
                         ),
-                        SizedBox(width: 8),
+                        const SizedBox(width: 8),
                         Icon(
                           Icons.chevron_right_rounded,
                           color: context.mtColors.controlBorder,
@@ -681,7 +683,7 @@ class _HomePageState extends State<HomePage> {
         alwaysUse24HourFormat: false,
       );
     }
-    if (date == today.subtract(Duration(days: 1))) {
+    if (date == today.subtract(const Duration(days: 1))) {
       return S.of(context).home_entry_yesterday;
     }
     return '${date.month}/${date.day}';
@@ -714,22 +716,22 @@ class _HomePageState extends State<HomePage> {
   Color _statusBackgroundColor(String statusLabel) {
     switch (statusLabel.toLowerCase()) {
       case 'elevated':
-        return Color(0xFFFEE2E2);
+        return const Color(0xFFFEE2E2);
       case 'gentle':
-        return Color(0xFFFEF3C7);
+        return const Color(0xFFFEF3C7);
       default:
-        return Color(0xFFDCFCE7);
+        return const Color(0xFFDCFCE7);
     }
   }
 
   Color _statusForegroundColor(String statusLabel) {
     switch (statusLabel.toLowerCase()) {
       case 'elevated':
-        return Color(0xFFDC2626);
+        return const Color(0xFFDC2626);
       case 'gentle':
-        return Color(0xFFD97706);
+        return const Color(0xFFD97706);
       default:
-        return Color(0xFF16A34A);
+        return const Color(0xFF16A34A);
     }
   }
 
@@ -781,7 +783,6 @@ class _HomePageState extends State<HomePage> {
     }
     return Icons.checklist_rounded;
   }
-
 }
 
 class _SectionCard extends StatelessWidget {
@@ -793,12 +794,12 @@ class _SectionCard extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       width: double.infinity,
-      padding: EdgeInsets.all(20),
+      padding: const EdgeInsets.all(20),
       decoration: BoxDecoration(
         color: context.mtColors.card,
         borderRadius: BorderRadius.circular(24),
         border: Border.all(color: context.mtColors.borderSubtle),
-        boxShadow: <BoxShadow>[
+        boxShadow: const <BoxShadow>[
           BoxShadow(
             color: Color(0x0D0F172A),
             blurRadius: 12,
@@ -821,26 +822,26 @@ class _HomeErrorState extends StatelessWidget {
   Widget build(BuildContext context) {
     return Center(
       child: Padding(
-        padding: EdgeInsets.symmetric(horizontal: 24),
+        padding: const EdgeInsets.symmetric(horizontal: 24),
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
-            Icon(
+            const Icon(
               Icons.cloud_off_rounded,
               size: 52,
               color: AppColors.textSecondary,
             ),
-            SizedBox(height: 16),
+            const SizedBox(height: 16),
             Text(
               message,
               textAlign: TextAlign.center,
-              style: TextStyle(
+              style: const TextStyle(
                 fontSize: 15,
                 height: 1.5,
                 color: AppColors.textSecondary,
               ),
             ),
-            SizedBox(height: 20),
+            const SizedBox(height: 20),
             ElevatedButton(
               onPressed: onRetry,
               child: Text(S.of(context).home_retry),

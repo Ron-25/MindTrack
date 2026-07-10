@@ -15,7 +15,6 @@ class OnboarningPage extends StatefulWidget {
 }
 
 class _OnboarningPageState extends State<OnboarningPage> {
-
   final PageController _controller = PageController();
   int currentPage = 0;
 
@@ -65,7 +64,11 @@ class _OnboarningPageState extends State<OnboarningPage> {
                 onPressed: () {
                   Navigator.of(context).pop();
                 },
-                icon: const Icon(Icons.arrow_back, size: 18, color: Colors.black),
+                icon: const Icon(
+                  Icons.arrow_back,
+                  size: 18,
+                  color: Colors.black,
+                ),
                 label: Text(
                   translation.back,
                   style: AppTextStyles.bodyMedium.copyWith(
@@ -112,7 +115,6 @@ class _OnboarningPageState extends State<OnboarningPage> {
               itemBuilder: (BuildContext context, int index) {
                 return Column(
                   children: <Widget>[
-
                     const SizedBox(height: 20),
 
                     /// Imagen
@@ -125,7 +127,7 @@ class _OnboarningPageState extends State<OnboarningPage> {
                           BoxShadow(
                             color: Colors.black.withOpacity(0.05),
                             blurRadius: 20,
-                          )
+                          ),
                         ],
                       ),
                       child: ClipRRect(

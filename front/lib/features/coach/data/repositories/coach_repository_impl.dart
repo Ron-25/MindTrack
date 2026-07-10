@@ -17,6 +17,9 @@ class CoachRepositoryImpl implements CoachRepository {
     required String message,
     required List<CoachChatMessage> history,
   }) {
-    return _remoteDataSource.sendChatMessage(message: message, history: history);
+    return _remoteDataSource.sendChatMessage(
+      message: message,
+      history: history,
+    );
   }
 }

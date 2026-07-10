@@ -15,11 +15,11 @@ class _CategoryOption {
 }
 
 List<_CategoryOption> _categoryOptions = <_CategoryOption>[
-  _CategoryOption(key: 'health', icon: Icons.favorite_border_rounded),
-  _CategoryOption(key: 'mind', icon: Icons.self_improvement_rounded),
-  _CategoryOption(key: 'social', icon: Icons.groups_outlined),
-  _CategoryOption(key: 'productivity', icon: Icons.work_outline_rounded),
-  _CategoryOption(key: 'other', icon: Icons.star_border_rounded),
+  const _CategoryOption(key: 'health', icon: Icons.favorite_border_rounded),
+  const _CategoryOption(key: 'mind', icon: Icons.self_improvement_rounded),
+  const _CategoryOption(key: 'social', icon: Icons.groups_outlined),
+  const _CategoryOption(key: 'productivity', icon: Icons.work_outline_rounded),
+  const _CategoryOption(key: 'other', icon: Icons.star_border_rounded),
 ];
 
 /// Formulario de creación/edición de hábito con el diseño "Add New Habit"
@@ -105,17 +105,17 @@ class _AddHabitPageState extends State<AddHabitPage> {
       bottomNavigationBar: SafeArea(
         top: false,
         child: Padding(
-          padding: EdgeInsets.all(16),
+          padding: const EdgeInsets.all(16),
           child: SizedBox(
             width: double.infinity,
             child: FilledButton.icon(
               onPressed: _submit,
-              icon: Icon(Icons.check_circle_outline_rounded, size: 20),
+              icon: const Icon(Icons.check_circle_outline_rounded, size: 20),
               label: Text(
                 _isEditing
                     ? translations.habits_save_changes
                     : translations.habits_create_button,
-                style: TextStyle(
+                style: const TextStyle(
                   fontSize: 16,
                   fontWeight: FontWeight.w700,
                 ),
@@ -123,7 +123,7 @@ class _AddHabitPageState extends State<AddHabitPage> {
               style: FilledButton.styleFrom(
                 backgroundColor: AppColors.primary,
                 foregroundColor: Colors.white,
-                padding: EdgeInsets.symmetric(vertical: 16),
+                padding: const EdgeInsets.symmetric(vertical: 16),
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(24),
                 ),
@@ -134,45 +134,42 @@ class _AddHabitPageState extends State<AddHabitPage> {
       ),
       body: SafeArea(
         child: SingleChildScrollView(
-          padding: EdgeInsets.all(16),
+          padding: const EdgeInsets.all(16),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: <Widget>[
               _buildLabel(translations.habits_name_label),
-              SizedBox(height: 8),
+              const SizedBox(height: 8),
               _buildTextInput(
                 controller: _nameController,
                 hint: translations.habits_name_hint,
                 errorText: _nameError,
               ),
-              SizedBox(height: 24),
+              const SizedBox(height: 24),
               _buildLabel(translations.habits_description_label),
-              SizedBox(height: 8),
-              _buildTextInput(
-                controller: _descriptionController,
-                hint: '',
-              ),
-              SizedBox(height: 24),
+              const SizedBox(height: 8),
+              _buildTextInput(controller: _descriptionController, hint: ''),
+              const SizedBox(height: 24),
               _buildLabel(translations.habits_icon_label),
-              SizedBox(height: 12),
+              const SizedBox(height: 12),
               _buildCategoryGrid(translations),
-              SizedBox(height: 24),
+              const SizedBox(height: 24),
               _buildLabel(translations.habits_frequency_label),
-              SizedBox(height: 12),
+              const SizedBox(height: 12),
               _buildFrequencySegments(translations),
-              SizedBox(height: 12),
+              const SizedBox(height: 12),
               _buildDayCircles(context),
               if (_daysError != null) ...<Widget>[
-                SizedBox(height: 8),
+                const SizedBox(height: 8),
                 Text(
                   _daysError!,
-                  style: TextStyle(
+                  style: const TextStyle(
                     fontSize: 12,
                     color: Color(0xFFEF4444),
                   ),
                 ),
               ],
-              SizedBox(height: 24),
+              const SizedBox(height: 24),
             ],
           ),
         ),
@@ -207,7 +204,7 @@ class _AddHabitPageState extends State<AddHabitPage> {
             borderRadius: BorderRadius.circular(24),
             border: Border.all(
               color: errorText != null
-                  ? Color(0xFFEF4444)
+                  ? const Color(0xFFEF4444)
                   : context.mtColors.border,
             ),
           ),
@@ -222,7 +219,7 @@ class _AddHabitPageState extends State<AddHabitPage> {
                 color: context.mtColors.textMuted,
               ),
               border: InputBorder.none,
-              contentPadding: EdgeInsets.symmetric(
+              contentPadding: const EdgeInsets.symmetric(
                 horizontal: 16,
                 vertical: 17,
               ),
@@ -230,10 +227,10 @@ class _AddHabitPageState extends State<AddHabitPage> {
           ),
         ),
         if (errorText != null) ...<Widget>[
-          SizedBox(height: 6),
+          const SizedBox(height: 6),
           Text(
             errorText,
-            style: TextStyle(fontSize: 12, color: Color(0xFFEF4444)),
+            style: const TextStyle(fontSize: 12, color: Color(0xFFEF4444)),
           ),
         ],
       ],
@@ -244,54 +241,58 @@ class _AddHabitPageState extends State<AddHabitPage> {
     return GridView.count(
       crossAxisCount: 3,
       shrinkWrap: true,
-      physics: NeverScrollableScrollPhysics(),
+      physics: const NeverScrollableScrollPhysics(),
       mainAxisSpacing: 14,
       crossAxisSpacing: 8,
       childAspectRatio: 1.24,
-      children: _categoryOptions.map((_CategoryOption option) {
-        final bool isSelected = _category == option.key;
-        return GestureDetector(
-          onTap: () => setState(() => _category = option.key),
-          child: AnimatedContainer(
-            duration: Duration(milliseconds: 150),
-            decoration: BoxDecoration(
-              color: isSelected
-                  ? AppColors.primary.withValues(alpha: 0.05)
-                  : Colors.white,
-              borderRadius: BorderRadius.circular(24),
-              border: Border.all(
-                color: isSelected ? AppColors.primary : context.mtColors.border,
-                width: isSelected ? 2 : 1,
-              ),
-            ),
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: <Widget>[
-                Icon(
-                  option.icon,
-                  size: 24,
+      children: _categoryOptions
+          .map((_CategoryOption option) {
+            final bool isSelected = _category == option.key;
+            return GestureDetector(
+              onTap: () => setState(() => _category = option.key),
+              child: AnimatedContainer(
+                duration: const Duration(milliseconds: 150),
+                decoration: BoxDecoration(
                   color: isSelected
-                      ? AppColors.primary
-                      : context.mtColors.textSecondary,
-                ),
-                SizedBox(height: 8),
-                Text(
-                  _categoryLabel(translations, option.key),
-                  maxLines: 1,
-                  overflow: TextOverflow.ellipsis,
-                  style: TextStyle(
-                    fontSize: 12,
-                    fontWeight: FontWeight.w500,
+                      ? AppColors.primary.withValues(alpha: 0.05)
+                      : Colors.white,
+                  borderRadius: BorderRadius.circular(24),
+                  border: Border.all(
                     color: isSelected
-                        ? context.mtColors.textPrimary
-                        : context.mtColors.textSecondary,
+                        ? AppColors.primary
+                        : context.mtColors.border,
+                    width: isSelected ? 2 : 1,
                   ),
                 ),
-              ],
-            ),
-          ),
-        );
-      }).toList(growable: false),
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: <Widget>[
+                    Icon(
+                      option.icon,
+                      size: 24,
+                      color: isSelected
+                          ? AppColors.primary
+                          : context.mtColors.textSecondary,
+                    ),
+                    const SizedBox(height: 8),
+                    Text(
+                      _categoryLabel(translations, option.key),
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
+                      style: TextStyle(
+                        fontSize: 12,
+                        fontWeight: FontWeight.w500,
+                        color: isSelected
+                            ? context.mtColors.textPrimary
+                            : context.mtColors.textSecondary,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            );
+          })
+          .toList(growable: false),
     );
   }
 
@@ -303,52 +304,54 @@ class _AddHabitPageState extends State<AddHabitPage> {
     };
 
     return Container(
-      padding: EdgeInsets.all(4),
+      padding: const EdgeInsets.all(4),
       decoration: BoxDecoration(
         color: context.mtColors.borderSubtle,
         borderRadius: BorderRadius.circular(16),
       ),
       child: Row(
-        children: labels.entries.map((
-          MapEntry<_FrequencyMode, String> entry,
-        ) {
-          final bool isSelected = _frequencyMode == entry.key;
-          return Expanded(
-            child: GestureDetector(
-              onTap: () => _selectFrequencyMode(entry.key),
-              child: AnimatedContainer(
-                duration: Duration(milliseconds: 200),
-                padding: EdgeInsets.symmetric(vertical: 8),
-                decoration: BoxDecoration(
-                  color: isSelected ? Colors.white : Colors.transparent,
-                  borderRadius: BorderRadius.circular(12),
-                  boxShadow: isSelected
-                      ? <BoxShadow>[
-                          BoxShadow(
-                            color: Color(0x0D000000),
-                            blurRadius: 1,
-                            offset: Offset(0, 1),
-                          ),
-                        ]
-                      : null,
-                ),
-                child: Text(
-                  entry.value,
-                  textAlign: TextAlign.center,
-                  maxLines: 1,
-                  overflow: TextOverflow.ellipsis,
-                  style: TextStyle(
-                    fontSize: 14,
-                    fontWeight: isSelected ? FontWeight.w600 : FontWeight.w500,
-                    color: isSelected
-                        ? AppColors.primary
-                        : context.mtColors.textSecondary,
+        children: labels.entries
+            .map((MapEntry<_FrequencyMode, String> entry) {
+              final bool isSelected = _frequencyMode == entry.key;
+              return Expanded(
+                child: GestureDetector(
+                  onTap: () => _selectFrequencyMode(entry.key),
+                  child: AnimatedContainer(
+                    duration: const Duration(milliseconds: 200),
+                    padding: const EdgeInsets.symmetric(vertical: 8),
+                    decoration: BoxDecoration(
+                      color: isSelected ? Colors.white : Colors.transparent,
+                      borderRadius: BorderRadius.circular(12),
+                      boxShadow: isSelected
+                          ? <BoxShadow>[
+                              const BoxShadow(
+                                color: Color(0x0D000000),
+                                blurRadius: 1,
+                                offset: Offset(0, 1),
+                              ),
+                            ]
+                          : null,
+                    ),
+                    child: Text(
+                      entry.value,
+                      textAlign: TextAlign.center,
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
+                      style: TextStyle(
+                        fontSize: 14,
+                        fontWeight: isSelected
+                            ? FontWeight.w600
+                            : FontWeight.w500,
+                        color: isSelected
+                            ? AppColors.primary
+                            : context.mtColors.textSecondary,
+                      ),
+                    ),
                   ),
                 ),
-              ),
-            ),
-          );
-        }).toList(growable: false),
+              );
+            })
+            .toList(growable: false),
       ),
     );
   }
@@ -367,7 +370,7 @@ class _AddHabitPageState extends State<AddHabitPage> {
         return GestureDetector(
           onTap: () => _toggleDay(index),
           child: AnimatedContainer(
-            duration: Duration(milliseconds: 150),
+            duration: const Duration(milliseconds: 150),
             width: 36,
             height: 36,
             alignment: Alignment.center,

@@ -91,11 +91,11 @@ class _NotificationsPageState extends State<NotificationsPage> {
         child: RefreshIndicator(
           onRefresh: _loadData,
           child: ListView(
-            physics: AlwaysScrollableScrollPhysics(),
-            padding: EdgeInsets.fromLTRB(16, 16, 16, 24),
+            physics: const AlwaysScrollableScrollPhysics(),
+            padding: const EdgeInsets.fromLTRB(16, 16, 16, 24),
             children: <Widget>[
               if (_isLoading)
-                Padding(
+                const Padding(
                   padding: EdgeInsets.only(top: 80),
                   child: Center(child: CircularProgressIndicator()),
                 )
@@ -113,10 +113,10 @@ class _NotificationsPageState extends State<NotificationsPage> {
                       ? S.of(context).notifications_active_description
                       : S.of(context).notifications_inactive_description,
                   tone: _profile?.notificationsEnabled == true
-                      ? Color(0xFF0F766E)
-                      : Color(0xFFD97706),
+                      ? const Color(0xFF0F766E)
+                      : const Color(0xFFD97706),
                 ),
-                SizedBox(height: 14),
+                const SizedBox(height: 14),
                 _NotificationCard(
                   icon: hasTodayEmotion
                       ? Icons.check_circle_outline_rounded
@@ -128,10 +128,10 @@ class _NotificationsPageState extends State<NotificationsPage> {
                       ? S.of(context).notifications_mood_logged_description
                       : S.of(context).notifications_mood_missing_description,
                   tone: hasTodayEmotion
-                      ? Color(0xFF166534)
-                      : Color(0xFF1D4ED8),
+                      ? const Color(0xFF166534)
+                      : const Color(0xFF1D4ED8),
                 ),
-                SizedBox(height: 14),
+                const SizedBox(height: 14),
                 if (pendingHabits.isEmpty)
                   _NotificationCard(
                     icon: Icons.checklist_rtl_rounded,
@@ -139,12 +139,12 @@ class _NotificationsPageState extends State<NotificationsPage> {
                     description: S
                         .of(context)
                         .notifications_habits_clear_description,
-                    tone: Color(0xFF166534),
+                    tone: const Color(0xFF166534),
                   )
                 else
                   ...pendingHabits.map((HabitTracker habit) {
                     return Padding(
-                      padding: EdgeInsets.only(bottom: 14),
+                      padding: const EdgeInsets.only(bottom: 14),
                       child: _NotificationCard(
                         icon: Icons.alarm_rounded,
                         title: S
@@ -156,7 +156,7 @@ class _NotificationsPageState extends State<NotificationsPage> {
                               habit.completedDays,
                               habit.targetDaysWeek,
                             ),
-                        tone: Color(0xFF7C3AED),
+                        tone: const Color(0xFF7C3AED),
                       ),
                     );
                   }),
@@ -185,7 +185,7 @@ class _NotificationCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding: EdgeInsets.all(18),
+      padding: const EdgeInsets.all(18),
       decoration: BoxDecoration(
         color: context.mtColors.card,
         borderRadius: BorderRadius.circular(24),
@@ -203,7 +203,7 @@ class _NotificationCard extends StatelessWidget {
             ),
             child: Icon(icon, color: tone),
           ),
-          SizedBox(width: 14),
+          const SizedBox(width: 14),
           Expanded(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -216,7 +216,7 @@ class _NotificationCard extends StatelessWidget {
                     color: context.mtColors.textPrimary,
                   ),
                 ),
-                SizedBox(height: 6),
+                const SizedBox(height: 6),
                 Text(
                   description,
                   style: TextStyle(
@@ -242,13 +242,13 @@ class _ErrorState extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: EdgeInsets.only(top: 60),
+      padding: const EdgeInsets.only(top: 60),
       child: Center(
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: <Widget>[
             Text(message, textAlign: TextAlign.center),
-            SizedBox(height: 16),
+            const SizedBox(height: 16),
             FilledButton(
               onPressed: onRetry,
               child: Text(S.of(context).home_retry),

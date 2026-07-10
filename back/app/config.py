@@ -34,8 +34,10 @@ class Settings(BaseSettings):
     celery_broker_url: str = "redis://localhost:6379/1"
     celery_result_backend: str = "redis://localhost:6379/2"
 
-    gemini_api_key: str = ""
-    gemini_model: str = "gemini-2.0-flash"
+    # OpenAI — https://platform.openai.com/api-keys
+    # gpt-5-nano es el modelo más barato del catálogo.
+    openai_api_key: str = ""
+    openai_model: str = "gpt-5-nano"
 
 
 settings = Settings()

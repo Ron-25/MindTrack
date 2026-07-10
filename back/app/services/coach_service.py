@@ -20,7 +20,7 @@ from app.schemas.coach import (
     CoachSummaryOut,
 )
 
-GEMINI_BASE_URL = "https://generativelanguage.googleapis.com/v1beta/models"
+OPENAI_CHAT_URL = "https://api.openai.com/v1/chat/completions"
 
 MAX_HISTORY_MESSAGES = 20
 logger = logging.getLogger(__name__)
@@ -112,10 +112,10 @@ class CoachService:
         )
 
     async def chat(self, user: User, body: CoachChatIn) -> CoachChatOut:
-        if not settings.gemini_api_key:
+        if not settings.openai_api_key:
             raise HTTPException(
                 status_code=status.HTTP_503_SERVICE_UNAVAILABLE,
-                detail="El asistente no está configurado (falta GEMINI_API_KEY).",
+                detail="El asistente no está configurado (falta OPENAI_API_KEY).",
             )
 
         message = body.message.strip()

@@ -1,4 +1,5 @@
 from datetime import date
+import logging
 from typing import List
 
 import httpx
@@ -22,6 +23,7 @@ from app.schemas.coach import (
 GEMINI_BASE_URL = "https://generativelanguage.googleapis.com/v1beta/models"
 
 MAX_HISTORY_MESSAGES = 20
+logger = logging.getLogger(__name__)
 
 
 class CoachService:
@@ -173,12 +175,14 @@ class CoachService:
                     headers={"x-goog-api-key": settings.gemini_api_key},
                 )
         except httpx.HTTPError:
+            logger.exception("Error de red al contactar la API de Gemini")
             raise HTTPException(
                 status_code=status.HTTP_502_BAD_GATEWAY,
                 detail="No se pudo contactar al asistente. Intenta de nuevo.",
             )
 
         if response.status_code == 429:
+            logger.warning("Gemini rechazó la solicitud por límite de uso (429)")
             raise HTTPException(
                 status_code=status.HTTP_429_TOO_MANY_REQUESTS,
                 detail=(
@@ -187,15 +191,36 @@ class CoachService:
                 ),
             )
         if response.status_code != 200:
+            try:
+                upstream_error = response.json().get("error", {})
+                upstream_message = upstream_error.get("message", response.text)
+            except (ValueError, AttributeError):
+                upstream_message = response.text
+            logger.error(
+                "Gemini respondió HTTP %s: %s",
+                response.status_code,
+                upstream_message[:1000],
+            )
             raise HTTPException(
                 status_code=status.HTTP_502_BAD_GATEWAY,
-                detail="El asistente no pudo responder. Intenta de nuevo.",
+                detail=(
+                    "Gemini rechazó la solicitud "
+                    f"(error {response.status_code}). Revisa los logs de Render."
+                ),
             )
 
-        data = response.json()
+        try:
+            data = response.json()
+        except ValueError:
+            logger.error("Gemini devolvió una respuesta que no es JSON")
+            raise HTTPException(
+                status_code=status.HTTP_502_BAD_GATEWAY,
+                detail="Gemini devolvió una respuesta inválida.",
+            )
         try:
             reply = data["candidates"][0]["content"]["parts"][0]["text"].strip()
         except (KeyError, IndexError, TypeError):
+            logger.error("Respuesta de Gemini sin texto: %s", str(data)[:1000])
             raise HTTPException(
                 status_code=status.HTTP_502_BAD_GATEWAY,
                 detail="El asistente devolvió una respuesta vacía. Intenta de nuevo.",

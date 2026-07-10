@@ -153,40 +153,45 @@ class CoachService:
             "profesional. Contexto reciente del usuario: " + " ".join(context_lines)
         )
 
-        contents = [
-            {"role": item.role, "parts": [{"text": item.content}]}
-            for item in body.history[-MAX_HISTORY_MESSAGES:]
-            if item.content.strip()
-        ]
-        contents.append({"role": "user", "parts": [{"text": message}]})
+
+        messages = [{"role": "system", "content": system_prompt}]
+        for item in body.history[-MAX_HISTORY_MESSAGES:]:
+            if not item.content.strip():
+                continue
+            role = "assistant" if item.role == "model" else "user"
+            messages.append({"role": role, "content": item.content})
+        messages.append({"role": "user", "content": message})
 
         payload = {
-            "system_instruction": {"parts": [{"text": system_prompt}]},
-            "contents": contents,
-            "generationConfig": {"temperature": 0.6, "maxOutputTokens": 500},
+            "model": settings.openai_model,
+            "messages": messages,
+            "max_completion_tokens": 500,
         }
 
-        url = f"{GEMINI_BASE_URL}/{settings.gemini_model}:generateContent"
         try:
             async with httpx.AsyncClient(timeout=30) as client:
                 response = await client.post(
-                    url,
+                    OPENAI_CHAT_URL,
                     json=payload,
-                    headers={"x-goog-api-key": settings.gemini_api_key},
+                    headers={
+                        "Authorization": f"Bearer {settings.openai_api_key}",
+                    },
                 )
         except httpx.HTTPError:
-            logger.exception("Error de red al contactar la API de Gemini")
+            logger.exception("Error de red al contactar la API de OpenAI")
             raise HTTPException(
                 status_code=status.HTTP_502_BAD_GATEWAY,
                 detail="No se pudo contactar al asistente. Intenta de nuevo.",
             )
 
         if response.status_code == 429:
-            logger.warning("Gemini rechazó la solicitud por límite de uso (429)")
+            logger.warning(
+                "OpenAI rechazó la solicitud por límite de uso o cuota (429)"
+            )
             raise HTTPException(
                 status_code=status.HTTP_429_TOO_MANY_REQUESTS,
                 detail=(
-                    "El asistente alcanzó el límite gratuito por ahora. "
+                    "El asistente alcanzó el límite de uso por ahora. "
                     "Intenta de nuevo en unos minutos."
                 ),
             )
@@ -197,14 +202,14 @@ class CoachService:
             except (ValueError, AttributeError):
                 upstream_message = response.text
             logger.error(
-                "Gemini respondió HTTP %s: %s",
+                "OpenAI respondió HTTP %s: %s",
                 response.status_code,
                 upstream_message[:1000],
             )
             raise HTTPException(
                 status_code=status.HTTP_502_BAD_GATEWAY,
                 detail=(
-                    "Gemini rechazó la solicitud "
+                    "OpenAI rechazó la solicitud "
                     f"(error {response.status_code}). Revisa los logs de Render."
                 ),
             )
@@ -212,15 +217,17 @@ class CoachService:
         try:
             data = response.json()
         except ValueError:
-            logger.error("Gemini devolvió una respuesta que no es JSON")
+            logger.error("OpenAI devolvió una respuesta que no es JSON")
             raise HTTPException(
                 status_code=status.HTTP_502_BAD_GATEWAY,
-                detail="Gemini devolvió una respuesta inválida.",
+                detail="OpenAI devolvió una respuesta inválida.",
             )
         try:
-            reply = data["candidates"][0]["content"]["parts"][0]["text"].strip()
+            reply = (data["choices"][0]["message"]["content"] or "").strip()
         except (KeyError, IndexError, TypeError):
-            logger.error("Respuesta de Gemini sin texto: %s", str(data)[:1000])
+            reply = ""
+        if not reply:
+            logger.error("Respuesta de OpenAI sin texto: %s", str(data)[:1000])
             raise HTTPException(
                 status_code=status.HTTP_502_BAD_GATEWAY,
                 detail="El asistente devolvió una respuesta vacía. Intenta de nuevo.",

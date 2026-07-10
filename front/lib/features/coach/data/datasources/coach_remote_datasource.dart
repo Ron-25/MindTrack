@@ -95,11 +95,15 @@ class CoachRemoteDataSourceImpl implements CoachRemoteDataSource {
     String fallback = 'No se pudo cargar el coach.',
   }) {
     final dynamic data = error.response?.data;
-    if (data is Map<String, dynamic>) {
+    if (data is Map) {
       final dynamic detail = data['detail'];
       if (detail is String && detail.trim().isNotEmpty) {
         return detail;
       }
+    }
+    final int? statusCode = error.response?.statusCode;
+    if (statusCode != null) {
+      return '$fallback (error $statusCode).';
     }
     if (error.type == DioExceptionType.connectionError) {
       return 'No se pudo conectar con el servidor.';

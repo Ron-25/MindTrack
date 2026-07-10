@@ -68,6 +68,46 @@ class _NotificationsPageState extends State<NotificationsPage> {
     }
   }
 
+  /// Cambia la hora del recordatorio diario desde la pantalla de avisos.
+  /// Si el recordatorio estaba desactivado, elegir hora lo activa.
+  Future<void> _editReminderTime() async {
+    final ProfileSettingsData? profile = _profile;
+    if (profile == null) {
+      return;
+    }
+    final List<String> parts = (profile.notificationTime ?? '20:00').split(':');
+    final TimeOfDay initial = TimeOfDay(
+      hour: int.tryParse(parts.first) ?? 20,
+      minute: parts.length > 1 ? int.tryParse(parts[1]) ?? 0 : 0,
+    );
+    final TimeOfDay? picked = await showTimePicker(
+      context: context,
+      initialTime: initial,
+    );
+    if (picked == null || !mounted) {
+      return;
+    }
+    final String time =
+        '${picked.hour.toString().padLeft(2, '0')}:'
+        '${picked.minute.toString().padLeft(2, '0')}';
+    try {
+      await _profileRepository.updatePreferences(
+        notificationsEnabled: true,
+        notificationTime: time,
+      );
+      await _loadData();
+    } catch (error) {
+      if (!mounted) {
+        return;
+      }
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text(error.toString().replaceFirst('Exception: ', '')),
+        ),
+      );
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     final DateTime now = DateTime.now();
@@ -102,19 +142,26 @@ class _NotificationsPageState extends State<NotificationsPage> {
               else if (_errorMessage != null)
                 _ErrorState(message: _errorMessage!, onRetry: _loadData)
               else ...<Widget>[
-                _NotificationCard(
-                  icon: _profile?.notificationsEnabled == true
-                      ? Icons.notifications_active_outlined
-                      : Icons.notifications_off_outlined,
-                  title: _profile?.notificationsEnabled == true
-                      ? S.of(context).notifications_active_title
-                      : S.of(context).notifications_inactive_title,
-                  description: _profile?.notificationsEnabled == true
-                      ? S.of(context).notifications_active_description
-                      : S.of(context).notifications_inactive_description,
-                  tone: _profile?.notificationsEnabled == true
-                      ? const Color(0xFF0F766E)
-                      : const Color(0xFFD97706),
+                GestureDetector(
+                  onTap: _editReminderTime,
+                  child: _NotificationCard(
+                    icon: _profile?.notificationsEnabled == true
+                        ? Icons.notifications_active_outlined
+                        : Icons.notifications_off_outlined,
+                    title: _profile?.notificationsEnabled == true
+                        ? S
+                              .of(context)
+                              .notifications_reminder_title(
+                                _profile?.notificationTime ?? '20:00',
+                              )
+                        : S.of(context).notifications_inactive_title,
+                    description: _profile?.notificationsEnabled == true
+                        ? S.of(context).notifications_reminder_edit_hint
+                        : S.of(context).notifications_inactive_description,
+                    tone: _profile?.notificationsEnabled == true
+                        ? const Color(0xFF0F766E)
+                        : const Color(0xFFD97706),
+                  ),
                 ),
                 const SizedBox(height: 14),
                 _NotificationCard(

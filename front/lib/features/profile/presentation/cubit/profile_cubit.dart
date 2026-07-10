@@ -55,6 +55,7 @@ class ProfileCubit extends Cubit<ProfileState> {
   Future<void> updatePreferences({
     String? languageCode,
     bool? notificationsEnabled,
+    String? notificationTime,
   }) async {
     emit(state.copyWith(isSaving: true, clearError: true, clearSuccess: true));
     try {
@@ -62,6 +63,7 @@ class ProfileCubit extends Cubit<ProfileState> {
           .updatePreferences(
             languageCode: languageCode,
             notificationsEnabled: notificationsEnabled,
+            notificationTime: notificationTime,
           );
       emit(
         state.copyWith(

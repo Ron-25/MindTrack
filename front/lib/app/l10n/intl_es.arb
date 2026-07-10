@@ -183,6 +183,14 @@
   "@home_streak_keep": {},
   "home_streak_start": "Registra una emocion hoy para empezar tu racha",
   "@home_streak_start": {},
+  "notifications_reminder_title": "Recordatorio diario · {time}",
+  "@notifications_reminder_title": {
+    "placeholders": {
+      "time": {}
+    }
+  },
+  "notifications_reminder_edit_hint": "Te avisaremos todos los dias a esa hora. Toca para cambiarla.",
+  "@notifications_reminder_edit_hint": {},
   "home_nav_home": "INICIO",
   "@home_nav_home": {},
   "home_nav_history": "HISTORIAL",

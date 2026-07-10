@@ -61,7 +61,9 @@ class MessageLookup extends MessageLookupByLibrary {
 
   static String m17(name) => "Pendiente: ${name}";
 
-  static String m18(step, total) =>
+  static String m18(time) => "Recordatorio diario · ${time}";
+
+  static String m19(step, total) =>
       "Paso ${step} de ${total} • Conciencia Emocional";
 
   final messages = _notInlinedMessages(_notInlinedMessages);
@@ -430,6 +432,10 @@ class MessageLookup extends MessageLookupByLibrary {
     ),
     "notifications_pending_description": m16,
     "notifications_pending_title": m17,
+    "notifications_reminder_edit_hint": MessageLookupByLibrary.simpleMessage(
+      "Te avisaremos todos los dias a esa hora. Toca para cambiarla.",
+    ),
+    "notifications_reminder_title": m18,
     "notifications_title": MessageLookupByLibrary.simpleMessage(
       "Notificaciones",
     ),
@@ -442,7 +448,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "onboarding_desc_3": MessageLookupByLibrary.simpleMessage(
       "Conecta tus rutinas diarias con tu bienestar emocional. Comienza tu camino hacia una vida más equilibrada.",
     ),
-    "onboarding_step": m18,
+    "onboarding_step": m19,
     "onboarding_title_1": MessageLookupByLibrary.simpleMessage(
       "Registra tus emociones diarias",
     ),

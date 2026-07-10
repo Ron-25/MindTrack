@@ -7,6 +7,7 @@ class ProfileSettingsData extends Equatable {
     this.avatarUrl,
     this.languageCode,
     this.notificationsEnabled = false,
+    this.notificationTime,
   });
 
   final String name;
@@ -15,12 +16,16 @@ class ProfileSettingsData extends Equatable {
   final String? languageCode;
   final bool notificationsEnabled;
 
+  /// Hora del recordatorio diario en formato "HH:MM".
+  final String? notificationTime;
+
   ProfileSettingsData copyWith({
     String? name,
     String? email,
     String? avatarUrl,
     String? languageCode,
     bool? notificationsEnabled,
+    String? notificationTime,
   }) {
     return ProfileSettingsData(
       name: name ?? this.name,
@@ -28,6 +33,7 @@ class ProfileSettingsData extends Equatable {
       avatarUrl: avatarUrl ?? this.avatarUrl,
       languageCode: languageCode ?? this.languageCode,
       notificationsEnabled: notificationsEnabled ?? this.notificationsEnabled,
+      notificationTime: notificationTime ?? this.notificationTime,
     );
   }
 
@@ -38,5 +44,6 @@ class ProfileSettingsData extends Equatable {
     avatarUrl,
     languageCode,
     notificationsEnabled,
+    notificationTime,
   ];
 }

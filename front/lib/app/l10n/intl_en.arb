@@ -183,6 +183,14 @@
   "@home_streak_keep": {},
   "home_streak_start": "Log an emotion today to start your streak",
   "@home_streak_start": {},
+  "notifications_reminder_title": "Daily reminder · {time}",
+  "@notifications_reminder_title": {
+    "placeholders": {
+      "time": {}
+    }
+  },
+  "notifications_reminder_edit_hint": "We will remind you every day at that time. Tap to change it.",
+  "@notifications_reminder_edit_hint": {},
   "home_nav_home": "HOME",
   "@home_nav_home": {},
   "home_nav_history": "HISTORY",

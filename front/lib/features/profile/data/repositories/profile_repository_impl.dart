@@ -21,10 +21,12 @@ class ProfileRepositoryImpl implements ProfileRepository {
   Future<ProfileSettingsData> updatePreferences({
     String? languageCode,
     bool? notificationsEnabled,
+    String? notificationTime,
   }) {
     return _remoteDataSource.updatePreferences(
       languageCode: languageCode,
       notificationsEnabled: notificationsEnabled,
+      notificationTime: notificationTime,
     );
   }
 }

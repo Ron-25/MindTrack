@@ -10,6 +10,7 @@ abstract class ProfileRemoteDataSource {
   Future<ProfileSettingsData> updatePreferences({
     String? languageCode,
     bool? notificationsEnabled,
+    String? notificationTime,
   });
 }
 
@@ -47,6 +48,7 @@ class ProfileRemoteDataSourceImpl implements ProfileRemoteDataSource {
   Future<ProfileSettingsData> updatePreferences({
     String? languageCode,
     bool? notificationsEnabled,
+    String? notificationTime,
   }) async {
     try {
       await _client.dio.patch<dynamic>(
@@ -58,6 +60,9 @@ class ProfileRemoteDataSourceImpl implements ProfileRemoteDataSource {
           ...?notificationsEnabled == null
               ? null
               : <String, dynamic>{'notif_enabled': notificationsEnabled},
+          ...?notificationTime == null
+              ? null
+              : <String, dynamic>{'notif_time': notificationTime},
         },
       );
       return fetchProfile();
@@ -77,7 +82,20 @@ class ProfileRemoteDataSourceImpl implements ProfileRemoteDataSource {
       avatarUrl: json['avatar_url'] as String?,
       languageCode: preferences?['language'] as String?,
       notificationsEnabled: preferences?['notif_enabled'] as bool? ?? false,
+      notificationTime: _normalizeTime(preferences?['notif_time'] as String?),
     );
+  }
+
+  /// El backend envía "HH:MM:SS"; en la app se usa "HH:MM".
+  String? _normalizeTime(String? raw) {
+    if (raw == null || raw.isEmpty) {
+      return null;
+    }
+    final List<String> parts = raw.split(':');
+    if (parts.length < 2) {
+      return raw;
+    }
+    return '${parts[0].padLeft(2, '0')}:${parts[1].padLeft(2, '0')}';
   }
 
   String _extractMessage(DioException error) {

@@ -145,9 +145,10 @@ class _ProfileSettingsPageState extends State<ProfileSettingsPage> {
                                     title: translations
                                         .profile_notification_settings,
                                     trailingText: profile.notificationsEnabled
-                                        ? 'Activadas'
-                                        : 'Desactivadas',
-                                    onTap: () => _toggleNotifications(profile),
+                                        ? 'Diario · ${profile.notificationTime ?? '20:00'}'
+                                        : 'Desactivados',
+                                    onTap: () =>
+                                        _editReminder(context, profile),
                                   ),
                                   _SettingsTile(
                                     icon: Icons.language_rounded,
@@ -354,10 +355,139 @@ class _ProfileSettingsPageState extends State<ProfileSettingsPage> {
     );
   }
 
-  Future<void> _toggleNotifications(ProfileSettingsData profile) async {
-    await _profileCubit.updatePreferences(
-      notificationsEnabled: !profile.notificationsEnabled,
+  /// Hoja de configuración del recordatorio diario: activarlo y elegir hora.
+  Future<void> _editReminder(
+    BuildContext context,
+    ProfileSettingsData profile,
+  ) async {
+    bool enabled = profile.notificationsEnabled;
+    TimeOfDay selected =
+        _parseTime(profile.notificationTime) ??
+        const TimeOfDay(hour: 20, minute: 0);
+
+    final bool? save = await showModalBottomSheet<bool>(
+      context: context,
+      backgroundColor: Theme.of(context).colorScheme.surface,
+      shape: const RoundedRectangleBorder(
+        borderRadius: BorderRadius.vertical(top: Radius.circular(28)),
+      ),
+      builder: (BuildContext sheetContext) {
+        return StatefulBuilder(
+          builder: (BuildContext context, StateSetter setModalState) {
+            return SafeArea(
+              child: Padding(
+                padding: const EdgeInsets.fromLTRB(20, 20, 20, 24),
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: <Widget>[
+                    const Text(
+                      'Recordatorio diario',
+                      style: TextStyle(
+                        fontSize: 20,
+                        fontWeight: FontWeight.w800,
+                      ),
+                    ),
+                    const SizedBox(height: 4),
+                    Text(
+                      'Un aviso al día para registrar cómo te sientes.',
+                      style: TextStyle(
+                        fontSize: 14,
+                        color: Theme.of(context).colorScheme.onSurfaceVariant,
+                      ),
+                    ),
+                    const SizedBox(height: 12),
+                    SwitchListTile.adaptive(
+                      contentPadding: EdgeInsets.zero,
+                      title: const Text('Activar recordatorio'),
+                      value: enabled,
+                      activeColor: AppColors.primary,
+                      onChanged: (bool value) {
+                        setModalState(() => enabled = value);
+                      },
+                    ),
+                    ListTile(
+                      contentPadding: EdgeInsets.zero,
+                      enabled: enabled,
+                      leading: const Icon(Icons.schedule_rounded),
+                      title: const Text('Hora del aviso'),
+                      trailing: Text(
+                        selected.format(context),
+                        style: TextStyle(
+                          fontSize: 16,
+                          fontWeight: FontWeight.w700,
+                          color: enabled
+                              ? AppColors.primary
+                              : Theme.of(context).disabledColor,
+                        ),
+                      ),
+                      onTap: !enabled
+                          ? null
+                          : () async {
+                              final TimeOfDay? picked = await showTimePicker(
+                                context: context,
+                                initialTime: selected,
+                              );
+                              if (picked != null) {
+                                setModalState(() => selected = picked);
+                              }
+                            },
+                    ),
+                    const SizedBox(height: 16),
+                    Row(
+                      children: <Widget>[
+                        Expanded(
+                          child: OutlinedButton(
+                            onPressed: () =>
+                                Navigator.of(sheetContext).pop(false),
+                            child: const Text('Cancelar'),
+                          ),
+                        ),
+                        const SizedBox(width: 12),
+                        Expanded(
+                          child: FilledButton(
+                            style: FilledButton.styleFrom(
+                              backgroundColor: AppColors.primary,
+                            ),
+                            onPressed: () =>
+                                Navigator.of(sheetContext).pop(true),
+                            child: const Text('Guardar'),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ],
+                ),
+              ),
+            );
+          },
+        );
+      },
     );
+
+    if (save != true) {
+      return;
+    }
+    final String time =
+        '${selected.hour.toString().padLeft(2, '0')}:'
+        '${selected.minute.toString().padLeft(2, '0')}';
+    await _profileCubit.updatePreferences(
+      notificationsEnabled: enabled,
+      notificationTime: time,
+    );
+  }
+
+  TimeOfDay? _parseTime(String? value) {
+    if (value == null || !value.contains(':')) {
+      return null;
+    }
+    final List<String> parts = value.split(':');
+    final int? hour = int.tryParse(parts[0]);
+    final int? minute = int.tryParse(parts[1]);
+    if (hour == null || minute == null) {
+      return null;
+    }
+    return TimeOfDay(hour: hour, minute: minute);
   }
 
   Future<void> _editProfileName(

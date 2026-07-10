@@ -774,6 +774,26 @@ class S {
     );
   }
 
+  /// `Daily reminder · {time}`
+  String notifications_reminder_title(Object time) {
+    return Intl.message(
+      'Daily reminder · $time',
+      name: 'notifications_reminder_title',
+      desc: '',
+      args: [time],
+    );
+  }
+
+  /// `We will remind you every day at that time. Tap to change it.`
+  String get notifications_reminder_edit_hint {
+    return Intl.message(
+      'We will remind you every day at that time. Tap to change it.',
+      name: 'notifications_reminder_edit_hint',
+      desc: '',
+      args: [],
+    );
+  }
+
   /// `HOME`
   String get home_nav_home {
     return Intl.message('HOME', name: 'home_nav_home', desc: '', args: []);

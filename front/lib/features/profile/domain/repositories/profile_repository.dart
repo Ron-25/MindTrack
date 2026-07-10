@@ -8,5 +8,6 @@ abstract class ProfileRepository {
   Future<ProfileSettingsData> updatePreferences({
     String? languageCode,
     bool? notificationsEnabled,
+    String? notificationTime,
   });
 }

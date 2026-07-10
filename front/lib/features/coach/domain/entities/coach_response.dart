@@ -37,6 +37,24 @@ class CoachInsight extends Equatable {
   List<Object?> get props => <Object?>[code, priority, message];
 }
 
+class CoachChatMessage extends Equatable {
+  const CoachChatMessage({
+    required this.role,
+    required this.content,
+    required this.sentAt,
+  });
+
+  /// 'user' o 'model' (rol que espera la API de Gemini).
+  final String role;
+  final String content;
+  final DateTime sentAt;
+
+  bool get isUser => role == 'user';
+
+  @override
+  List<Object?> get props => <Object?>[role, content, sentAt];
+}
+
 class CoachSummary extends Equatable {
   const CoachSummary({
     required this.totalLogs,

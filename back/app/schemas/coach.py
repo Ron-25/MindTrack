@@ -22,3 +22,17 @@ class CoachInsightsOut(BaseModel):
     hero_description: str
     insights: List[CoachInsightOut]
     summary: CoachSummaryOut
+
+
+class CoachChatMessage(BaseModel):
+    role: Literal["user", "model"]
+    content: str
+
+
+class CoachChatIn(BaseModel):
+    message: str
+    history: List[CoachChatMessage] = []
+
+
+class CoachChatOut(BaseModel):
+    reply: str

@@ -79,6 +79,30 @@ class HabitCubit extends Cubit<HabitState> {
     }
   }
 
+  Future<void> updateHabit(String id, UpdateHabitInput input) async {
+    emit(state.copyWith(isSaving: true, clearError: true, clearSuccess: true));
+    try {
+      await _habitRepository.updateHabit(id, input);
+      final List<HabitTracker> habits = await _habitRepository.fetchHabits();
+      emit(
+        state.copyWith(
+          isSaving: false,
+          habits: habits,
+          successMessage: 'Hábito actualizado correctamente.',
+          clearError: true,
+        ),
+      );
+    } catch (error) {
+      emit(
+        state.copyWith(
+          isSaving: false,
+          errorMessage: error.toString().replaceFirst('Exception: ', ''),
+          clearSuccess: true,
+        ),
+      );
+    }
+  }
+
   void clearFeedback() {
     emit(state.copyWith(clearError: true, clearSuccess: true));
   }

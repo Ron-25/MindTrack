@@ -1,17 +1,15 @@
 import 'package:flutter/material.dart';
-import 'package:mind_track/features/analytics/presentation/pages/analytics_page.dart';
+import 'package:mind_track/features/coach/presentation/pages/chat_bot_page.dart';
 import 'package:mind_track/features/coach/presentation/pages/coach_page.dart';
 import 'package:mind_track/features/daily_mood/presentation/pages/daily_mood_page.dart';
 import 'package:mind_track/features/emotion_tracker/presentation/pages/add_emotion_page.dart';
 import 'package:mind_track/features/emotion_tracker/presentation/pages/emotion_detail_page.dart';
-import 'package:mind_track/features/habits/presentation/pages/habits_page.dart';
-import 'package:mind_track/features/home/presentation/pages/home_page.dart';
 import 'package:mind_track/features/login/presentation/pages/sign_in_page.dart';
 import 'package:mind_track/features/login/presentation/pages/sign_up_page.dart';
 import 'package:mind_track/features/notifications/presentation/pages/notifications_page.dart';
 import 'package:mind_track/features/onboarning/presentation/pages/onboarning_page.dart';
-import 'package:mind_track/features/profile/presentation/pages/profile_settings_page.dart';
 import 'package:mind_track/features/splash/presentation/pages/splash_page.dart';
+import 'package:mind_track/shared/pages/main_shell_page.dart';
 import 'route_names.dart';
 
 class AppRouter {
@@ -28,21 +26,25 @@ class AppRouter {
       case RouteNames.signUp:
         return _slide(const SignUp());
       case RouteNames.home:
-        return _fade(const HomePage());
+        return _fade(const MainShellPage());
       case RouteNames.profile:
-        return _slide(const ProfileSettingsPage());
+        return _fade(const MainShellPage(initialIndex: MainShellPage.profileTab));
       case RouteNames.dailyMood:
-        return _slide(const DailyMoodPage());
+        return _fade(const MainShellPage(initialIndex: MainShellPage.historyTab));
       case RouteNames.analytics:
-        return _slide(const AnalyticsPage());
+        return _fade(
+          const MainShellPage(initialIndex: MainShellPage.analyticsTab),
+        );
       case RouteNames.habits:
-        return _slide(const HabitsPage());
+        return _fade(const MainShellPage(initialIndex: MainShellPage.habitsTab));
       case RouteNames.search:
         return _slide(const DailyMoodPage(searchMode: true));
       case RouteNames.notifications:
         return _slide(const NotificationsPage());
       case RouteNames.coach:
         return _slide(const CoachPage());
+      case RouteNames.chat:
+        return _slide(const ChatBotPage());
       case RouteNames.addEmotion:
         return _slide(const AddEmotionPage());
       case RouteNames.emotionDetail:

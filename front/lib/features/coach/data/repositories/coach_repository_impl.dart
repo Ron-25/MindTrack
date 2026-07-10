@@ -11,4 +11,12 @@ class CoachRepositoryImpl implements CoachRepository {
   Future<CoachResponse> fetchCoachResponse() {
     return _remoteDataSource.fetchCoachResponse();
   }
+
+  @override
+  Future<String> sendChatMessage({
+    required String message,
+    required List<CoachChatMessage> history,
+  }) {
+    return _remoteDataSource.sendChatMessage(message: message, history: history);
+  }
 }

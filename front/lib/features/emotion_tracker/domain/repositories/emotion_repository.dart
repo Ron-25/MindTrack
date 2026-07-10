@@ -11,5 +11,7 @@ abstract class EmotionRepository {
 
   Future<EmotionEntry> createEntry(CreateEmotionEntryInput input);
 
+  Future<EmotionEntry> updateEntry(String id, UpdateEmotionEntryInput input);
+
   Future<void> deleteEntry(String id);
 }

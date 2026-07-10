@@ -1189,6 +1189,166 @@ class S {
     );
   }
 
+  /// `Week`
+  String get analytics_range_week {
+    return Intl.message(
+      'Week',
+      name: 'analytics_range_week',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Month`
+  String get analytics_range_month {
+    return Intl.message(
+      'Month',
+      name: 'analytics_range_month',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Year`
+  String get analytics_range_year {
+    return Intl.message(
+      'Year',
+      name: 'analytics_range_year',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Emotional Trends`
+  String get analytics_trends_title {
+    return Intl.message(
+      'Emotional Trends',
+      name: 'analytics_trends_title',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Weekly Mood Flow`
+  String get analytics_mood_flow_label {
+    return Intl.message(
+      'Weekly Mood Flow',
+      name: 'analytics_mood_flow_label',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Average emotional intensity per day (1-10 scale)`
+  String get analytics_mood_flow_caption {
+    return Intl.message(
+      'Average emotional intensity per day (1-10 scale)',
+      name: 'analytics_mood_flow_caption',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `No intensity logs this week. Showing completed habits per day instead.`
+  String get analytics_mood_flow_fallback_caption {
+    return Intl.message(
+      'No intensity logs this week. Showing completed habits per day instead.',
+      name: 'analytics_mood_flow_fallback_caption',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Mood Distribution`
+  String get analytics_distribution_title {
+    return Intl.message(
+      'Mood Distribution',
+      name: 'analytics_distribution_title',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Patterns & Observations`
+  String get analytics_patterns_title {
+    return Intl.message(
+      'Patterns & Observations',
+      name: 'analytics_patterns_title',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Top Day`
+  String get analytics_top_day_label {
+    return Intl.message(
+      'Top Day',
+      name: 'analytics_top_day_label',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Best mood on {day}`
+  String analytics_top_day_value(Object day) {
+    return Intl.message(
+      'Best mood on $day',
+      name: 'analytics_top_day_value',
+      desc: '',
+      args: [day],
+    );
+  }
+
+  /// `Habits`
+  String get analytics_habits_card_label {
+    return Intl.message(
+      'Habits',
+      name: 'analytics_habits_card_label',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `{pct}% completed`
+  String analytics_habits_card_value(Object pct) {
+    return Intl.message(
+      '$pct% completed',
+      name: 'analytics_habits_card_value',
+      desc: '',
+      args: [pct],
+    );
+  }
+
+  /// `Weekly Insight`
+  String get analytics_insight_title {
+    return Intl.message(
+      'Weekly Insight',
+      name: 'analytics_insight_title',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Read more insights`
+  String get analytics_read_more {
+    return Intl.message(
+      'Read more insights',
+      name: 'analytics_read_more',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Not enough data`
+  String get analytics_no_data_short {
+    return Intl.message(
+      'Not enough data',
+      name: 'analytics_no_data_short',
+      desc: '',
+      args: [],
+    );
+  }
+
   /// `Habits`
   String get habits_title {
     return Intl.message('Habits', name: 'habits_title', desc: '', args: []);
@@ -1314,6 +1474,156 @@ class S {
     return Intl.message(
       'Other',
       name: 'habits_category_other',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Daily Progress`
+  String get habits_daily_progress_title {
+    return Intl.message(
+      'Daily Progress',
+      name: 'habits_daily_progress_title',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `You've completed {completed} of {total} habits today!`
+  String habits_daily_progress_message(Object completed, Object total) {
+    return Intl.message(
+      'You\'ve completed $completed of $total habits today!',
+      name: 'habits_daily_progress_message',
+      desc: '',
+      args: [completed, total],
+    );
+  }
+
+  /// `Consistency is the key to mental clarity.`
+  String get habits_daily_progress_subtitle {
+    return Intl.message(
+      'Consistency is the key to mental clarity.',
+      name: 'habits_daily_progress_subtitle',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Insights`
+  String get habits_insights_button {
+    return Intl.message(
+      'Insights',
+      name: 'habits_insights_button',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Today's Habits`
+  String get habits_today_title {
+    return Intl.message(
+      'Today\'s Habits',
+      name: 'habits_today_title',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `e.g., Drink Water`
+  String get habits_name_hint {
+    return Intl.message(
+      'e.g., Drink Water',
+      name: 'habits_name_hint',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Choose Icon`
+  String get habits_icon_label {
+    return Intl.message(
+      'Choose Icon',
+      name: 'habits_icon_label',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Frequency`
+  String get habits_frequency_label {
+    return Intl.message(
+      'Frequency',
+      name: 'habits_frequency_label',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Daily`
+  String get habits_frequency_daily {
+    return Intl.message(
+      'Daily',
+      name: 'habits_frequency_daily',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Weekly`
+  String get habits_frequency_weekly {
+    return Intl.message(
+      'Weekly',
+      name: 'habits_frequency_weekly',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Custom`
+  String get habits_frequency_custom {
+    return Intl.message(
+      'Custom',
+      name: 'habits_frequency_custom',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Create Habit`
+  String get habits_create_button {
+    return Intl.message(
+      'Create Habit',
+      name: 'habits_create_button',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Edit Habit`
+  String get habits_edit_title {
+    return Intl.message(
+      'Edit Habit',
+      name: 'habits_edit_title',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Save Changes`
+  String get habits_save_changes {
+    return Intl.message(
+      'Save Changes',
+      name: 'habits_save_changes',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Select at least one day.`
+  String get habits_days_error {
+    return Intl.message(
+      'Select at least one day.',
+      name: 'habits_days_error',
       desc: '',
       args: [],
     );

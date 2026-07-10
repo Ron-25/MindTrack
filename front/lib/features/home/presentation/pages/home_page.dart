@@ -1,13 +1,11 @@
 import 'dart:math' as math;
 
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:mind_track/app/generated/l10n.dart';
 import 'package:mind_track/app/injector.dart';
 import 'package:mind_track/app/routes/route_names.dart';
 import 'package:mind_track/app/theme/app_colors.dart';
-import 'package:mind_track/core/services/token_storage_service.dart';
 import 'package:mind_track/core/utils/toast_utils.dart';
 import 'package:mind_track/features/home/domain/entities/home_dashboard.dart';
 import 'package:mind_track/features/home/presentation/cubit/home_cubit.dart';
@@ -15,6 +13,8 @@ import 'package:mind_track/features/home/presentation/cubit/home_state.dart';
 import 'package:mind_track/features/login/presentation/blocs/login_bloc.dart';
 import 'package:mind_track/features/login/presentation/blocs/login_event.dart';
 import 'package:mind_track/features/login/presentation/blocs/login_state.dart';
+import 'package:mind_track/shared/pages/main_shell_page.dart';
+import 'package:mind_track/shared/widget/mindtrack_app_bar.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -26,8 +26,6 @@ class HomePage extends StatefulWidget {
 class _HomePageState extends State<HomePage> {
   final HomeCubit _homeCubit = Injector.get<HomeCubit>();
   final LoginBloc _loginBloc = Injector.get<LoginBloc>();
-  final TokenStorageService _tokenStorage = Injector.get<TokenStorageService>();
-  int _selectedIndex = 0;
 
   @override
   void initState() {
@@ -84,15 +82,9 @@ class _HomePageState extends State<HomePage> {
           },
         ),
       ],
-      child: AnnotatedRegion<SystemUiOverlayStyle>(
-        value: const SystemUiOverlayStyle(
-          systemNavigationBarColor: Colors.white,
-          systemNavigationBarIconBrightness: Brightness.dark,
-          systemNavigationBarContrastEnforced: false,
-        ),
-        child: Scaffold(
+      child: Scaffold(
           backgroundColor: const Color(0xFFF6F7F8),
-          bottomNavigationBar: _buildBottomArea(context),
+          appBar: MindTrackAppBar(title: S.of(context).title),
           floatingActionButton: _buildManagerIaButton(context),
           floatingActionButtonLocation:
               FloatingActionButtonLocation.centerFloat,
@@ -122,8 +114,6 @@ class _HomePageState extends State<HomePage> {
                         padding: const EdgeInsets.fromLTRB(16, 10, 16, 172),
                         sliver: SliverList(
                           delegate: SliverChildListDelegate(<Widget>[
-                            _buildHeader(context),
-                            const SizedBox(height: 24),
                             Text(
                               _greetingForTime(context, dashboard.userName),
                               style: const TextStyle(
@@ -183,74 +173,6 @@ class _HomePageState extends State<HomePage> {
             ),
           ),
         ),
-      ),
-    );
-  }
-
-  Widget _buildHeader(BuildContext context) {
-    return Row(
-      children: <Widget>[
-        Container(
-          width: 40,
-          height: 40,
-          decoration: const BoxDecoration(
-            color: Color(0x335FA9D3),
-            shape: BoxShape.circle,
-          ),
-          child: const Icon(
-            Icons.psychology_alt_rounded,
-            color: AppColors.primary,
-            size: 20,
-          ),
-        ),
-        const SizedBox(width: 12),
-        Expanded(
-          child: Text(
-            S.of(context).title,
-            style: const TextStyle(
-              fontSize: 18,
-              fontWeight: FontWeight.w700,
-              letterSpacing: -0.4,
-              color: Color(0xFF0F172A),
-            ),
-          ),
-        ),
-        _HeaderIconButton(
-          icon: Icons.search_rounded,
-          onTap: () => Navigator.of(context).pushNamed(RouteNames.search),
-        ),
-        const SizedBox(width: 8),
-        _HeaderIconButton(
-          icon: Icons.notifications_none_rounded,
-          onTap: () =>
-              Navigator.of(context).pushNamed(RouteNames.notifications),
-        ),
-        const SizedBox(width: 8),
-        _HeaderIconButton(
-          icon: Icons.logout_rounded,
-          tooltip: S.of(context).home_logout_tooltip,
-          onTap: () => _handleLogout(context),
-        ),
-      ],
-    );
-  }
-
-  Future<void> _handleLogout(BuildContext context) async {
-    final S translations = S.of(context);
-    await _tokenStorage.clearTokens();
-    _loginBloc.add(const LoginStatusReset());
-    if (!context.mounted) {
-      return;
-    }
-    ThToast.success(
-      context: context,
-      title: translations.auth_success_title,
-      description: translations.home_logout_success,
-      applyBlurEffect: false,
-    );
-    Navigator.of(context).pushNamedAndRemoveUntil(
-      RouteNames.signIn,
-      (Route<dynamic> route) => false,
     );
   }
 
@@ -326,10 +248,10 @@ class _HomePageState extends State<HomePage> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: <Widget>[
             Container(
-              width: 56,
-              height: 56,
+              width: 64,
+              height: 64,
               decoration: BoxDecoration(
-                color: accentColor.withValues(alpha: 0.12),
+                color: accentColor.withValues(alpha: 0.1),
                 shape: BoxShape.circle,
               ),
               child: Icon(
@@ -379,8 +301,7 @@ class _HomePageState extends State<HomePage> {
         SizedBox(
           width: double.infinity,
           child: FilledButton(
-            onPressed: () =>
-                Navigator.of(context).pushNamed(RouteNames.analytics),
+            onPressed: () => _goToTab(context, MainShellPage.analyticsTab),
             style: FilledButton.styleFrom(
               backgroundColor: const Color(0xFFF3F6F8),
               foregroundColor: AppColors.primary,
@@ -415,11 +336,18 @@ class _HomePageState extends State<HomePage> {
         ),
         const SizedBox(height: 20),
         SizedBox(
-          height: 120,
+          height: 140,
           child: Row(
             crossAxisAlignment: CrossAxisAlignment.end,
             children: overview.bars.map((WeeklyOverviewBar bar) {
+              final double maxValue = overview.bars.fold<double>(
+                1,
+                (double value, WeeklyOverviewBar item) =>
+                    math.max(value, item.value),
+              );
               final double barHeight = math.max(24, bar.value);
+              // Intensidad del color proporcional al valor del día (0.2-0.9).
+              final double alpha = 0.2 + 0.7 * (bar.value / maxValue);
               return Expanded(
                 child: Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 3),
@@ -431,9 +359,9 @@ class _HomePageState extends State<HomePage> {
                         curve: Curves.easeOutCubic,
                         height: barHeight,
                         decoration: BoxDecoration(
-                          color: bar.isHighlighted
-                              ? AppColors.primary.withValues(alpha: 0.9)
-                              : AppColors.primary.withValues(alpha: 0.22),
+                          color: AppColors.primary.withValues(
+                            alpha: alpha.clamp(0.2, 0.9),
+                          ),
                           borderRadius: const BorderRadius.only(
                             topLeft: Radius.circular(16),
                             topRight: Radius.circular(16),
@@ -442,7 +370,7 @@ class _HomePageState extends State<HomePage> {
                       ),
                       const SizedBox(height: 12),
                       Text(
-                        bar.label,
+                        bar.label.toUpperCase(),
                         style: const TextStyle(
                           fontSize: 10,
                           fontWeight: FontWeight.w500,
@@ -538,10 +466,10 @@ class _HomePageState extends State<HomePage> {
     return Material(
       color: Colors.transparent,
       child: InkWell(
-        onTap: () => Navigator.of(context).pushNamed(RouteNames.coach),
+        onTap: () => Navigator.of(context).pushNamed(RouteNames.chat),
         borderRadius: BorderRadius.circular(999),
         child: Container(
-          width: 146,
+          width: 200,
           height: 56,
           decoration: BoxDecoration(
             color: AppColors.primary,
@@ -599,8 +527,7 @@ class _HomePageState extends State<HomePage> {
               ),
             ),
             TextButton(
-              onPressed: () =>
-                  Navigator.of(context).pushNamed(RouteNames.dailyMood),
+              onPressed: () => _goToTab(context, MainShellPage.historyTab),
               child: Text(
                 S.of(context).home_see_all,
                 style: const TextStyle(
@@ -705,103 +632,21 @@ class _HomePageState extends State<HomePage> {
     );
   }
 
-  Widget _buildBottomArea(BuildContext context) {
-    final S translations = S.of(context);
-    final List<_NavItem> items = <_NavItem>[
-      _NavItem(label: translations.home_nav_home, icon: Icons.home_outlined),
-      _NavItem(
-        label: translations.home_nav_history,
-        icon: Icons.history_toggle_off_rounded,
-      ),
-      _NavItem(
-        label: translations.home_nav_analytics,
-        icon: Icons.insights_outlined,
-      ),
-      _NavItem(
-        label: translations.home_nav_habits,
-        icon: Icons.calendar_today_outlined,
-      ),
-      _NavItem(
-        label: translations.home_nav_profile,
-        icon: Icons.person_outline_rounded,
-      ),
-    ];
-
-    return SafeArea(
-      top: false,
-      child: Container(
-        decoration: const BoxDecoration(
-          color: Colors.white,
-          border: Border(top: BorderSide(color: Color(0xFFE2E8F0))),
-          boxShadow: <BoxShadow>[
-            BoxShadow(
-              color: Color(0x1A000000),
-              blurRadius: 20,
-              offset: Offset(0, -6),
-            ),
-          ],
-        ),
-        padding: const EdgeInsets.fromLTRB(16, 12, 16, 12),
-        child: Row(
-          children: List<Widget>.generate(items.length, (int index) {
-            final bool isSelected = _selectedIndex == index;
-            final Color color = isSelected
-                ? AppColors.primary
-                : const Color(0xFF94A3B8);
-            return Expanded(
-              child: InkWell(
-                onTap: () => _onBottomNavTap(index),
-                borderRadius: BorderRadius.circular(16),
-                child: Padding(
-                  padding: const EdgeInsets.symmetric(vertical: 4),
-                  child: Column(
-                    mainAxisSize: MainAxisSize.min,
-                    children: <Widget>[
-                      Icon(items[index].icon, size: 20, color: color),
-                      const SizedBox(height: 4),
-                      Text(
-                        items[index].label,
-                        textAlign: TextAlign.center,
-                        style: TextStyle(
-                          fontSize: 10,
-                          fontWeight: FontWeight.w700,
-                          letterSpacing: -0.3,
-                          color: color,
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-              ),
-            );
-          }),
-        ),
-      ),
-    );
-  }
-
-  void _onBottomNavTap(int index) {
-    if (index == 1) {
-      Navigator.of(context).pushNamed(RouteNames.dailyMood);
+  void _goToTab(BuildContext context, int tabIndex) {
+    final MainShellPageState? shell = MainShellPage.of(context);
+    if (shell != null) {
+      shell.goToTab(tabIndex);
       return;
     }
-    if (index == 4) {
-      Navigator.of(context).pushNamed(RouteNames.profile);
-      return;
-    }
-    if (index == 2) {
-      Navigator.of(context).pushNamed(RouteNames.analytics);
-      return;
-    }
-    if (index == 3) {
-      Navigator.of(context).pushNamed(RouteNames.habits);
-      return;
-    }
-    setState(() => _selectedIndex = index);
-    if (index != 0) {
-      _showSoonToast(context);
-      setState(() => _selectedIndex = 0);
-    }
+    // Fuera del shell (deep link): navega por ruta como antes.
+    final String route = switch (tabIndex) {
+      MainShellPage.historyTab => RouteNames.dailyMood,
+      MainShellPage.analyticsTab => RouteNames.analytics,
+      MainShellPage.habitsTab => RouteNames.habits,
+      MainShellPage.profileTab => RouteNames.profile,
+      _ => RouteNames.home,
+    };
+    Navigator.of(context).pushNamed(route);
   }
 
   String _greetingForTime(BuildContext context, String userName) {
@@ -936,15 +781,6 @@ class _HomePageState extends State<HomePage> {
     return Icons.checklist_rounded;
   }
 
-  void _showSoonToast(BuildContext context) {
-    final S translations = S.of(context);
-    ThToast.info(
-      context: context,
-      title: 'MindTrack',
-      description: translations.home_section_soon_description,
-      applyBlurEffect: false,
-    );
-  }
 }
 
 class _SectionCard extends StatelessWidget {
@@ -970,34 +806,6 @@ class _SectionCard extends StatelessWidget {
         ],
       ),
       child: child,
-    );
-  }
-}
-
-class _HeaderIconButton extends StatelessWidget {
-  const _HeaderIconButton({
-    required this.icon,
-    required this.onTap,
-    this.tooltip,
-  });
-
-  final IconData icon;
-  final VoidCallback onTap;
-  final String? tooltip;
-
-  @override
-  Widget build(BuildContext context) {
-    return Tooltip(
-      message: tooltip ?? '',
-      child: InkWell(
-        onTap: onTap,
-        borderRadius: BorderRadius.circular(999),
-        child: SizedBox(
-          width: 40,
-          height: 40,
-          child: Icon(icon, color: const Color(0xFF334155), size: 20),
-        ),
-      ),
     );
   }
 }
@@ -1041,11 +849,4 @@ class _HomeErrorState extends StatelessWidget {
       ),
     );
   }
-}
-
-class _NavItem {
-  const _NavItem({required this.label, required this.icon});
-
-  final String label;
-  final IconData icon;
 }

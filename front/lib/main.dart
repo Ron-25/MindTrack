@@ -11,6 +11,7 @@ import 'package:mind_track/app/routes/route_names.dart';
 import 'package:mind_track/app/theme/app_colors.dart';
 import 'package:mind_track/app/theme/app_theme.dart';
 import 'package:path_provider/path_provider.dart';
+import 'package:toastification/toastification.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -47,6 +48,9 @@ class MyApp extends StatelessWidget {
       supportedLocales: AppLocalizationsSetup.supportedLocales,
       initialRoute: RouteNames.splash,
       onGenerateRoute: AppRouter.onGenerateRoute,
+      builder: (BuildContext context, Widget? child) {
+        return ToastificationWrapper(child: child ?? const SizedBox.shrink());
+      },
     );
   }
 }

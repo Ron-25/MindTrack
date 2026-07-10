@@ -21,4 +21,9 @@ class HabitRepositoryImpl implements HabitRepository {
   Future<void> createHabit(CreateHabitInput input) {
     return _remoteDataSource.createHabit(input);
   }
+
+  @override
+  Future<void> updateHabit(String id, UpdateHabitInput input) {
+    return _remoteDataSource.updateHabit(id, input);
+  }
 }

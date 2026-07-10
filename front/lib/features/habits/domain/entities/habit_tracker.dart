@@ -61,3 +61,25 @@ class CreateHabitInput extends Equatable {
     category,
   ];
 }
+
+class UpdateHabitInput extends Equatable {
+  const UpdateHabitInput({
+    this.name,
+    this.description,
+    this.category,
+    this.targetDaysWeek,
+  });
+
+  final String? name;
+  final String? description;
+  final String? category;
+  final int? targetDaysWeek;
+
+  @override
+  List<Object?> get props => <Object?>[
+    name,
+    description,
+    category,
+    targetDaysWeek,
+  ];
+}

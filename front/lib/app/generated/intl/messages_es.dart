@@ -22,35 +22,42 @@ class MessageLookup extends MessageLookupByLibrary {
 
   static String m0(terms, privacy) => "Acepto los ${terms} y la ${privacy}.";
 
-  static String m1(count) => "${count} registros";
+  static String m1(pct) => "${pct}% completados";
 
-  static String m2(count) =>
+  static String m2(count) => "${count} registros";
+
+  static String m3(day) => "Mejor animo el ${day}";
+
+  static String m4(count) =>
       "Aun tienes ${count} habito(s) pendiente(s) hoy. El mas facil de completar ahora mismo puede darte un pequeño impulso de avance.";
 
-  static String m3(name) =>
+  static String m5(name) =>
       "La emocion mas frecuente recientemente es ${name}. Vale la pena revisar que actividades o personas suelen aparecer junto a ella.";
 
-  static String m4(days) => "Dias por semana: ${days}";
+  static String m6(completed, total) =>
+      "¡Has completado ${completed} de ${total} habitos hoy!";
 
-  static String m5(days) => "Meta semanal: ${days} dias";
+  static String m7(days) => "Dias por semana: ${days}";
 
-  static String m6(name) => "Buenos dias, ${name}";
-
-  static String m7(name) => "Buenas tardes, ${name}";
-
-  static String m8(name) => "Buenas noches, ${name}";
+  static String m8(days) => "Meta semanal: ${days} dias";
 
   static String m9(name) => "Buenos dias, ${name}";
 
-  static String m10(count, energy) =>
+  static String m10(name) => "Buenas tardes, ${name}";
+
+  static String m11(name) => "Buenas noches, ${name}";
+
+  static String m12(name) => "Buenos dias, ${name}";
+
+  static String m13(count, energy) =>
       "Has registrado ${Intl.plural(count, one: '1 entrada', other: '${count} entradas')} hoy. Tu nivel promedio de energia es ${energy}.";
 
-  static String m11(completed, target) =>
+  static String m14(completed, target) =>
       "Aun no marcas este habito hoy. Llevas ${completed}/${target} esta semana.";
 
-  static String m12(name) => "Pendiente: ${name}";
+  static String m15(name) => "Pendiente: ${name}";
 
-  static String m13(step, total) =>
+  static String m16(step, total) =>
       "Paso ${step} de ${total} • Conciencia Emocional";
 
   final messages = _notInlinedMessages(_notInlinedMessages);
@@ -68,25 +75,63 @@ class MessageLookup extends MessageLookupByLibrary {
     "analytics_default_insight": MessageLookupByLibrary.simpleMessage(
       "Sigue registrando emociones y habitos para descubrir patrones.",
     ),
+    "analytics_distribution_title": MessageLookupByLibrary.simpleMessage(
+      "Distribucion de animo",
+    ),
     "analytics_frequency_empty": MessageLookupByLibrary.simpleMessage(
       "Todavia no hay suficientes registros para calcular frecuencia.",
     ),
     "analytics_frequency_title": MessageLookupByLibrary.simpleMessage(
       "Frecuencia emocional",
     ),
+    "analytics_habits_card_label": MessageLookupByLibrary.simpleMessage(
+      "Habitos",
+    ),
+    "analytics_habits_card_value": m1,
     "analytics_habits_mood_title": MessageLookupByLibrary.simpleMessage(
       "Habitos vs animo",
+    ),
+    "analytics_insight_title": MessageLookupByLibrary.simpleMessage(
+      "Insight semanal",
     ),
     "analytics_metric_habits": MessageLookupByLibrary.simpleMessage("Habitos"),
     "analytics_metric_intensity": MessageLookupByLibrary.simpleMessage(
       "Intensidad",
     ),
     "analytics_metric_logs": MessageLookupByLibrary.simpleMessage("Registros"),
+    "analytics_mood_flow_caption": MessageLookupByLibrary.simpleMessage(
+      "Intensidad emocional promedio por dia (escala 1-10)",
+    ),
+    "analytics_mood_flow_fallback_caption": MessageLookupByLibrary.simpleMessage(
+      "Sin registros de intensidad esta semana. Mostrando habitos completados por dia.",
+    ),
+    "analytics_mood_flow_label": MessageLookupByLibrary.simpleMessage(
+      "Flujo de animo semanal",
+    ),
+    "analytics_no_data_short": MessageLookupByLibrary.simpleMessage(
+      "Datos insuficientes",
+    ),
     "analytics_no_dominant_emotion": MessageLookupByLibrary.simpleMessage(
       "Sin emocion dominante aun",
     ),
-    "analytics_records_count": m1,
+    "analytics_patterns_title": MessageLookupByLibrary.simpleMessage(
+      "Patrones y observaciones",
+    ),
+    "analytics_range_month": MessageLookupByLibrary.simpleMessage("Mes"),
+    "analytics_range_week": MessageLookupByLibrary.simpleMessage("Semana"),
+    "analytics_range_year": MessageLookupByLibrary.simpleMessage("Año"),
+    "analytics_read_more": MessageLookupByLibrary.simpleMessage(
+      "Ver mas insights",
+    ),
+    "analytics_records_count": m2,
     "analytics_title": MessageLookupByLibrary.simpleMessage("Analiticas"),
+    "analytics_top_day_label": MessageLookupByLibrary.simpleMessage(
+      "Mejor dia",
+    ),
+    "analytics_top_day_value": m3,
+    "analytics_trends_title": MessageLookupByLibrary.simpleMessage(
+      "Tendencias emocionales",
+    ),
     "analytics_view_habits": MessageLookupByLibrary.simpleMessage(
       "Ver habitos",
     ),
@@ -124,8 +169,8 @@ class MessageLookup extends MessageLookupByLibrary {
     "coach_insight_low_logs": MessageLookupByLibrary.simpleMessage(
       "Esta semana todavia hay pocos registros. Intenta anotar al menos una emocion por la mañana y otra por la noche para mejorar tus patrones.",
     ),
-    "coach_insight_pending_habits": m2,
-    "coach_insight_top_emotion": m3,
+    "coach_insight_pending_habits": m4,
+    "coach_insight_top_emotion": m5,
     "coach_stat_habits": MessageLookupByLibrary.simpleMessage("Habitos"),
     "coach_stat_intensity": MessageLookupByLibrary.simpleMessage("Intensidad"),
     "coach_stat_logs": MessageLookupByLibrary.simpleMessage("Registros"),
@@ -165,25 +210,58 @@ class MessageLookup extends MessageLookupByLibrary {
       "Productividad",
     ),
     "habits_category_social": MessageLookupByLibrary.simpleMessage("Social"),
+    "habits_create_button": MessageLookupByLibrary.simpleMessage(
+      "Crear habito",
+    ),
     "habits_create_title": MessageLookupByLibrary.simpleMessage("Crear habito"),
-    "habits_days_per_week": m4,
+    "habits_daily_progress_message": m6,
+    "habits_daily_progress_subtitle": MessageLookupByLibrary.simpleMessage(
+      "La constancia es la clave de la claridad mental.",
+    ),
+    "habits_daily_progress_title": MessageLookupByLibrary.simpleMessage(
+      "Progreso diario",
+    ),
+    "habits_days_error": MessageLookupByLibrary.simpleMessage(
+      "Selecciona al menos un dia.",
+    ),
+    "habits_days_per_week": m7,
     "habits_description_label": MessageLookupByLibrary.simpleMessage(
       "Descripcion",
     ),
+    "habits_edit_title": MessageLookupByLibrary.simpleMessage("Editar habito"),
     "habits_empty_description": MessageLookupByLibrary.simpleMessage(
       "Crea uno para empezar a medir constancia y su relacion con tu animo.",
     ),
     "habits_empty_title": MessageLookupByLibrary.simpleMessage(
       "Aun no tienes habitos activos.",
     ),
+    "habits_frequency_custom": MessageLookupByLibrary.simpleMessage(
+      "Personalizado",
+    ),
+    "habits_frequency_daily": MessageLookupByLibrary.simpleMessage("Diario"),
+    "habits_frequency_label": MessageLookupByLibrary.simpleMessage(
+      "Frecuencia",
+    ),
+    "habits_frequency_weekly": MessageLookupByLibrary.simpleMessage("Semanal"),
+    "habits_icon_label": MessageLookupByLibrary.simpleMessage("Elige un icono"),
+    "habits_insights_button": MessageLookupByLibrary.simpleMessage("Insights"),
     "habits_name_error": MessageLookupByLibrary.simpleMessage(
       "Ingresa un nombre.",
+    ),
+    "habits_name_hint": MessageLookupByLibrary.simpleMessage(
+      "p. ej., Beber agua",
     ),
     "habits_name_label": MessageLookupByLibrary.simpleMessage("Nombre"),
     "habits_new_button": MessageLookupByLibrary.simpleMessage("Nuevo habito"),
     "habits_save": MessageLookupByLibrary.simpleMessage("Guardar"),
+    "habits_save_changes": MessageLookupByLibrary.simpleMessage(
+      "Guardar cambios",
+    ),
     "habits_title": MessageLookupByLibrary.simpleMessage("Habitos"),
-    "habits_weekly_target": m5,
+    "habits_today_title": MessageLookupByLibrary.simpleMessage(
+      "Habitos de hoy",
+    ),
+    "habits_weekly_target": m8,
     "home_daily_habits_title": MessageLookupByLibrary.simpleMessage(
       "Habitos diarios",
     ),
@@ -200,10 +278,10 @@ class MessageLookup extends MessageLookupByLibrary {
       "Sin nota adicional.",
     ),
     "home_entry_yesterday": MessageLookupByLibrary.simpleMessage("Ayer"),
-    "home_greeting": m6,
-    "home_greeting_afternoon": m7,
-    "home_greeting_evening": m8,
-    "home_greeting_morning": m9,
+    "home_greeting": m9,
+    "home_greeting_afternoon": m10,
+    "home_greeting_evening": m11,
+    "home_greeting_morning": m12,
     "home_log_emotion_button": MessageLookupByLibrary.simpleMessage(
       "Registrar mi emocion actual",
     ),
@@ -255,7 +333,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "home_today_empty_title": MessageLookupByLibrary.simpleMessage(
       "Aun no hay entradas",
     ),
-    "home_today_entries_description": m10,
+    "home_today_entries_description": m13,
     "home_today_mood_title": MessageLookupByLibrary.simpleMessage(
       "Estado de animo de hoy",
     ),
@@ -313,8 +391,8 @@ class MessageLookup extends MessageLookupByLibrary {
     "notifications_mood_missing_title": MessageLookupByLibrary.simpleMessage(
       "Te falta registrar como te sientes hoy",
     ),
-    "notifications_pending_description": m11,
-    "notifications_pending_title": m12,
+    "notifications_pending_description": m14,
+    "notifications_pending_title": m15,
     "notifications_title": MessageLookupByLibrary.simpleMessage(
       "Notificaciones",
     ),
@@ -327,7 +405,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "onboarding_desc_3": MessageLookupByLibrary.simpleMessage(
       "Conecta tus rutinas diarias con tu bienestar emocional. Comienza tu camino hacia una vida más equilibrada.",
     ),
-    "onboarding_step": m13,
+    "onboarding_step": m16,
     "onboarding_title_1": MessageLookupByLibrary.simpleMessage(
       "Registra tus emociones diarias",
     ),

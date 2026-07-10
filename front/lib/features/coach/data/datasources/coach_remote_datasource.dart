@@ -4,6 +4,11 @@ import 'package:mind_track/features/coach/domain/entities/coach_response.dart';
 
 abstract class CoachRemoteDataSource {
   Future<CoachResponse> fetchCoachResponse();
+
+  Future<String> sendChatMessage({
+    required String message,
+    required List<CoachChatMessage> history,
+  });
 }
 
 class CoachRemoteDataSourceImpl implements CoachRemoteDataSource {
@@ -52,7 +57,43 @@ class CoachRemoteDataSourceImpl implements CoachRemoteDataSource {
     }
   }
 
-  String _extractMessage(DioException error) {
+  @override
+  Future<String> sendChatMessage({
+    required String message,
+    required List<CoachChatMessage> history,
+  }) async {
+    try {
+      final Response<dynamic> response = await _client.dio.post<dynamic>(
+        '/api/v1/coach/chat',
+        data: <String, dynamic>{
+          'message': message,
+          'history': history
+              .map(
+                (CoachChatMessage item) => <String, String>{
+                  'role': item.role,
+                  'content': item.content,
+                },
+              )
+              .toList(growable: false),
+        },
+      );
+      final Map<String, dynamic> json = response.data as Map<String, dynamic>;
+      final String reply = json['reply'] as String? ?? '';
+      if (reply.trim().isEmpty) {
+        throw Exception('El asistente devolvió una respuesta vacía.');
+      }
+      return reply;
+    } on DioException catch (error) {
+      throw Exception(
+        _extractMessage(error, fallback: 'No se pudo enviar el mensaje.'),
+      );
+    }
+  }
+
+  String _extractMessage(
+    DioException error, {
+    String fallback = 'No se pudo cargar el coach.',
+  }) {
     final dynamic data = error.response?.data;
     if (data is Map<String, dynamic>) {
       final dynamic detail = data['detail'];
@@ -63,6 +104,6 @@ class CoachRemoteDataSourceImpl implements CoachRemoteDataSource {
     if (error.type == DioExceptionType.connectionError) {
       return 'No se pudo conectar con el servidor.';
     }
-    return 'No se pudo cargar el coach.';
+    return fallback;
   }
 }

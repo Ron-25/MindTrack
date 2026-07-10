@@ -10,10 +10,12 @@ import 'package:mind_track/features/login/presentation/blocs/login_event.dart';
 class MindTrackAppBar extends StatelessWidget implements PreferredSizeWidget {
   const MindTrackAppBar({
     required this.title,
+    this.showActions = true,
     super.key,
   });
 
   final String title;
+  final bool showActions;
 
   @override
   Size get preferredSize => const Size.fromHeight(kToolbarHeight);
@@ -56,28 +58,24 @@ class MindTrackAppBar extends StatelessWidget implements PreferredSizeWidget {
           ),
         ],
       ),
-      actions: <Widget>[
-        _AppBarActionButton(
-          icon: Icons.search_rounded,
-          onTap: currentRoute == RouteNames.search
-              ? null
-              : () => Navigator.of(context).pushNamed(RouteNames.search),
-        ),
-        const SizedBox(width: 8),
-        _AppBarActionButton(
-          icon: Icons.notifications_none_rounded,
-          onTap: currentRoute == RouteNames.notifications
-              ? null
-              : () => Navigator.of(context).pushNamed(RouteNames.notifications),
-        ),
-        const SizedBox(width: 8),
-        _AppBarActionButton(
-          icon: Icons.logout_rounded,
-          tooltip: S.of(context).home_logout_tooltip,
-          onTap: () => _handleLogout(context),
-        ),
-        const SizedBox(width: 12),
-      ],
+      actions: showActions
+          ? <Widget>[
+              _AppBarActionButton(
+                icon: Icons.notifications_none_rounded,
+                onTap: currentRoute == RouteNames.notifications
+                    ? null
+                    : () =>
+                          Navigator.of(context).pushNamed(RouteNames.notifications),
+              ),
+              const SizedBox(width: 8),
+              _AppBarActionButton(
+                icon: Icons.logout_rounded,
+                tooltip: S.of(context).home_logout_tooltip,
+                onTap: () => _handleLogout(context),
+              ),
+              const SizedBox(width: 12),
+            ]
+          : null,
     );
   }
 

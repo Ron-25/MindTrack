@@ -13,6 +13,8 @@ abstract class EmotionRemoteDataSource {
 
   Future<EmotionEntry> createEntry(CreateEmotionEntryInput input);
 
+  Future<EmotionEntry> updateEntry(String id, UpdateEmotionEntryInput input);
+
   Future<void> deleteEntry(String id);
 }
 
@@ -110,6 +112,28 @@ class EmotionRemoteDataSourceImpl implements EmotionRemoteDataSource {
     } on DioException catch (error) {
       throw Exception(
         _extractMessage(error, 'No se pudo guardar el registro emocional.'),
+      );
+    }
+  }
+
+  @override
+  Future<EmotionEntry> updateEntry(
+    String id,
+    UpdateEmotionEntryInput input,
+  ) async {
+    try {
+      final Response<dynamic> response = await _client.dio.patch<dynamic>(
+        '/api/v1/emotions/$id',
+        data: <String, dynamic>{
+          if (input.intensity != null) 'intensity': input.intensity,
+          if (input.note != null) 'note': _normalizeNullable(input.note),
+          if (input.tagIds != null) 'tag_ids': input.tagIds,
+        },
+      );
+      return _mapEmotionEntry(response.data as Map<String, dynamic>);
+    } on DioException catch (error) {
+      throw Exception(
+        _extractMessage(error, 'No se pudo actualizar el registro emocional.'),
       );
     }
   }

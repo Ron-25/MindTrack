@@ -132,6 +132,40 @@ class EmotionCubit extends Cubit<EmotionState> {
     }
   }
 
+  Future<void> updateSelectedEntry(UpdateEmotionEntryInput input) async {
+    final EmotionEntry? entry = state.selectedEntry;
+    if (entry == null) {
+      return;
+    }
+    emit(state.copyWith(isSaving: true, clearError: true, clearSuccess: true));
+    try {
+      final EmotionEntry updated = await _emotionRepository.updateEntry(
+        entry.id,
+        input,
+      );
+      final List<EmotionEntry> updatedEntries = state.entries
+          .map((EmotionEntry item) => item.id == updated.id ? updated : item)
+          .toList(growable: false);
+      emit(
+        state.copyWith(
+          isSaving: false,
+          selectedEntry: updated,
+          entries: updatedEntries,
+          successMessage: 'Registro actualizado.',
+          clearError: true,
+        ),
+      );
+    } catch (error) {
+      emit(
+        state.copyWith(
+          isSaving: false,
+          errorMessage: error.toString().replaceFirst('Exception: ', ''),
+          clearSuccess: true,
+        ),
+      );
+    }
+  }
+
   Future<void> deleteSelectedEntry() async {
     final EmotionEntry? entry = state.selectedEntry;
     if (entry == null) {

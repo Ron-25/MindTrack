@@ -8,6 +8,8 @@ abstract class HabitRemoteDataSource {
   Future<void> toggleHabit(String id, {required bool completed});
 
   Future<void> createHabit(CreateHabitInput input);
+
+  Future<void> updateHabit(String id, UpdateHabitInput input);
 }
 
 class HabitRemoteDataSourceImpl implements HabitRemoteDataSource {
@@ -108,6 +110,27 @@ class HabitRemoteDataSourceImpl implements HabitRemoteDataSource {
               ? null
               : input.category,
           'target_days_week': input.targetDaysWeek,
+        },
+      );
+    } on DioException catch (error) {
+      throw Exception(_extractMessage(error));
+    }
+  }
+
+  @override
+  Future<void> updateHabit(String id, UpdateHabitInput input) async {
+    try {
+      await _client.dio.patch<dynamic>(
+        '/api/v1/habits/$id',
+        data: <String, dynamic>{
+          if (input.name != null) 'name': input.name,
+          if (input.description != null)
+            'description': input.description!.trim().isEmpty
+                ? null
+                : input.description,
+          if (input.category != null) 'category': input.category,
+          if (input.targetDaysWeek != null)
+            'target_days_week': input.targetDaysWeek,
         },
       );
     } on DioException catch (error) {

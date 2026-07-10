@@ -1,13 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:intl/intl.dart';
 import 'package:mind_track/app/generated/l10n.dart';
 import 'package:mind_track/app/injector.dart';
 import 'package:mind_track/app/routes/route_names.dart';
 import 'package:mind_track/app/theme/app_colors.dart';
-import 'package:mind_track/shared/widget/mindtrack_app_bar.dart';
+import 'package:mind_track/features/analytics/presentation/cubit/analytics_cubit.dart';
 import 'package:mind_track/features/emotion_tracker/domain/entities/emotion_entry.dart';
 import 'package:mind_track/features/emotion_tracker/presentation/cubit/emotion_cubit.dart';
 import 'package:mind_track/features/emotion_tracker/presentation/cubit/emotion_state.dart';
+import 'package:mind_track/features/home/presentation/cubit/home_cubit.dart';
+import 'package:mind_track/shared/widget/mindtrack_app_bar.dart';
 
 class DailyMoodPage extends StatelessWidget {
   const DailyMoodPage({super.key, this.searchMode = false});
@@ -35,6 +38,7 @@ class _DailyMoodView extends StatefulWidget {
 class _DailyMoodViewState extends State<_DailyMoodView> {
   late final TextEditingController _searchController;
   String _query = '';
+  String? _emotionFilter;
 
   @override
   void initState() {
@@ -74,18 +78,16 @@ class _DailyMoodViewState extends State<_DailyMoodView> {
         }
       },
       child: Scaffold(
-        backgroundColor: AppColors.background,
+        backgroundColor: const Color(0xFFF6F7F8),
         appBar: MindTrackAppBar(
-          title: widget.searchMode ? 'Buscar en historial' : 'Historial emocional',
+          title: widget.searchMode
+              ? 'Buscar en historial'
+              : 'Historial emocional',
         ),
-        floatingActionButton: FloatingActionButton.extended(
-          onPressed: () => _openComposer(context),
-          backgroundColor: AppColors.primary,
-          foregroundColor: Colors.white,
-          icon: const Icon(Icons.add_rounded),
-          label: const Text('Registrar'),
-        ),
+        floatingActionButton: _buildLogEmotionButton(context),
+        floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
         body: RefreshIndicator(
+          color: AppColors.primary,
           onRefresh: () => context.read<EmotionCubit>().loadEntries(),
           child: BlocBuilder<EmotionCubit, EmotionState>(
             builder: (BuildContext context, EmotionState state) {
@@ -97,11 +99,49 @@ class _DailyMoodViewState extends State<_DailyMoodView> {
     );
   }
 
-  Widget _buildBody(BuildContext context, EmotionState state) {
-    final List<EmotionEntry> filteredEntries = state.entries
-        .where((EmotionEntry entry) => _matchesQuery(entry))
-        .toList(growable: false);
+  Widget _buildLogEmotionButton(BuildContext context) {
+    return Column(
+      mainAxisSize: MainAxisSize.min,
+      children: <Widget>[
+        const Text(
+          'Registrar emoción',
+          style: TextStyle(
+            fontSize: 18,
+            fontWeight: FontWeight.w700,
+            letterSpacing: -0.27,
+            color: Color(0xFF0F172A),
+          ),
+        ),
+        const SizedBox(height: 8),
+        Material(
+          color: Colors.transparent,
+          child: InkWell(
+            onTap: () => _openComposer(context),
+            customBorder: const CircleBorder(),
+            child: Container(
+              width: 56,
+              height: 56,
+              decoration: BoxDecoration(
+                color: AppColors.primary,
+                shape: BoxShape.circle,
+                border: Border.all(color: const Color(0xFFF6F7F8), width: 4),
+                boxShadow: const <BoxShadow>[
+                  BoxShadow(
+                    color: Color(0x665FA9D3),
+                    blurRadius: 15,
+                    offset: Offset(0, 10),
+                  ),
+                ],
+              ),
+              child: const Icon(Icons.add_rounded, color: Colors.white),
+            ),
+          ),
+        ),
+      ],
+    );
+  }
 
+  Widget _buildBody(BuildContext context, EmotionState state) {
     if (state.isLoading && state.entries.isEmpty) {
       return const Center(child: CircularProgressIndicator());
     }
@@ -171,175 +211,310 @@ class _DailyMoodViewState extends State<_DailyMoodView> {
       );
     }
 
-    return ListView.separated(
+    final List<EmotionEntry> filteredEntries = state.entries
+        .where(
+          (EmotionEntry entry) =>
+              _matchesQuery(entry) && _matchesFilter(entry),
+        )
+        .toList(growable: false);
+    final List<_DayGroup> groups = _groupByDay(filteredEntries);
+
+    return ListView(
       physics: const AlwaysScrollableScrollPhysics(),
-      padding: const EdgeInsets.fromLTRB(16, 16, 16, 120),
-      itemCount: filteredEntries.length + 1,
-      separatorBuilder: (_, _) => const SizedBox(height: 12),
-      itemBuilder: (BuildContext context, int index) {
-        if (index == 0) {
-          return _buildSearchBox(context, filteredEntries.length);
-        }
-
-        if (filteredEntries.isEmpty) {
-          return const SizedBox.shrink();
-        }
-
-        final EmotionEntry entry = filteredEntries[index - 1];
-        return Dismissible(
-          key: ValueKey<String>(entry.id),
-          direction: DismissDirection.endToStart,
-          confirmDismiss: (_) => _confirmDelete(context),
-          onDismissed: (_) {
-            context.read<EmotionCubit>().deleteEntryFromList(entry.id);
-          },
-          background: Container(
-            decoration: BoxDecoration(
-              color: const Color(0xFFEF4444),
-              borderRadius: BorderRadius.circular(24),
-            ),
-            padding: const EdgeInsets.symmetric(horizontal: 20),
-            alignment: Alignment.centerRight,
-            child: const Icon(
-              Icons.delete_outline_rounded,
-              color: Colors.white,
+      padding: const EdgeInsets.fromLTRB(16, 16, 16, 160),
+      children: <Widget>[
+        _buildSearchBar(context),
+        const SizedBox(height: 16),
+        _buildFilterChips(context, state.entries),
+        if (_query.isNotEmpty || _emotionFilter != null) ...<Widget>[
+          const SizedBox(height: 12),
+          Text(
+            '${filteredEntries.length} resultado(s)',
+            style: const TextStyle(
+              fontSize: 13,
+              color: Color(0xFF64748B),
+              fontWeight: FontWeight.w500,
             ),
           ),
-          child: Material(
-            color: Colors.white,
-            borderRadius: BorderRadius.circular(24),
-            child: InkWell(
-              borderRadius: BorderRadius.circular(24),
-              onTap: () => _openDetail(context, entry.id),
-              child: Container(
-                padding: const EdgeInsets.all(18),
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(24),
-                  border: Border.all(color: const Color(0xFFE2E8F0)),
+        ],
+        const SizedBox(height: 24),
+        if (filteredEntries.isEmpty)
+          const Padding(
+            padding: EdgeInsets.only(top: 28),
+            child: Center(
+              child: Text(
+                'No encontramos emociones con esa busqueda.',
+                textAlign: TextAlign.center,
+                style: TextStyle(color: Color(0xFF64748B), height: 1.4),
+              ),
+            ),
+          )
+        else
+          ...groups.map(
+            (_DayGroup group) => Padding(
+              padding: const EdgeInsets.only(bottom: 24),
+              child: _buildDayGroup(context, group),
+            ),
+          ),
+      ],
+    );
+  }
+
+  Widget _buildSearchBar(BuildContext context) {
+    final S translations = S.of(context);
+    return Container(
+      height: 48,
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(24),
+        border: Border.all(color: const Color(0xFFE2E8F0)),
+        boxShadow: const <BoxShadow>[
+          BoxShadow(
+            color: Color(0x0D000000),
+            blurRadius: 1,
+            offset: Offset(0, 1),
+          ),
+        ],
+      ),
+      child: TextField(
+        controller: _searchController,
+        autofocus: widget.searchMode,
+        style: const TextStyle(fontSize: 16, color: Color(0xFF0F172A)),
+        decoration: InputDecoration(
+          hintText: widget.searchMode
+              ? translations.search_hint
+              : 'Buscar notas o estados de ánimo',
+          hintStyle: const TextStyle(fontSize: 16, color: Color(0xFF94A3B8)),
+          prefixIcon: const Icon(
+            Icons.search_rounded,
+            size: 20,
+            color: Color(0xFF94A3B8),
+          ),
+          suffixIcon: _query.isEmpty
+              ? null
+              : IconButton(
+                  onPressed: _searchController.clear,
+                  icon: const Icon(
+                    Icons.close_rounded,
+                    size: 20,
+                    color: Color(0xFF94A3B8),
+                  ),
                 ),
-                child: Row(
-                  children: <Widget>[
-                    Container(
-                      width: 48,
-                      height: 48,
-                      decoration: BoxDecoration(
-                        color: _colorFromHex(
-                          entry.colorHex,
-                        ).withValues(alpha: 0.14),
-                        shape: BoxShape.circle,
-                      ),
-                      child: Icon(
-                        _iconForEmotion(entry),
-                        color: _colorFromHex(entry.colorHex),
-                      ),
-                    ),
-                    const SizedBox(width: 14),
-                    Expanded(
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: <Widget>[
-                          Text(
-                            entry.localizedName('es'),
-                            style: const TextStyle(
-                              fontSize: 16,
-                              fontWeight: FontWeight.w700,
-                              color: Color(0xFF0F172A),
-                            ),
-                          ),
-                          const SizedBox(height: 4),
-                          Text(
-                            _subtitle(entry),
-                            maxLines: 2,
-                            overflow: TextOverflow.ellipsis,
-                            style: const TextStyle(
-                              color: Color(0xFF64748B),
-                              height: 1.35,
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                    const SizedBox(width: 12),
-                    Column(
-                      crossAxisAlignment: CrossAxisAlignment.end,
-                      children: <Widget>[
-                        Text(
-                          'Int ${entry.intensity}/10',
-                          style: const TextStyle(
-                            fontSize: 12,
-                            fontWeight: FontWeight.w700,
-                            color: AppColors.primary,
-                          ),
-                        ),
-                        const SizedBox(height: 6),
-                        Text(
-                          _formatDate(entry.loggedAt),
-                          style: const TextStyle(
-                            fontSize: 12,
-                            color: Color(0xFF94A3B8),
-                          ),
-                        ),
-                      ],
-                    ),
-                  ],
+          border: InputBorder.none,
+          contentPadding: const EdgeInsets.symmetric(
+            horizontal: 12,
+            vertical: 13,
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget _buildFilterChips(BuildContext context, List<EmotionEntry> entries) {
+    final String locale = Localizations.localeOf(context).languageCode;
+    final List<String> emotionNames = <String>[];
+    for (final EmotionEntry entry in entries) {
+      final String name = entry.localizedName(locale);
+      if (!emotionNames.contains(name)) {
+        emotionNames.add(name);
+      }
+    }
+
+    return SizedBox(
+      height: 36,
+      child: ListView(
+        scrollDirection: Axis.horizontal,
+        children: <Widget>[
+          _FilterChipButton(
+            label: 'Todas',
+            isSelected: _emotionFilter == null,
+            onTap: () => setState(() => _emotionFilter = null),
+          ),
+          ...emotionNames.map(
+            (String name) => Padding(
+              padding: const EdgeInsets.only(left: 8),
+              child: _FilterChipButton(
+                label: name,
+                isSelected: _emotionFilter == name,
+                onTap: () => setState(
+                  () => _emotionFilter = _emotionFilter == name ? null : name,
                 ),
               ),
             ),
           ),
-        );
-      },
+        ],
+      ),
     );
   }
 
-  Widget _buildSearchBox(BuildContext context, int resultCount) {
-    final S translations = S.of(context);
+  Widget _buildDayGroup(BuildContext context, _DayGroup group) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: <Widget>[
-        TextField(
-          controller: _searchController,
-          autofocus: widget.searchMode,
-          decoration: InputDecoration(
-            hintText: widget.searchMode
-                ? translations.search_hint
-                : 'Buscar en historial emocional',
-            prefixIcon: const Icon(Icons.search_rounded),
-            suffixIcon: _query.isEmpty
-                ? null
-                : IconButton(
-                    onPressed: _searchController.clear,
-                    icon: const Icon(Icons.close_rounded),
-                  ),
-            filled: true,
-            fillColor: Colors.white,
-            border: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(18),
-              borderSide: BorderSide.none,
-            ),
+        Text(
+          _dayLabel(context, group.date).toUpperCase(),
+          style: const TextStyle(
+            fontSize: 14,
+            fontWeight: FontWeight.w600,
+            letterSpacing: 0.7,
+            color: Color(0xFF64748B),
           ),
         ),
         const SizedBox(height: 12),
-        Text(
-          _query.isEmpty
-              ? 'Explora tu historial emocional'
-              : '$resultCount resultado(s)',
-          style: const TextStyle(
-            fontSize: 13,
-            color: Color(0xFF64748B),
-            fontWeight: FontWeight.w500,
-          ),
+        Stack(
+          children: <Widget>[
+            Positioned(
+              left: 21,
+              top: 16,
+              bottom: 16,
+              child: Container(width: 2, color: const Color(0xFFE2E8F0)),
+            ),
+            Column(
+              children: List<Widget>.generate(group.entries.length, (
+                int index,
+              ) {
+                return Padding(
+                  padding: EdgeInsets.only(
+                    bottom: index == group.entries.length - 1 ? 0 : 12,
+                  ),
+                  child: _buildEntry(context, group.entries[index]),
+                );
+              }),
+            ),
+          ],
         ),
-        if (_query.isNotEmpty && resultCount == 0) ...<Widget>[
-          const SizedBox(height: 28),
-          const Center(
-            child: Text(
-              'No encontramos emociones con esa busqueda.',
-              textAlign: TextAlign.center,
-              style: TextStyle(color: Color(0xFF64748B), height: 1.4),
+      ],
+    );
+  }
+
+  Widget _buildEntry(BuildContext context, EmotionEntry entry) {
+    final String locale = Localizations.localeOf(context).languageCode;
+    final Color accent = _colorFromHex(entry.colorHex);
+
+    return Dismissible(
+      key: ValueKey<String>(entry.id),
+      direction: DismissDirection.endToStart,
+      confirmDismiss: (_) => _confirmDelete(context),
+      onDismissed: (_) {
+        context.read<EmotionCubit>().deleteEntryFromList(entry.id);
+      },
+      background: Container(
+        margin: const EdgeInsets.only(left: 40),
+        decoration: BoxDecoration(
+          color: const Color(0xFFEF4444),
+          borderRadius: BorderRadius.circular(24),
+        ),
+        padding: const EdgeInsets.symmetric(horizontal: 20),
+        alignment: Alignment.centerRight,
+        child: const Icon(Icons.delete_outline_rounded, color: Colors.white),
+      ),
+      child: Stack(
+        clipBehavior: Clip.none,
+        children: <Widget>[
+          Padding(
+            padding: const EdgeInsets.only(left: 40),
+            child: Material(
+              color: Colors.white,
+              borderRadius: BorderRadius.circular(24),
+              child: InkWell(
+                borderRadius: BorderRadius.circular(24),
+                onTap: () => _openDetail(context, entry.id),
+                child: Container(
+                  width: double.infinity,
+                  padding: const EdgeInsets.all(16),
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(24),
+                    border: Border.all(color: const Color(0xFFF1F5F9)),
+                    boxShadow: const <BoxShadow>[
+                      BoxShadow(
+                        color: Color(0x0D000000),
+                        blurRadius: 1,
+                        offset: Offset(0, 1),
+                      ),
+                    ],
+                  ),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: <Widget>[
+                      Row(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: <Widget>[
+                          Expanded(
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: <Widget>[
+                                Text(
+                                  entry.localizedName(locale),
+                                  style: const TextStyle(
+                                    fontSize: 16,
+                                    fontWeight: FontWeight.w700,
+                                    color: Color(0xFF0F172A),
+                                  ),
+                                ),
+                                Text(
+                                  _formatTime(context, entry.loggedAt),
+                                  style: const TextStyle(
+                                    fontSize: 12,
+                                    color: Color(0xFF64748B),
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                          const SizedBox(width: 12),
+                          Column(
+                            crossAxisAlignment: CrossAxisAlignment.end,
+                            children: <Widget>[
+                              const Text(
+                                'INTENSIDAD',
+                                style: TextStyle(
+                                  fontSize: 10,
+                                  fontWeight: FontWeight.w700,
+                                  color: Color(0xFF94A3B8),
+                                ),
+                              ),
+                              const SizedBox(height: 4),
+                              _IntensityBars(intensity: entry.intensity),
+                            ],
+                          ),
+                        ],
+                      ),
+                      const SizedBox(height: 8),
+                      Text(
+                        _subtitle(entry),
+                        maxLines: 2,
+                        overflow: TextOverflow.ellipsis,
+                        style: const TextStyle(
+                          fontSize: 14,
+                          height: 1.45,
+                          color: Color(0xFF475569),
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+            ),
+          ),
+          Positioned(
+            left: 0,
+            top: 4,
+            child: Container(
+              width: 44,
+              height: 44,
+              decoration: BoxDecoration(
+                color: Color.alphaBlend(
+                  accent.withValues(alpha: 0.16),
+                  Colors.white,
+                ),
+                shape: BoxShape.circle,
+                border: Border.all(color: const Color(0xFFF6F7F8), width: 4),
+              ),
+              child: Icon(_iconForEmotion(entry), size: 20, color: accent),
             ),
           ),
         ],
-      ],
+      ),
     );
   }
 
@@ -361,12 +536,63 @@ class _DailyMoodViewState extends State<_DailyMoodView> {
     return haystack.contains(_query);
   }
 
+  bool _matchesFilter(EmotionEntry entry) {
+    if (_emotionFilter == null) {
+      return true;
+    }
+    final String locale = Localizations.localeOf(context).languageCode;
+    return entry.localizedName(locale) == _emotionFilter;
+  }
+
+  List<_DayGroup> _groupByDay(List<EmotionEntry> entries) {
+    final List<EmotionEntry> sorted = List<EmotionEntry>.from(entries)
+      ..sort(
+        (EmotionEntry a, EmotionEntry b) => b.loggedAt.compareTo(a.loggedAt),
+      );
+
+    final List<_DayGroup> groups = <_DayGroup>[];
+    for (final EmotionEntry entry in sorted) {
+      final DateTime day = DateTime(
+        entry.loggedAt.year,
+        entry.loggedAt.month,
+        entry.loggedAt.day,
+      );
+      if (groups.isNotEmpty && groups.last.date == day) {
+        groups.last.entries.add(entry);
+      } else {
+        groups.add(_DayGroup(date: day, entries: <EmotionEntry>[entry]));
+      }
+    }
+    return groups;
+  }
+
+  String _dayLabel(BuildContext context, DateTime date) {
+    final DateTime now = DateTime.now();
+    final DateTime today = DateTime(now.year, now.month, now.day);
+    if (date == today) {
+      return 'Hoy';
+    }
+    if (date == today.subtract(const Duration(days: 1))) {
+      return 'Ayer';
+    }
+    final String locale = Localizations.localeOf(context).languageCode;
+    return DateFormat.MMMEd(locale).format(date);
+  }
+
+  String _formatTime(BuildContext context, DateTime dateTime) {
+    return MaterialLocalizations.of(context).formatTimeOfDay(
+      TimeOfDay.fromDateTime(dateTime),
+      alwaysUse24HourFormat: false,
+    );
+  }
+
   Future<void> _openComposer(BuildContext context) async {
     final Object? result = await Navigator.of(
       context,
     ).pushNamed(RouteNames.addEmotion);
     if (result == true && context.mounted) {
       await context.read<EmotionCubit>().loadEntries();
+      _refreshDependentTabs();
     }
   }
 
@@ -376,7 +602,13 @@ class _DailyMoodViewState extends State<_DailyMoodView> {
     ).pushNamed(RouteNames.emotionDetail, arguments: id);
     if (result == true && context.mounted) {
       await context.read<EmotionCubit>().loadEntries();
+      _refreshDependentTabs();
     }
+  }
+
+  void _refreshDependentTabs() {
+    Injector.get<HomeCubit>().loadDashboard();
+    Injector.get<AnalyticsCubit>().loadSnapshot();
   }
 
   Future<bool> _confirmDelete(BuildContext context) async {
@@ -422,14 +654,6 @@ class _DailyMoodViewState extends State<_DailyMoodView> {
     return contexts.join(' • ');
   }
 
-  String _formatDate(DateTime dateTime) {
-    final String day = dateTime.day.toString().padLeft(2, '0');
-    final String month = dateTime.month.toString().padLeft(2, '0');
-    final String hour = dateTime.hour.toString().padLeft(2, '0');
-    final String minute = dateTime.minute.toString().padLeft(2, '0');
-    return '$day/$month $hour:$minute';
-  }
-
   Color _colorFromHex(String? hex) {
     if (hex == null || hex.isEmpty) {
       return AppColors.primary;
@@ -458,5 +682,84 @@ class _DailyMoodViewState extends State<_DailyMoodView> {
       return Icons.local_fire_department_rounded;
     }
     return Icons.mood_rounded;
+  }
+}
+
+class _DayGroup {
+  _DayGroup({required this.date, required this.entries});
+
+  final DateTime date;
+  final List<EmotionEntry> entries;
+}
+
+class _FilterChipButton extends StatelessWidget {
+  const _FilterChipButton({
+    required this.label,
+    required this.isSelected,
+    required this.onTap,
+  });
+
+  final String label;
+  final bool isSelected;
+  final VoidCallback onTap;
+
+  @override
+  Widget build(BuildContext context) {
+    return Material(
+      color: isSelected ? AppColors.primary : Colors.white,
+      borderRadius: BorderRadius.circular(999),
+      child: InkWell(
+        onTap: onTap,
+        borderRadius: BorderRadius.circular(999),
+        child: Container(
+          padding: const EdgeInsets.symmetric(horizontal: 16),
+          alignment: Alignment.center,
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(999),
+            border: isSelected
+                ? null
+                : Border.all(color: const Color(0xFFE2E8F0)),
+          ),
+          child: Text(
+            label,
+            style: TextStyle(
+              fontSize: 14,
+              fontWeight: FontWeight.w500,
+              color: isSelected ? Colors.white : const Color(0xFF0F172A),
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+class _IntensityBars extends StatelessWidget {
+  const _IntensityBars({required this.intensity});
+
+  /// Intensidad en escala 1-10; se muestra en 5 segmentos.
+  final int intensity;
+
+  @override
+  Widget build(BuildContext context) {
+    final int filled = (intensity / 2).ceil().clamp(0, 5);
+    return Row(
+      mainAxisSize: MainAxisSize.min,
+      children: List<Widget>.generate(5, (int index) {
+        return Padding(
+          padding: EdgeInsets.only(left: index == 0 ? 0 : 2),
+          child: Container(
+            width: 16,
+            height: 6,
+            decoration: BoxDecoration(
+              color: index < filled
+                  ? AppColors.primary
+                  : const Color(0xFFE2E8F0),
+              borderRadius: BorderRadius.circular(999),
+            ),
+          ),
+        );
+      }),
+    );
   }
 }

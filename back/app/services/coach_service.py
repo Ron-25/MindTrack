@@ -1,14 +1,27 @@
 from datetime import date
 from typing import List
 
+import httpx
+from fastapi import HTTPException, status
 from sqlalchemy.ext.asyncio import AsyncSession
 
+from app.config import settings
 from app.models.user import User
 from app.repositories.analytics_repository import AnalyticsRepository
 from app.repositories.habit_log_repository import HabitLogRepository
 from app.repositories.habit_repository import HabitRepository
 from app.repositories.user_repository import UserRepository
-from app.schemas.coach import CoachInsightOut, CoachInsightsOut, CoachSummaryOut
+from app.schemas.coach import (
+    CoachChatIn,
+    CoachChatOut,
+    CoachInsightOut,
+    CoachInsightsOut,
+    CoachSummaryOut,
+)
+
+GEMINI_BASE_URL = "https://generativelanguage.googleapis.com/v1beta/models"
+
+MAX_HISTORY_MESSAGES = 20
 
 
 class CoachService:
@@ -95,6 +108,100 @@ class CoachService:
                 pending_habits_count=pending_habits_count,
             ),
         )
+
+    async def chat(self, user: User, body: CoachChatIn) -> CoachChatOut:
+        if not settings.gemini_api_key:
+            raise HTTPException(
+                status_code=status.HTTP_503_SERVICE_UNAVAILABLE,
+                detail="El asistente no está configurado (falta GEMINI_API_KEY).",
+            )
+
+        message = body.message.strip()
+        if not message:
+            raise HTTPException(
+                status_code=status.HTTP_422_UNPROCESSABLE_ENTITY,
+                detail="El mensaje no puede estar vacío.",
+            )
+
+        insights = await self.get_insights(user)
+        summary = insights.summary
+        context_lines = [
+            f"Registros emocionales esta semana: {summary.total_logs}.",
+            f"Hábitos pendientes hoy: {summary.pending_habits_count}.",
+        ]
+        if summary.avg_intensity is not None:
+            context_lines.append(
+                f"Intensidad emocional promedio: {summary.avg_intensity:.1f}/10."
+            )
+        if summary.habits_completion_pct is not None:
+            context_lines.append(
+                f"Cumplimiento de hábitos semanal: {summary.habits_completion_pct:.0f}%."
+            )
+        if summary.dominant_emotion_name:
+            context_lines.append(
+                f"Emoción dominante de la semana: {summary.dominant_emotion_name}."
+            )
+
+        system_prompt = (
+            "Eres MindtrackBot, el coach de bienestar emocional de la app MindTrack. "
+            "Responde con calidez, en el idioma del usuario, en 2-4 frases claras y "
+            "accionables. Puedes sugerir registrar emociones, revisar hábitos o "
+            "técnicas breves de bienestar (respiración, journaling, caminatas). "
+            "No des diagnósticos médicos; si detectas crisis sugiere buscar ayuda "
+            "profesional. Contexto reciente del usuario: " + " ".join(context_lines)
+        )
+
+        contents = [
+            {"role": item.role, "parts": [{"text": item.content}]}
+            for item in body.history[-MAX_HISTORY_MESSAGES:]
+            if item.content.strip()
+        ]
+        contents.append({"role": "user", "parts": [{"text": message}]})
+
+        payload = {
+            "system_instruction": {"parts": [{"text": system_prompt}]},
+            "contents": contents,
+            "generationConfig": {"temperature": 0.6, "maxOutputTokens": 500},
+        }
+
+        url = f"{GEMINI_BASE_URL}/{settings.gemini_model}:generateContent"
+        try:
+            async with httpx.AsyncClient(timeout=30) as client:
+                response = await client.post(
+                    url,
+                    json=payload,
+                    headers={"x-goog-api-key": settings.gemini_api_key},
+                )
+        except httpx.HTTPError:
+            raise HTTPException(
+                status_code=status.HTTP_502_BAD_GATEWAY,
+                detail="No se pudo contactar al asistente. Intenta de nuevo.",
+            )
+
+        if response.status_code == 429:
+            raise HTTPException(
+                status_code=status.HTTP_429_TOO_MANY_REQUESTS,
+                detail=(
+                    "El asistente alcanzó el límite gratuito por ahora. "
+                    "Intenta de nuevo en unos minutos."
+                ),
+            )
+        if response.status_code != 200:
+            raise HTTPException(
+                status_code=status.HTTP_502_BAD_GATEWAY,
+                detail="El asistente no pudo responder. Intenta de nuevo.",
+            )
+
+        data = response.json()
+        try:
+            reply = data["candidates"][0]["content"]["parts"][0]["text"].strip()
+        except (KeyError, IndexError, TypeError):
+            raise HTTPException(
+                status_code=status.HTTP_502_BAD_GATEWAY,
+                detail="El asistente devolvió una respuesta vacía. Intenta de nuevo.",
+            )
+
+        return CoachChatOut(reply=reply)
 
     def _build_insights(
         self,

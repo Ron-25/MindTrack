@@ -26,8 +26,15 @@ class EmotionDetailPage extends StatelessWidget {
   }
 }
 
-class _EmotionDetailView extends StatelessWidget {
+class _EmotionDetailView extends StatefulWidget {
   const _EmotionDetailView();
+
+  @override
+  State<_EmotionDetailView> createState() => _EmotionDetailViewState();
+}
+
+class _EmotionDetailViewState extends State<_EmotionDetailView> {
+  bool _modified = false;
 
   @override
   Widget build(BuildContext context) {
@@ -46,50 +53,109 @@ class _EmotionDetailView extends StatelessWidget {
         }
         if (state.successMessage != null && state.selectedEntry == null) {
           Navigator.of(context).pop(true);
+          return;
+        }
+        if (state.successMessage != null) {
+          // Edición exitosa: notifica y marca para recargar el historial.
+          _modified = true;
+          ScaffoldMessenger.of(
+            context,
+          ).showSnackBar(SnackBar(content: Text(state.successMessage!)));
+          context.read<EmotionCubit>().clearFeedback();
         }
       },
-      child: Scaffold(
-        backgroundColor: const Color(0xFFF8FAFC),
-        appBar: AppBar(
-          title: const Text('Detalle de emoción'),
+      child: PopScope(
+        canPop: false,
+        onPopInvokedWithResult: (bool didPop, Object? result) {
+          if (!didPop) {
+            Navigator.of(context).pop(_modified);
+          }
+        },
+        child: Scaffold(
           backgroundColor: const Color(0xFFF8FAFC),
-          actions: <Widget>[
-            BlocBuilder<EmotionCubit, EmotionState>(
+          appBar: AppBar(
+            title: const Text('Detalle de emoción'),
+            backgroundColor: const Color(0xFFF8FAFC),
+            actions: <Widget>[
+              BlocBuilder<EmotionCubit, EmotionState>(
+                builder: (BuildContext context, EmotionState state) {
+                  return IconButton(
+                    tooltip: 'Editar registro',
+                    onPressed: state.selectedEntry == null || state.isSaving
+                        ? null
+                        : () => _openEditSheet(context),
+                    icon: state.isSaving
+                        ? const SizedBox(
+                            width: 20,
+                            height: 20,
+                            child: CircularProgressIndicator(strokeWidth: 2),
+                          )
+                        : const Icon(Icons.edit_outlined),
+                  );
+                },
+              ),
+              BlocBuilder<EmotionCubit, EmotionState>(
+                builder: (BuildContext context, EmotionState state) {
+                  return IconButton(
+                    tooltip: 'Eliminar registro',
+                    onPressed: state.selectedEntry == null || state.isDeleting
+                        ? null
+                        : () => _delete(context),
+                    icon: state.isDeleting
+                        ? const SizedBox(
+                            width: 20,
+                            height: 20,
+                            child: CircularProgressIndicator(strokeWidth: 2),
+                          )
+                        : const Icon(Icons.delete_outline_rounded),
+                  );
+                },
+              ),
+            ],
+          ),
+          body: RefreshIndicator(
+            onRefresh: () async {
+              final EmotionEntry? entry = context
+                  .read<EmotionCubit>()
+                  .state
+                  .selectedEntry;
+              if (entry != null) {
+                await context.read<EmotionCubit>().loadEntry(entry.id);
+              }
+            },
+            child: BlocBuilder<EmotionCubit, EmotionState>(
               builder: (BuildContext context, EmotionState state) {
-                return IconButton(
-                  onPressed: state.selectedEntry == null || state.isDeleting
-                      ? null
-                      : () => _delete(context),
-                  icon: state.isDeleting
-                      ? const SizedBox(
-                          width: 20,
-                          height: 20,
-                          child: CircularProgressIndicator(strokeWidth: 2),
-                        )
-                      : const Icon(Icons.delete_outline_rounded),
-                );
+                return _buildBody(context, state);
               },
             ),
-          ],
-        ),
-        body: RefreshIndicator(
-          onRefresh: () async {
-            final EmotionEntry? entry = context
-                .read<EmotionCubit>()
-                .state
-                .selectedEntry;
-            if (entry != null) {
-              await context.read<EmotionCubit>().loadEntry(entry.id);
-            }
-          },
-          child: BlocBuilder<EmotionCubit, EmotionState>(
-            builder: (BuildContext context, EmotionState state) {
-              return _buildBody(context, state);
-            },
           ),
         ),
       ),
     );
+  }
+
+  Future<void> _openEditSheet(BuildContext context) async {
+    final EmotionCubit cubit = context.read<EmotionCubit>();
+    final EmotionEntry? entry = cubit.state.selectedEntry;
+    if (entry == null) {
+      return;
+    }
+
+    final UpdateEmotionEntryInput? input =
+        await showModalBottomSheet<UpdateEmotionEntryInput>(
+          context: context,
+          isScrollControlled: true,
+          backgroundColor: Colors.white,
+          shape: const RoundedRectangleBorder(
+            borderRadius: BorderRadius.vertical(top: Radius.circular(28)),
+          ),
+          builder: (BuildContext context) => _EditEmotionSheet(entry: entry),
+        );
+
+    if (input == null || !context.mounted) {
+      return;
+    }
+    await cubit.updateSelectedEntry(input);
   }
 
   Widget _buildBody(BuildContext context, EmotionState state) {
@@ -324,6 +390,137 @@ class _EmotionDetailView extends StatelessWidget {
       return Icons.self_improvement_rounded;
     }
     return Icons.mood_rounded;
+  }
+}
+
+class _EditEmotionSheet extends StatefulWidget {
+  const _EditEmotionSheet({required this.entry});
+
+  final EmotionEntry entry;
+
+  @override
+  State<_EditEmotionSheet> createState() => _EditEmotionSheetState();
+}
+
+class _EditEmotionSheetState extends State<_EditEmotionSheet> {
+  late final TextEditingController _noteController;
+  late double _intensity;
+
+  @override
+  void initState() {
+    super.initState();
+    _noteController = TextEditingController(text: widget.entry.note ?? '');
+    _intensity = widget.entry.intensity.toDouble();
+  }
+
+  @override
+  void dispose() {
+    _noteController.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return SafeArea(
+      child: SingleChildScrollView(
+        padding: EdgeInsets.fromLTRB(
+          20,
+          20,
+          20,
+          MediaQuery.of(context).viewInsets.bottom + 20,
+        ),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: <Widget>[
+            const Text(
+              'Editar registro',
+              style: TextStyle(
+                fontSize: 20,
+                fontWeight: FontWeight.w800,
+                color: Color(0xFF0F172A),
+              ),
+            ),
+            const SizedBox(height: 4),
+            Text(
+              widget.entry.localizedName('es'),
+              style: const TextStyle(fontSize: 14, color: Color(0xFF64748B)),
+            ),
+            const SizedBox(height: 20),
+            Text(
+              'Intensidad: ${_intensity.round()}/10',
+              style: const TextStyle(
+                fontWeight: FontWeight.w700,
+                color: Color(0xFF0F172A),
+              ),
+            ),
+            Slider(
+              value: _intensity,
+              min: 1,
+              max: 10,
+              divisions: 9,
+              activeColor: AppColors.primary,
+              label: '${_intensity.round()}',
+              onChanged: (double value) {
+                setState(() => _intensity = value);
+              },
+            ),
+            const SizedBox(height: 12),
+            TextField(
+              controller: _noteController,
+              maxLines: 3,
+              decoration: InputDecoration(
+                labelText: 'Nota',
+                hintText: 'Escribe una nota para este registro',
+                filled: true,
+                fillColor: const Color(0xFFF8FAFC),
+                border: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(16),
+                ),
+              ),
+            ),
+            const SizedBox(height: 20),
+            Row(
+              children: <Widget>[
+                Expanded(
+                  child: OutlinedButton(
+                    onPressed: () => Navigator.of(context).pop(),
+                    style: OutlinedButton.styleFrom(
+                      padding: const EdgeInsets.symmetric(vertical: 14),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(16),
+                      ),
+                    ),
+                    child: const Text('Cancelar'),
+                  ),
+                ),
+                const SizedBox(width: 12),
+                Expanded(
+                  child: FilledButton(
+                    onPressed: () {
+                      Navigator.of(context).pop(
+                        UpdateEmotionEntryInput(
+                          intensity: _intensity.round(),
+                          note: _noteController.text.trim(),
+                        ),
+                      );
+                    },
+                    style: FilledButton.styleFrom(
+                      backgroundColor: AppColors.primary,
+                      padding: const EdgeInsets.symmetric(vertical: 14),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(16),
+                      ),
+                    ),
+                    child: const Text('Guardar cambios'),
+                  ),
+                ),
+              ],
+            ),
+          ],
+        ),
+      ),
+    );
   }
 }
 

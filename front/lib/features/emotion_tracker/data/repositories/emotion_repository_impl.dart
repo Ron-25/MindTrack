@@ -33,6 +33,11 @@ class EmotionRepositoryImpl implements EmotionRepository {
   }
 
   @override
+  Future<EmotionEntry> updateEntry(String id, UpdateEmotionEntryInput input) {
+    return _dataSource.updateEntry(id, input);
+  }
+
+  @override
   Future<void> deleteEntry(String id) {
     return _dataSource.deleteEntry(id);
   }

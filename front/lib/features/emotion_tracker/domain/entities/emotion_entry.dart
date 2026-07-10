@@ -133,3 +133,14 @@ class CreateEmotionEntryInput extends Equatable {
     tagIds,
   ];
 }
+
+class UpdateEmotionEntryInput extends Equatable {
+  const UpdateEmotionEntryInput({this.intensity, this.note, this.tagIds});
+
+  final int? intensity;
+  final String? note;
+  final List<String>? tagIds;
+
+  @override
+  List<Object?> get props => <Object?>[intensity, note, tagIds];
+}

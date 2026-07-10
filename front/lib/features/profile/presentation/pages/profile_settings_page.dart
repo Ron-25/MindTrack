@@ -7,6 +7,7 @@ import 'package:mind_track/app/theme/app_colors.dart';
 import 'package:mind_track/core/services/device_intent_service.dart';
 import 'package:mind_track/core/services/token_storage_service.dart';
 import 'package:mind_track/core/utils/toast_utils.dart';
+import 'package:mind_track/features/home/presentation/cubit/home_cubit.dart';
 import 'package:mind_track/shared/widget/mindtrack_app_bar.dart';
 import 'package:mind_track/features/login/presentation/blocs/login_bloc.dart';
 import 'package:mind_track/features/login/presentation/blocs/login_event.dart';
@@ -27,8 +28,6 @@ class _ProfileSettingsPageState extends State<ProfileSettingsPage> {
       Injector.get<DeviceIntentService>();
   final TokenStorageService _tokenStorage = Injector.get<TokenStorageService>();
   final LoginBloc _loginBloc = Injector.get<LoginBloc>();
-  int _selectedIndex = 4;
-
   @override
   void initState() {
     super.initState();
@@ -40,8 +39,10 @@ class _ProfileSettingsPageState extends State<ProfileSettingsPage> {
     final S translations = S.of(context);
     return Scaffold(
       backgroundColor: const Color(0xFFF6F7F8),
-      appBar: MindTrackAppBar(title: translations.profile_title),
-      bottomNavigationBar: _buildBottomArea(context),
+      appBar: MindTrackAppBar(
+        title: translations.profile_title,
+        showActions: false,
+      ),
       body: SafeArea(
         child: BlocListener<ProfileCubit, ProfileState>(
           bloc: _profileCubit,
@@ -93,9 +94,6 @@ class _ProfileSettingsPageState extends State<ProfileSettingsPage> {
                     child: CustomScrollView(
                       physics: const AlwaysScrollableScrollPhysics(),
                       slivers: <Widget>[
-                        SliverToBoxAdapter(
-                          child: _buildHeader(context, translations, profile),
-                        ),
                         SliverPadding(
                           padding: const EdgeInsets.fromLTRB(16, 24, 16, 120),
                           sliver: SliverList(
@@ -199,45 +197,6 @@ class _ProfileSettingsPageState extends State<ProfileSettingsPage> {
             },
           ),
         ),
-      ),
-    );
-  }
-
-  Widget _buildHeader(
-    BuildContext context,
-    S translations,
-    ProfileSettingsData profile,
-  ) {
-    return Container(
-      padding: const EdgeInsets.fromLTRB(16, 16, 16, 17),
-      decoration: const BoxDecoration(
-        color: Colors.white,
-        border: Border(bottom: BorderSide(color: Color(0xFFF1F5F9))),
-      ),
-      child: Row(
-        children: <Widget>[
-          _HeaderButton(
-            icon: Icons.arrow_back_rounded,
-            onTap: () => Navigator.of(context).pop(),
-          ),
-          Expanded(
-            child: Center(
-              child: Text(
-                translations.profile_title,
-                style: const TextStyle(
-                  fontSize: 18,
-                  fontWeight: FontWeight.w700,
-                  letterSpacing: -0.45,
-                  color: Color(0xFF0F172A),
-                ),
-              ),
-            ),
-          ),
-          _HeaderButton(
-            icon: Icons.settings_outlined,
-            onTap: () => _editPreferences(context, profile),
-          ),
-        ],
       ),
     );
   }
@@ -348,99 +307,6 @@ class _ProfileSettingsPageState extends State<ProfileSettingsPage> {
     );
   }
 
-  Widget _buildBottomArea(BuildContext context) {
-    final S translations = S.of(context);
-    final List<_NavItem> items = <_NavItem>[
-      _NavItem(label: translations.home_nav_home, icon: Icons.home_outlined),
-      _NavItem(
-        label: translations.home_nav_history,
-        icon: Icons.history_toggle_off_rounded,
-      ),
-      _NavItem(
-        label: translations.home_nav_analytics,
-        icon: Icons.insights_outlined,
-      ),
-      _NavItem(
-        label: translations.home_nav_habits,
-        icon: Icons.calendar_today_outlined,
-      ),
-      _NavItem(
-        label: translations.home_nav_profile,
-        icon: Icons.person_outline_rounded,
-      ),
-    ];
-
-    return SafeArea(
-      top: false,
-      child: Container(
-        decoration: const BoxDecoration(
-          color: Colors.white,
-          border: Border(top: BorderSide(color: Color(0xFFE2E8F0))),
-          boxShadow: <BoxShadow>[
-            BoxShadow(
-              color: Color(0x1A000000),
-              blurRadius: 20,
-              offset: Offset(0, -6),
-            ),
-          ],
-        ),
-        padding: const EdgeInsets.fromLTRB(16, 12, 16, 12),
-        child: Row(
-          children: List<Widget>.generate(items.length, (int index) {
-            final bool isSelected = _selectedIndex == index;
-            final Color color = isSelected
-                ? AppColors.primary
-                : const Color(0xFF94A3B8);
-            return Expanded(
-              child: InkWell(
-                onTap: () => _onBottomNavTap(index),
-                borderRadius: BorderRadius.circular(16),
-                child: Padding(
-                  padding: const EdgeInsets.symmetric(vertical: 4),
-                  child: Column(
-                    mainAxisSize: MainAxisSize.min,
-                    children: <Widget>[
-                      Icon(items[index].icon, size: 20, color: color),
-                      const SizedBox(height: 4),
-                      Text(
-                        items[index].label,
-                        textAlign: TextAlign.center,
-                        style: TextStyle(
-                          fontSize: 10,
-                          fontWeight: FontWeight.w700,
-                          letterSpacing: -0.3,
-                          color: color,
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-              ),
-            );
-          }),
-        ),
-      ),
-    );
-  }
-
-  void _onBottomNavTap(int index) {
-    if (index == 0) {
-      Navigator.of(context).pushReplacementNamed(RouteNames.home);
-      return;
-    }
-    if (index == 4) {
-      return;
-    }
-    setState(() => _selectedIndex = index);
-    ThToast.info(
-      context: context,
-      title: 'MindTrack',
-      description: S.of(context).home_section_soon_description,
-      applyBlurEffect: false,
-    );
-    setState(() => _selectedIndex = 4);
-  }
-
   Future<void> _handleLogout(BuildContext context) async {
     final S translations = S.of(context);
     await _tokenStorage.clearTokens();
@@ -537,6 +403,7 @@ class _ProfileSettingsPageState extends State<ProfileSettingsPage> {
       return;
     }
     await _profileCubit.updateProfileName(result);
+    Injector.get<HomeCubit>().loadDashboard();
   }
 
   Future<void> _editPreferences(
@@ -794,26 +661,6 @@ class _SettingsTile extends StatelessWidget {
   }
 }
 
-class _HeaderButton extends StatelessWidget {
-  const _HeaderButton({required this.icon, required this.onTap});
-
-  final IconData icon;
-  final VoidCallback onTap;
-
-  @override
-  Widget build(BuildContext context) {
-    return InkWell(
-      onTap: onTap,
-      borderRadius: BorderRadius.circular(16),
-      child: SizedBox(
-        width: 40,
-        height: 40,
-        child: Icon(icon, color: const Color(0xFF0F172A), size: 22),
-      ),
-    );
-  }
-}
-
 class _ProfileErrorState extends StatelessWidget {
   const _ProfileErrorState({required this.message, required this.onRetry});
 
@@ -853,11 +700,4 @@ class _ProfileErrorState extends StatelessWidget {
       ),
     );
   }
-}
-
-class _NavItem {
-  const _NavItem({required this.label, required this.icon});
-
-  final String label;
-  final IconData icon;
 }

@@ -6,4 +6,6 @@ abstract class HabitRepository {
   Future<void> toggleHabit(String id, {required bool completed});
 
   Future<void> createHabit(CreateHabitInput input);
+
+  Future<void> updateHabit(String id, UpdateHabitInput input);
 }

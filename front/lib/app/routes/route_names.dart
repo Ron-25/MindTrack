@@ -13,6 +13,7 @@ class RouteNames {
   static const String search = '/search';
   static const String notifications = '/notifications';
   static const String coach = '/coach';
+  static const String chat = '/chat';
   static const String addEmotion = '/emotion/add';
   static const String emotionDetail = '/emotion/detail';
 }

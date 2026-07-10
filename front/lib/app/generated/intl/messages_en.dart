@@ -22,35 +22,42 @@ class MessageLookup extends MessageLookupByLibrary {
 
   static String m0(terms, privacy) => "I agree to the ${terms} and ${privacy}.";
 
-  static String m1(count) => "${count} logs";
+  static String m1(pct) => "${pct}% completed";
 
-  static String m2(count) =>
+  static String m2(count) => "${count} logs";
+
+  static String m3(day) => "Best mood on ${day}";
+
+  static String m4(count) =>
       "You still have ${count} habit(s) pending today. The easiest one to complete right now may give you a useful momentum boost.";
 
-  static String m3(name) =>
+  static String m5(name) =>
       "Your most frequent recent emotion is ${name}. It is worth checking what activities or people usually appear alongside it.";
 
-  static String m4(days) => "Days per week: ${days}";
+  static String m6(completed, total) =>
+      "You\'ve completed ${completed} of ${total} habits today!";
 
-  static String m5(days) => "Weekly target: ${days} days";
+  static String m7(days) => "Days per week: ${days}";
 
-  static String m6(name) => "Good morning, ${name}";
-
-  static String m7(name) => "Good afternoon, ${name}";
-
-  static String m8(name) => "Good evening, ${name}";
+  static String m8(days) => "Weekly target: ${days} days";
 
   static String m9(name) => "Good morning, ${name}";
 
-  static String m10(count, energy) =>
+  static String m10(name) => "Good afternoon, ${name}";
+
+  static String m11(name) => "Good evening, ${name}";
+
+  static String m12(name) => "Good morning, ${name}";
+
+  static String m13(count, energy) =>
       "You\'ve logged ${Intl.plural(count, one: '1 entry', other: '${count} entries')} today. Your average energy level is ${energy}.";
 
-  static String m11(completed, target) =>
+  static String m14(completed, target) =>
       "You have not marked this habit today yet. You are at ${completed}/${target} this week.";
 
-  static String m12(name) => "Pending: ${name}";
+  static String m15(name) => "Pending: ${name}";
 
-  static String m13(step, total) =>
+  static String m16(step, total) =>
       "Step ${step} of ${total} • Emotional Awareness";
 
   final messages = _notInlinedMessages(_notInlinedMessages);
@@ -68,25 +75,61 @@ class MessageLookup extends MessageLookupByLibrary {
     "analytics_default_insight": MessageLookupByLibrary.simpleMessage(
       "Keep logging emotions and habits to uncover patterns.",
     ),
+    "analytics_distribution_title": MessageLookupByLibrary.simpleMessage(
+      "Mood Distribution",
+    ),
     "analytics_frequency_empty": MessageLookupByLibrary.simpleMessage(
       "There is not enough data yet to calculate frequency.",
     ),
     "analytics_frequency_title": MessageLookupByLibrary.simpleMessage(
       "Emotional Frequency",
     ),
+    "analytics_habits_card_label": MessageLookupByLibrary.simpleMessage(
+      "Habits",
+    ),
+    "analytics_habits_card_value": m1,
     "analytics_habits_mood_title": MessageLookupByLibrary.simpleMessage(
       "Habits vs Mood",
+    ),
+    "analytics_insight_title": MessageLookupByLibrary.simpleMessage(
+      "Weekly Insight",
     ),
     "analytics_metric_habits": MessageLookupByLibrary.simpleMessage("Habits"),
     "analytics_metric_intensity": MessageLookupByLibrary.simpleMessage(
       "Intensity",
     ),
     "analytics_metric_logs": MessageLookupByLibrary.simpleMessage("Logs"),
+    "analytics_mood_flow_caption": MessageLookupByLibrary.simpleMessage(
+      "Average emotional intensity per day (1-10 scale)",
+    ),
+    "analytics_mood_flow_fallback_caption": MessageLookupByLibrary.simpleMessage(
+      "No intensity logs this week. Showing completed habits per day instead.",
+    ),
+    "analytics_mood_flow_label": MessageLookupByLibrary.simpleMessage(
+      "Weekly Mood Flow",
+    ),
+    "analytics_no_data_short": MessageLookupByLibrary.simpleMessage(
+      "Not enough data",
+    ),
     "analytics_no_dominant_emotion": MessageLookupByLibrary.simpleMessage(
       "No dominant emotion yet",
     ),
-    "analytics_records_count": m1,
+    "analytics_patterns_title": MessageLookupByLibrary.simpleMessage(
+      "Patterns & Observations",
+    ),
+    "analytics_range_month": MessageLookupByLibrary.simpleMessage("Month"),
+    "analytics_range_week": MessageLookupByLibrary.simpleMessage("Week"),
+    "analytics_range_year": MessageLookupByLibrary.simpleMessage("Year"),
+    "analytics_read_more": MessageLookupByLibrary.simpleMessage(
+      "Read more insights",
+    ),
+    "analytics_records_count": m2,
     "analytics_title": MessageLookupByLibrary.simpleMessage("Analytics"),
+    "analytics_top_day_label": MessageLookupByLibrary.simpleMessage("Top Day"),
+    "analytics_top_day_value": m3,
+    "analytics_trends_title": MessageLookupByLibrary.simpleMessage(
+      "Emotional Trends",
+    ),
     "analytics_view_habits": MessageLookupByLibrary.simpleMessage(
       "View habits",
     ),
@@ -124,8 +167,8 @@ class MessageLookup extends MessageLookupByLibrary {
     "coach_insight_low_logs": MessageLookupByLibrary.simpleMessage(
       "There are still few logs this week. Try noting at least one emotion in the morning and one at night to improve your patterns.",
     ),
-    "coach_insight_pending_habits": m2,
-    "coach_insight_top_emotion": m3,
+    "coach_insight_pending_habits": m4,
+    "coach_insight_top_emotion": m5,
     "coach_stat_habits": MessageLookupByLibrary.simpleMessage("Habits"),
     "coach_stat_intensity": MessageLookupByLibrary.simpleMessage("Intensity"),
     "coach_stat_logs": MessageLookupByLibrary.simpleMessage("Logs"),
@@ -163,23 +206,50 @@ class MessageLookup extends MessageLookupByLibrary {
       "Productivity",
     ),
     "habits_category_social": MessageLookupByLibrary.simpleMessage("Social"),
+    "habits_create_button": MessageLookupByLibrary.simpleMessage(
+      "Create Habit",
+    ),
     "habits_create_title": MessageLookupByLibrary.simpleMessage("Create habit"),
-    "habits_days_per_week": m4,
+    "habits_daily_progress_message": m6,
+    "habits_daily_progress_subtitle": MessageLookupByLibrary.simpleMessage(
+      "Consistency is the key to mental clarity.",
+    ),
+    "habits_daily_progress_title": MessageLookupByLibrary.simpleMessage(
+      "Daily Progress",
+    ),
+    "habits_days_error": MessageLookupByLibrary.simpleMessage(
+      "Select at least one day.",
+    ),
+    "habits_days_per_week": m7,
     "habits_description_label": MessageLookupByLibrary.simpleMessage(
       "Description",
     ),
+    "habits_edit_title": MessageLookupByLibrary.simpleMessage("Edit Habit"),
     "habits_empty_description": MessageLookupByLibrary.simpleMessage(
       "Create one to start measuring consistency and its relationship with your mood.",
     ),
     "habits_empty_title": MessageLookupByLibrary.simpleMessage(
       "You do not have active habits yet.",
     ),
+    "habits_frequency_custom": MessageLookupByLibrary.simpleMessage("Custom"),
+    "habits_frequency_daily": MessageLookupByLibrary.simpleMessage("Daily"),
+    "habits_frequency_label": MessageLookupByLibrary.simpleMessage("Frequency"),
+    "habits_frequency_weekly": MessageLookupByLibrary.simpleMessage("Weekly"),
+    "habits_icon_label": MessageLookupByLibrary.simpleMessage("Choose Icon"),
+    "habits_insights_button": MessageLookupByLibrary.simpleMessage("Insights"),
     "habits_name_error": MessageLookupByLibrary.simpleMessage("Enter a name."),
+    "habits_name_hint": MessageLookupByLibrary.simpleMessage(
+      "e.g., Drink Water",
+    ),
     "habits_name_label": MessageLookupByLibrary.simpleMessage("Name"),
     "habits_new_button": MessageLookupByLibrary.simpleMessage("New habit"),
     "habits_save": MessageLookupByLibrary.simpleMessage("Save"),
+    "habits_save_changes": MessageLookupByLibrary.simpleMessage("Save Changes"),
     "habits_title": MessageLookupByLibrary.simpleMessage("Habits"),
-    "habits_weekly_target": m5,
+    "habits_today_title": MessageLookupByLibrary.simpleMessage(
+      "Today\'s Habits",
+    ),
+    "habits_weekly_target": m8,
     "home_daily_habits_title": MessageLookupByLibrary.simpleMessage(
       "Daily Habits",
     ),
@@ -196,10 +266,10 @@ class MessageLookup extends MessageLookupByLibrary {
       "No additional notes.",
     ),
     "home_entry_yesterday": MessageLookupByLibrary.simpleMessage("Yesterday"),
-    "home_greeting": m6,
-    "home_greeting_afternoon": m7,
-    "home_greeting_evening": m8,
-    "home_greeting_morning": m9,
+    "home_greeting": m9,
+    "home_greeting_afternoon": m10,
+    "home_greeting_evening": m11,
+    "home_greeting_morning": m12,
     "home_log_emotion_button": MessageLookupByLibrary.simpleMessage(
       "Log My Current Emotion",
     ),
@@ -249,7 +319,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "home_today_empty_title": MessageLookupByLibrary.simpleMessage(
       "No entries yet",
     ),
-    "home_today_entries_description": m10,
+    "home_today_entries_description": m13,
     "home_today_mood_title": MessageLookupByLibrary.simpleMessage(
       "Today\'s Mood",
     ),
@@ -306,8 +376,8 @@ class MessageLookup extends MessageLookupByLibrary {
     "notifications_mood_missing_title": MessageLookupByLibrary.simpleMessage(
       "You still need to log how you feel today",
     ),
-    "notifications_pending_description": m11,
-    "notifications_pending_title": m12,
+    "notifications_pending_description": m14,
+    "notifications_pending_title": m15,
     "notifications_title": MessageLookupByLibrary.simpleMessage(
       "Notifications",
     ),
@@ -320,7 +390,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "onboarding_desc_3": MessageLookupByLibrary.simpleMessage(
       "Connect your daily routines with your emotional well-being. Start your journey towards a more balanced life.",
     ),
-    "onboarding_step": m13,
+    "onboarding_step": m16,
     "onboarding_title_1": MessageLookupByLibrary.simpleMessage(
       "Track your daily emotions",
     ),

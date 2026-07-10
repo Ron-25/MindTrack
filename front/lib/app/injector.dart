@@ -149,7 +149,7 @@ class Injector {
         tokenStorageService: Injector.get<TokenStorageService>(),
       ),
     );
-    registerFactory<HomeCubit>(
+    registerLazySingleton<HomeCubit>(
       () => HomeCubit(homeRepository: Injector.get<HomeRepository>()),
     );
     registerFactory<ProfileCubit>(
@@ -158,7 +158,7 @@ class Injector {
     registerFactory<EmotionCubit>(
       () => EmotionCubit(emotionRepository: Injector.get<EmotionRepository>()),
     );
-    registerFactory<AnalyticsCubit>(
+    registerLazySingleton<AnalyticsCubit>(
       () => AnalyticsCubit(
         analyticsRepository: Injector.get<AnalyticsRepository>(),
       ),

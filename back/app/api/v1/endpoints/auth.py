@@ -64,13 +64,10 @@ async def forgot_password(
     db: AsyncSession = Depends(get_db),
 ) -> ForgotPasswordResponse:
     service = AuthService(db)
-    await service.forgot_password(body.email)
+    await service.forgot_password(body.email, body.new_password)
     # Respuesta genérica: no revela si el correo está registrado.
     return ForgotPasswordResponse(
-        message=(
-            "Si el correo está registrado, recibirás instrucciones "
-            "para restablecer tu contraseña."
-        ),
+        message="Si el correo está registrado, tu contraseña fue actualizada.",
     )
 
 

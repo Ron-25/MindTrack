@@ -22,7 +22,7 @@ Future<void> main() async {
         ? HydratedStorage.webStorageDirectory
         : await getTemporaryDirectory(),
   );
-  ThemeController.instance.load();
+  await ThemeController.instance.load();
   SystemChrome.setSystemUIOverlayStyle(
     const SystemUiOverlayStyle(
       statusBarColor: Colors.transparent,

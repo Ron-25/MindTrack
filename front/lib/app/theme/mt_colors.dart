@@ -41,6 +41,13 @@ class MTColors {
   /// Chip/checkbox sin seleccionar (#CBD5E1 / #D1D5DB en claro).
   Color get controlBorder =>
       isDark ? const Color(0xFF3B4A61) : const Color(0xFFCBD5E1);
+
+  /// Degradado de las pantallas de autenticación/splash.
+  LinearGradient get splashGradient => isDark
+      ? const LinearGradient(
+          colors: <Color>[AppColors.darkSurface, AppColors.darkBackground],
+        )
+      : AppColors.splashGradient;
 }
 
 extension MTColorsX on BuildContext {

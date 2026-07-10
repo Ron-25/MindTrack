@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:mind_track/app/theme/mt_colors.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
@@ -85,20 +86,26 @@ class _SignInPageState extends State<SignInPage> with WidgetsBindingObserver {
         }
       },
       child: AnnotatedRegion<SystemUiOverlayStyle>(
-        value: const SystemUiOverlayStyle(
+        value: SystemUiOverlayStyle(
           statusBarColor: Colors.transparent,
-          statusBarIconBrightness: Brightness.dark,
-          statusBarBrightness: Brightness.light,
-          systemNavigationBarColor: AppColors.background,
-          systemNavigationBarIconBrightness: Brightness.dark,
+          statusBarIconBrightness: context.mtColors.isDark
+              ? Brightness.light
+              : Brightness.dark,
+          statusBarBrightness: context.mtColors.isDark
+              ? Brightness.dark
+              : Brightness.light,
+          systemNavigationBarColor: Theme.of(context).scaffoldBackgroundColor,
+          systemNavigationBarIconBrightness: context.mtColors.isDark
+              ? Brightness.light
+              : Brightness.dark,
         ),
         child: Scaffold(
           appBar: AppBar(
             title: Text(translations.sign_in),
             centerTitle: true,
-            backgroundColor: AppColors.background,
+            backgroundColor: Theme.of(context).scaffoldBackgroundColor,
           ),
-          backgroundColor: AppColors.background,
+          backgroundColor: Theme.of(context).scaffoldBackgroundColor,
           body: FormBuilder(
             key: _formKey,
             child: ListView(
@@ -112,8 +119,8 @@ class _SignInPageState extends State<SignInPage> with WidgetsBindingObserver {
                 ),
                 Container(
                   width: double.infinity,
-                  decoration: const BoxDecoration(
-                    gradient: AppColors.splashGradient,
+                  decoration: BoxDecoration(
+                    gradient: context.mtColors.splashGradient,
                   ),
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.center,
@@ -127,10 +134,10 @@ class _SignInPageState extends State<SignInPage> with WidgetsBindingObserver {
                       Center(
                         child: Text(
                           translations.sign_in,
-                          style: const TextStyle(
+                          style: TextStyle(
                             fontSize: 25,
                             fontWeight: FontWeight.w700,
-                            color: AppColors.textPrimary,
+                            color: context.mtColors.textPrimary,
                           ),
                         ),
                       ),
@@ -138,10 +145,10 @@ class _SignInPageState extends State<SignInPage> with WidgetsBindingObserver {
                       Text(
                         translations.login_subtitle,
                         textAlign: TextAlign.center,
-                        style: const TextStyle(
+                        style: TextStyle(
                           fontSize: 15,
                           height: 1.7,
-                          color: AppColors.textSecondary,
+                          color: context.mtColors.textSecondary,
                         ),
                       ),
                       const SizedBox(height: 40),
@@ -154,9 +161,9 @@ class _SignInPageState extends State<SignInPage> with WidgetsBindingObserver {
                             Text(
                               translations.email_address,
                               textAlign: TextAlign.start,
-                              style: const TextStyle(
+                              style: TextStyle(
                                 fontSize: 15,
-                                color: AppColors.textSecondary,
+                                color: context.mtColors.textSecondary,
                               ),
                             ),
                             const SizedBox(height: 8),
@@ -173,9 +180,9 @@ class _SignInPageState extends State<SignInPage> with WidgetsBindingObserver {
                                 Text(
                                   translations.password,
                                   textAlign: TextAlign.center,
-                                  style: const TextStyle(
+                                  style: TextStyle(
                                     fontSize: 15,
-                                    color: AppColors.textSecondary,
+                                    color: context.mtColors.textSecondary,
                                   ),
                                 ),
                                 const Spacer(),
@@ -194,7 +201,7 @@ class _SignInPageState extends State<SignInPage> with WidgetsBindingObserver {
                                 ),
                               ],
                             ),
-                            //const SizedBox(height: 8),
+                            //SizedBox(height: 8),
                             PasswordTextField(
                               hintText: translations.password,
                               obscureText: _obscurePassword,
@@ -286,7 +293,9 @@ class _SignInPageState extends State<SignInPage> with WidgetsBindingObserver {
                                   borderRadius: BorderRadius.circular(24),
                                 ),
                                 side: BorderSide(color: Colors.grey.shade300),
-                                backgroundColor: Colors.white,
+                                backgroundColor: Theme.of(
+                                  context,
+                                ).colorScheme.surface,
                                 elevation: 0,
                               ),
                               onPressed: () {},

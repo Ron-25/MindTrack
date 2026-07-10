@@ -1,4 +1,5 @@
 import 'package:flutter/gestures.dart';
+import 'package:mind_track/app/theme/mt_colors.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -7,7 +8,6 @@ import 'package:form_builder_validators/form_builder_validators.dart';
 import 'package:mind_track/app/generated/l10n.dart';
 import 'package:mind_track/app/injector.dart';
 import 'package:mind_track/app/routes/route_names.dart';
-import 'package:mind_track/app/theme/app_colors.dart';
 import 'package:mind_track/core/utils/toast_utils.dart';
 import 'package:mind_track/features/login/presentation/blocs/login_bloc.dart';
 import 'package:mind_track/features/login/presentation/blocs/login_event.dart';
@@ -53,20 +53,26 @@ class _SignUpState extends State<SignUp> {
         }
       },
       child: AnnotatedRegion<SystemUiOverlayStyle>(
-        value: const SystemUiOverlayStyle(
+        value: SystemUiOverlayStyle(
           statusBarColor: Colors.transparent,
-          statusBarIconBrightness: Brightness.dark,
-          statusBarBrightness: Brightness.light,
-          systemNavigationBarColor: AppColors.background,
-          systemNavigationBarIconBrightness: Brightness.dark,
+          statusBarIconBrightness: context.mtColors.isDark
+              ? Brightness.light
+              : Brightness.dark,
+          statusBarBrightness: context.mtColors.isDark
+              ? Brightness.dark
+              : Brightness.light,
+          systemNavigationBarColor: Theme.of(context).scaffoldBackgroundColor,
+          systemNavigationBarIconBrightness: context.mtColors.isDark
+              ? Brightness.light
+              : Brightness.dark,
         ),
         child: Scaffold(
           appBar: AppBar(
             title: Text(translations.create_account),
             centerTitle: true,
-            backgroundColor: AppColors.background,
+            backgroundColor: Theme.of(context).scaffoldBackgroundColor,
           ),
-          backgroundColor: AppColors.background,
+          backgroundColor: Theme.of(context).scaffoldBackgroundColor,
           body: FormBuilder(
             key: _formKey,
             child: SingleChildScrollView(
@@ -79,8 +85,8 @@ class _SignUpState extends State<SignUp> {
                   ),
                   Container(
                     width: double.infinity,
-                    decoration: const BoxDecoration(
-                      gradient: AppColors.splashGradient,
+                    decoration: BoxDecoration(
+                      gradient: context.mtColors.splashGradient,
                     ),
                     child: Column(
                       mainAxisAlignment: MainAxisAlignment.center,
@@ -94,10 +100,10 @@ class _SignUpState extends State<SignUp> {
                         Center(
                           child: Text(
                             translations.begin_your_journey,
-                            style: const TextStyle(
+                            style: TextStyle(
                               fontSize: 25,
                               fontWeight: FontWeight.w700,
-                              color: AppColors.textPrimary,
+                              color: context.mtColors.textPrimary,
                             ),
                           ),
                         ),
@@ -105,10 +111,10 @@ class _SignUpState extends State<SignUp> {
                         Text(
                           translations.signup_subtitle,
                           textAlign: TextAlign.center,
-                          style: const TextStyle(
+                          style: TextStyle(
                             fontSize: 15,
                             height: 1.7,
-                            color: AppColors.textSecondary,
+                            color: context.mtColors.textSecondary,
                           ),
                         ),
                         const SizedBox(height: 15),
@@ -121,9 +127,9 @@ class _SignUpState extends State<SignUp> {
                               Text(
                                 translations.full_name,
                                 textAlign: TextAlign.start,
-                                style: const TextStyle(
+                                style: TextStyle(
                                   fontSize: 15,
-                                  color: AppColors.textSecondary,
+                                  color: context.mtColors.textSecondary,
                                 ),
                               ),
                               const SizedBox(height: 8),
@@ -140,7 +146,7 @@ class _SignUpState extends State<SignUp> {
                                     borderSide: BorderSide.none,
                                   ),
                                   filled: true,
-                                  fillColor: Colors.white,
+                                  fillColor: context.mtColors.card,
                                   prefixIcon: const Icon(Icons.person_outline),
                                 ),
                               ),
@@ -148,9 +154,9 @@ class _SignUpState extends State<SignUp> {
                               Text(
                                 translations.email_address,
                                 textAlign: TextAlign.start,
-                                style: const TextStyle(
+                                style: TextStyle(
                                   fontSize: 15,
-                                  color: AppColors.textSecondary,
+                                  color: context.mtColors.textSecondary,
                                 ),
                               ),
                               const SizedBox(height: 8),
@@ -165,9 +171,9 @@ class _SignUpState extends State<SignUp> {
                               Text(
                                 translations.password,
                                 textAlign: TextAlign.center,
-                                style: const TextStyle(
+                                style: TextStyle(
                                   fontSize: 15,
-                                  color: AppColors.textSecondary,
+                                  color: context.mtColors.textSecondary,
                                 ),
                               ),
                               const SizedBox(height: 8),
@@ -380,7 +386,9 @@ class _SignUpState extends State<SignUp> {
                                     borderRadius: BorderRadius.circular(24),
                                   ),
                                   side: BorderSide(color: Colors.grey.shade300),
-                                  backgroundColor: Colors.white,
+                                  backgroundColor: Theme.of(
+                                    context,
+                                  ).colorScheme.surface,
                                   elevation: 0,
                                 ),
                                 onPressed: () {

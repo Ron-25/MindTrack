@@ -9,5 +9,8 @@ abstract class AuthRepository {
     required String password,
   });
 
-  Future<String> forgotPassword({required String email});
+  Future<String> forgotPassword({
+    required String email,
+    required String newPassword,
+  });
 }

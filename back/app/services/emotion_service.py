@@ -1,4 +1,4 @@
-from datetime import datetime
+from datetime import date, datetime, timedelta
 from typing import List, Optional
 from uuid import UUID
 
@@ -8,12 +8,39 @@ from app.core.exceptions import BadRequestError, ForbiddenError, NotFoundError
 from app.models.emotion import EmotionLog
 from app.models.user import User
 from app.repositories.emotion_repository import EmotionRepository
-from app.schemas.emotion import EmotionLogCreate, EmotionLogUpdate
+from app.schemas.emotion import EmotionLogCreate, EmotionLogUpdate, EmotionStreakOut
 
 
 class EmotionService:
     def __init__(self, db: AsyncSession):
         self.repo = EmotionRepository(db)
+
+    async def get_streak(self, user: User) -> EmotionStreakOut:
+        """Racha de días consecutivos con al menos un registro emocional."""
+        log_dates = set(await self.repo.get_distinct_log_dates(user.id))
+        today = date.today()
+        logged_today = today in log_dates
+
+        # Racha actual: si hoy aún no registra, la racha sigue viva desde ayer.
+        current = 0
+        cursor = today if logged_today else today - timedelta(days=1)
+        while cursor in log_dates:
+            current += 1
+            cursor -= timedelta(days=1)
+
+        longest = 0
+        run = 0
+        previous = None
+        for day in sorted(log_dates):
+            run = run + 1 if previous is not None and (day - previous).days == 1 else 1
+            longest = max(longest, run)
+            previous = day
+
+        return EmotionStreakOut(
+            current_streak=current,
+            longest_streak=max(longest, current),
+            logged_today=logged_today,
+        )
 
     async def create_log(self, user: User, data: EmotionLogCreate) -> EmotionLog:
         emotion_type = await self.repo.get_emotion_type_by_id(data.emotion_type_id)

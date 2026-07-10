@@ -25,6 +25,7 @@ class RefreshRequest(BaseModel):
 
 class ForgotPasswordRequest(BaseModel):
     email: EmailStr
+    new_password: str = Field(min_length=8)
 
 
 class ForgotPasswordResponse(BaseModel):

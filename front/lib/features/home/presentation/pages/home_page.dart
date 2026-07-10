@@ -133,7 +133,13 @@ class _HomePageState extends State<HomePage> {
                               color: AppColors.textSecondary,
                             ),
                           ),
-                          const SizedBox(height: 20),
+                          const SizedBox(height: 16),
+                          _buildStreakCard(
+                            context,
+                            dashboard.streak,
+                            translations,
+                          ),
+                          const SizedBox(height: 16),
                           _buildLogEmotionButton(context, translations),
                           const SizedBox(height: 24),
                           _SectionCard(
@@ -172,6 +178,79 @@ class _HomePageState extends State<HomePage> {
             },
           ),
         ),
+      ),
+    );
+  }
+
+  Widget _buildStreakCard(
+    BuildContext context,
+    EmotionStreak streak,
+    S translations,
+  ) {
+    const Color flame = Color(0xFFF59E0B);
+    final bool hasStreak = streak.currentStreak > 0;
+    final Color accent = hasStreak ? flame : context.mtColors.textMuted;
+
+    final String title = hasStreak
+        ? translations.home_streak_title(streak.currentStreak)
+        : translations.home_streak_start;
+    final String? subtitle = !hasStreak
+        ? null
+        : !streak.loggedToday
+        ? translations.home_streak_keep
+        : streak.longestStreak > streak.currentStreak
+        ? translations.home_streak_best(streak.longestStreak)
+        : null;
+
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+      decoration: BoxDecoration(
+        color: accent.withValues(alpha: 0.1),
+        borderRadius: BorderRadius.circular(20),
+        border: Border.all(color: accent.withValues(alpha: 0.3)),
+      ),
+      child: Row(
+        children: <Widget>[
+          Icon(
+            hasStreak
+                ? Icons.local_fire_department_rounded
+                : Icons.local_fire_department_outlined,
+            color: accent,
+            size: 26,
+          ),
+          const SizedBox(width: 12),
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: <Widget>[
+                Text(
+                  title,
+                  style: TextStyle(
+                    fontSize: 14,
+                    fontWeight: FontWeight.w700,
+                    color: context.mtColors.textPrimary,
+                  ),
+                ),
+                if (subtitle != null) ...<Widget>[
+                  const SizedBox(height: 2),
+                  Text(
+                    subtitle,
+                    style: TextStyle(
+                      fontSize: 12,
+                      color: context.mtColors.textSecondary,
+                    ),
+                  ),
+                ],
+              ],
+            ),
+          ),
+          if (hasStreak && streak.loggedToday)
+            const Icon(
+              Icons.check_circle_rounded,
+              color: Color(0xFF16A34A),
+              size: 20,
+            ),
+        ],
       ),
     );
   }

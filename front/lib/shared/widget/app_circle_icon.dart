@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import '../../app/theme/app_colors.dart';
 
 class AppCircleIcon extends StatelessWidget {
-
   const AppCircleIcon({
     super.key,
     required this.icon,
@@ -23,16 +22,9 @@ class AppCircleIcon extends StatelessWidget {
     return Container(
       width: size,
       height: size,
-      decoration: BoxDecoration(
-        color: backgroundColor,
-        shape: BoxShape.circle,
-      ),
+      decoration: BoxDecoration(color: backgroundColor, shape: BoxShape.circle),
       child: Center(
-        child: Icon(
-          icon,
-          color: iconColor,
-          size: iconSize,
-        ),
+        child: Icon(icon, color: iconColor, size: iconSize),
       ),
     );
   }

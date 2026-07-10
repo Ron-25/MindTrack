@@ -15,7 +15,10 @@ abstract class AuthRemoteDataSource {
     required String password,
   });
 
-  Future<String> forgotPassword({required String email});
+  Future<String> forgotPassword({
+    required String email,
+    required String newPassword,
+  });
 }
 
 class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
@@ -61,15 +64,18 @@ class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
   }
 
   @override
-  Future<String> forgotPassword({required String email}) async {
+  Future<String> forgotPassword({
+    required String email,
+    required String newPassword,
+  }) async {
     try {
       final Response<dynamic> response = await _client.dio.post<dynamic>(
         '/api/v1/auth/forgot-password',
-        data: <String, String>{'email': email},
+        data: <String, String>{'email': email, 'new_password': newPassword},
       );
       final Map<String, dynamic> json = response.data as Map<String, dynamic>;
       return json['message'] as String? ??
-          'Si el correo está registrado, recibirás instrucciones para restablecer tu contraseña.';
+          'Si el correo está registrado, tu contraseña fue actualizada.';
     } on DioException catch (e) {
       throw AuthException(_extractDetail(e));
     }

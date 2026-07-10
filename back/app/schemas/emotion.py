@@ -36,3 +36,9 @@ class EmotionLogOut(BaseModel):
     created_at: datetime
 
     model_config = {"from_attributes": True}
+
+
+class EmotionStreakOut(BaseModel):
+    current_streak: int
+    longest_streak: int
+    logged_today: bool

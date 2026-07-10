@@ -1,13 +1,16 @@
 import 'package:flutter/material.dart';
+import 'package:mind_track/app/theme/mt_colors.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
+import 'package:form_builder_validators/form_builder_validators.dart';
 import 'package:mind_track/app/generated/l10n.dart';
 import 'package:mind_track/app/injector.dart';
 import 'package:mind_track/app/theme/app_colors.dart';
 import 'package:mind_track/features/login/domain/repositories/auth_repository.dart';
 import 'package:mind_track/features/login/presentation/widgets/email_text_field.dart';
+import 'package:mind_track/features/login/presentation/widgets/password_text_field.dart';
 
-/// Página para solicitar el restablecimiento de contraseña: solo pide el
-/// correo de la cuenta y muestra una confirmación genérica.
+/// Página para cambiar la contraseña directamente a partir del correo,
+/// sin envío de correo de verificación.
 class ForgotPasswordPage extends StatefulWidget {
   const ForgotPasswordPage({super.key});
 
@@ -20,17 +23,19 @@ class _ForgotPasswordPageState extends State<ForgotPasswordPage> {
   final GlobalKey<FormBuilderState> _formKey = GlobalKey<FormBuilderState>();
 
   bool _isSending = false;
+  bool _obscureNewPassword = true;
+  bool _obscureConfirmPassword = true;
   String? _successMessage;
 
   @override
   Widget build(BuildContext context) {
     final S translations = S.of(context);
     return Scaffold(
-      backgroundColor: AppColors.background,
+      backgroundColor: Theme.of(context).scaffoldBackgroundColor,
       appBar: AppBar(
         title: Text(translations.forgot_password_title),
         centerTitle: true,
-        backgroundColor: AppColors.background,
+        backgroundColor: Theme.of(context).scaffoldBackgroundColor,
       ),
       body: SafeArea(
         child: SingleChildScrollView(
@@ -67,18 +72,18 @@ class _ForgotPasswordPageState extends State<ForgotPasswordPage> {
           const SizedBox(height: 24),
           Text(
             translations.forgot_password_description,
-            style: const TextStyle(
+            style: TextStyle(
               fontSize: 15,
               height: 1.5,
-              color: AppColors.textSecondary,
+              color: context.mtColors.textSecondary,
             ),
           ),
           const SizedBox(height: 28),
           Text(
             translations.email_address,
-            style: const TextStyle(
+            style: TextStyle(
               fontSize: 15,
-              color: AppColors.textSecondary,
+              color: context.mtColors.textSecondary,
             ),
           ),
           const SizedBox(height: 8),
@@ -86,6 +91,80 @@ class _ForgotPasswordPageState extends State<ForgotPasswordPage> {
             hintText: translations.email_address,
             requiredErrorText: translations.email_required_error,
             invalidErrorText: translations.email_invalid_error,
+          ),
+          const SizedBox(height: 20),
+          Text(
+            translations.new_password,
+            style: TextStyle(
+              fontSize: 15,
+              color: context.mtColors.textSecondary,
+            ),
+          ),
+          const SizedBox(height: 8),
+          PasswordTextField(
+            name: 'new_password',
+            hintText: translations.new_password,
+            obscureText: _obscureNewPassword,
+            onToggleVisibility: () {
+              setState(() => _obscureNewPassword = !_obscureNewPassword);
+            },
+            requiredErrorText: translations.password_required_error,
+            minLengthErrorText: translations.password_min_length_error,
+            uppercaseErrorText: translations.password_uppercase_error,
+            lowercaseErrorText: translations.password_lowercase_error,
+            numberErrorText: translations.password_number_error,
+            specialCharacterErrorText: translations.password_special_char_error,
+          ),
+          const SizedBox(height: 20),
+          Text(
+            translations.confirm_password,
+            style: TextStyle(
+              fontSize: 15,
+              color: context.mtColors.textSecondary,
+            ),
+          ),
+          const SizedBox(height: 8),
+          FormBuilderTextField(
+            name: 'confirm_password',
+            obscureText: _obscureConfirmPassword,
+            textInputAction: TextInputAction.done,
+            onTapOutside: (_) => FocusScope.of(context).unfocus(),
+            validator: FormBuilderValidators.compose(<FormFieldValidator<String>>[
+              FormBuilderValidators.required(
+                errorText: translations.confirm_password_required_error,
+              ),
+              (String? value) {
+                final String newPassword =
+                    _formKey.currentState?.fields['new_password']?.value
+                        as String? ??
+                    '';
+                return value == newPassword
+                    ? null
+                    : translations.confirm_password_mismatch_error;
+              },
+            ]),
+            decoration: InputDecoration(
+              hintText: translations.confirm_password,
+              border: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(12),
+                borderSide: BorderSide.none,
+              ),
+              filled: true,
+              fillColor: context.mtColors.card,
+              prefixIcon: const Icon(Icons.lock_outline),
+              suffixIcon: IconButton(
+                icon: Icon(
+                  _obscureConfirmPassword
+                      ? Icons.visibility_off
+                      : Icons.visibility,
+                ),
+                onPressed: () {
+                  setState(
+                    () => _obscureConfirmPassword = !_obscureConfirmPassword,
+                  );
+                },
+              ),
+            ),
           ),
           const SizedBox(height: 28),
           SizedBox(
@@ -153,10 +232,10 @@ class _ForgotPasswordPageState extends State<ForgotPasswordPage> {
         Text(
           _successMessage!,
           textAlign: TextAlign.center,
-          style: const TextStyle(
+          style: TextStyle(
             fontSize: 15,
             height: 1.5,
-            color: AppColors.textSecondary,
+            color: context.mtColors.textSecondary,
           ),
         ),
         const SizedBox(height: 32),
@@ -185,12 +264,16 @@ class _ForgotPasswordPageState extends State<ForgotPasswordPage> {
     if (_formKey.currentState?.saveAndValidate() != true) {
       return;
     }
-    final String email =
-        (_formKey.currentState?.value['email'] as String? ?? '').trim();
+    final Map<String, dynamic> formData = _formKey.currentState!.value;
+    final String email = (formData['email'] as String? ?? '').trim();
+    final String newPassword = (formData['new_password'] as String? ?? '');
 
     setState(() => _isSending = true);
     try {
-      final String message = await _authRepository.forgotPassword(email: email);
+      final String message = await _authRepository.forgotPassword(
+        email: email,
+        newPassword: newPassword,
+      );
       if (!mounted) {
         return;
       }

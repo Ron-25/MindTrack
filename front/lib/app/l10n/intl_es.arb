@@ -77,14 +77,22 @@
   "@forgot_password": {},
   "forgot_password_title": "Recuperar contraseña",
   "@forgot_password_title": {},
-  "forgot_password_description": "Ingresa el correo de tu cuenta y te enviaremos instrucciones para restablecer tu contraseña.",
+  "forgot_password_description": "Ingresa el correo de tu cuenta y elige una nueva contraseña.",
   "@forgot_password_description": {},
-  "forgot_password_button": "Enviar instrucciones",
+  "forgot_password_button": "Cambiar contraseña",
   "@forgot_password_button": {},
-  "forgot_password_success_title": "Revisa tu correo",
+  "forgot_password_success_title": "Contraseña actualizada",
   "@forgot_password_success_title": {},
   "forgot_password_back_to_login": "Volver a iniciar sesión",
   "@forgot_password_back_to_login": {},
+  "new_password": "Nueva contraseña",
+  "@new_password": {},
+  "confirm_password": "Confirmar contraseña",
+  "@confirm_password": {},
+  "confirm_password_required_error": "Confirma tu contraseña",
+  "@confirm_password_required_error": {},
+  "confirm_password_mismatch_error": "Las contraseñas no coinciden",
+  "@confirm_password_mismatch_error": {},
   "create_account": "Crear cuenta",
   "@create_account": {},
   "begin_your_journey": "Comienza tu viaje",
@@ -159,6 +167,22 @@
   "@home_weekly_overview_title": {},
   "home_weekly_quote": "\"Tu estado de animo mejora durante el fin de semana. Intenta identificar por que!\"",
   "@home_weekly_quote": {},
+  "home_streak_title": "Racha: {count} dia(s)",
+  "@home_streak_title": {
+    "placeholders": {
+      "count": {}
+    }
+  },
+  "home_streak_best": "Mejor racha: {count} dia(s)",
+  "@home_streak_best": {
+    "placeholders": {
+      "count": {}
+    }
+  },
+  "home_streak_keep": "Registra hoy para mantenerla",
+  "@home_streak_keep": {},
+  "home_streak_start": "Registra una emocion hoy para empezar tu racha",
+  "@home_streak_start": {},
   "home_nav_home": "INICIO",
   "@home_nav_home": {},
   "home_nav_history": "HISTORIAL",

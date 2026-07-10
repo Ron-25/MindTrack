@@ -44,6 +44,7 @@ class HomeRemoteDataSourceImpl implements HomeRemoteDataSource {
             queryParameters: <String, dynamic>{'days': 7},
           ),
           _client.dio.get<dynamic>('/api/v1/habits/'),
+          _client.dio.get<dynamic>('/api/v1/emotions/streak'),
         ],
       );
 
@@ -56,6 +57,8 @@ class HomeRemoteDataSourceImpl implements HomeRemoteDataSource {
           responses[3].data as Map<String, dynamic>;
       final List<dynamic> habitsMoodJson = responses[4].data as List<dynamic>;
       final List<dynamic> habitsJson = responses[5].data as List<dynamic>;
+      final Map<String, dynamic> streakJson =
+          responses[6].data as Map<String, dynamic>;
 
       final List<Map<String, dynamic>> habitProgressJson =
           await _loadHabitProgress(habitsJson, weekStart);
@@ -79,6 +82,11 @@ class HomeRemoteDataSourceImpl implements HomeRemoteDataSource {
         ),
         recentEntries: _buildRecentEntries(
           recentEntriesJson.cast<Map<String, dynamic>>(),
+        ),
+        streak: EmotionStreak(
+          currentStreak: (streakJson['current_streak'] as num?)?.toInt() ?? 0,
+          longestStreak: (streakJson['longest_streak'] as num?)?.toInt() ?? 0,
+          loggedToday: streakJson['logged_today'] as bool? ?? false,
         ),
       );
     } on DioException catch (error) {

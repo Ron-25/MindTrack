@@ -7,6 +7,7 @@ class HomeDashboard extends Equatable {
     required this.weeklyOverview,
     required this.habits,
     required this.recentEntries,
+    required this.streak,
   });
 
   final String userName;
@@ -14,6 +15,7 @@ class HomeDashboard extends Equatable {
   final WeeklyOverview weeklyOverview;
   final List<HabitOverview> habits;
   final List<RecentEmotionEntry> recentEntries;
+  final EmotionStreak streak;
 
   @override
   List<Object?> get props => <Object?>[
@@ -22,6 +24,26 @@ class HomeDashboard extends Equatable {
     weeklyOverview,
     habits,
     recentEntries,
+    streak,
+  ];
+}
+
+class EmotionStreak extends Equatable {
+  const EmotionStreak({
+    required this.currentStreak,
+    required this.longestStreak,
+    required this.loggedToday,
+  });
+
+  final int currentStreak;
+  final int longestStreak;
+  final bool loggedToday;
+
+  @override
+  List<Object?> get props => <Object?>[
+    currentStreak,
+    longestStreak,
+    loggedToday,
   ];
 }
 

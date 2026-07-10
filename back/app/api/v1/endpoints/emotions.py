@@ -8,7 +8,7 @@ from sqlalchemy.ext.asyncio import AsyncSession
 from app.core.database import get_db
 from app.dependencies import get_current_user
 from app.models.user import User
-from app.schemas.emotion import EmotionLogCreate, EmotionLogOut, EmotionLogUpdate
+from app.schemas.emotion import EmotionLogCreate, EmotionLogOut, EmotionLogUpdate, EmotionStreakOut
 from app.services.emotion_service import EmotionService
 
 router = APIRouter()
@@ -42,6 +42,15 @@ async def create_emotion(
 ) -> EmotionLogOut:
     service = EmotionService(db)
     return await service.create_log(current_user, body)
+
+
+@router.get("/streak", response_model=EmotionStreakOut, status_code=status.HTTP_200_OK)
+async def get_emotion_streak(
+    current_user: User = Depends(get_current_user),
+    db: AsyncSession = Depends(get_db),
+) -> EmotionStreakOut:
+    service = EmotionService(db)
+    return await service.get_streak(current_user)
 
 
 @router.get("/{log_id}", response_model=EmotionLogOut, status_code=status.HTTP_200_OK)

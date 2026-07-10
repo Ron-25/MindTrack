@@ -77,14 +77,22 @@
   "@forgot_password": {},
   "forgot_password_title": "Reset password",
   "@forgot_password_title": {},
-  "forgot_password_description": "Enter your account email and we will send you instructions to reset your password.",
+  "forgot_password_description": "Enter your account email and choose a new password.",
   "@forgot_password_description": {},
-  "forgot_password_button": "Send instructions",
+  "forgot_password_button": "Change password",
   "@forgot_password_button": {},
-  "forgot_password_success_title": "Check your email",
+  "forgot_password_success_title": "Password updated",
   "@forgot_password_success_title": {},
   "forgot_password_back_to_login": "Back to sign in",
   "@forgot_password_back_to_login": {},
+  "new_password": "New password",
+  "@new_password": {},
+  "confirm_password": "Confirm password",
+  "@confirm_password": {},
+  "confirm_password_required_error": "Please confirm your password",
+  "@confirm_password_required_error": {},
+  "confirm_password_mismatch_error": "Passwords do not match",
+  "@confirm_password_mismatch_error": {},
   "create_account": "Create Account",
   "@create_account": {},
   "begin_your_journey": "Begin Your Journey",
@@ -159,6 +167,22 @@
   "@home_weekly_overview_title": {},
   "home_weekly_quote": "\"Your mood peaks during the weekend.\\nTry to identify why!\"",
   "@home_weekly_quote": {},
+  "home_streak_title": "Streak: {count} day(s)",
+  "@home_streak_title": {
+    "placeholders": {
+      "count": {}
+    }
+  },
+  "home_streak_best": "Best streak: {count} day(s)",
+  "@home_streak_best": {
+    "placeholders": {
+      "count": {}
+    }
+  },
+  "home_streak_keep": "Log today to keep it going",
+  "@home_streak_keep": {},
+  "home_streak_start": "Log an emotion today to start your streak",
+  "@home_streak_start": {},
   "home_nav_home": "HOME",
   "@home_nav_home": {},
   "home_nav_history": "HISTORY",

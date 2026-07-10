@@ -1,4 +1,4 @@
-from datetime import datetime
+from datetime import date, datetime
 from typing import List, Optional
 from uuid import UUID
 
@@ -13,6 +13,19 @@ from app.repositories.base_repository import BaseRepository
 class EmotionRepository(BaseRepository[EmotionLog]):
     def __init__(self, db: AsyncSession):
         super().__init__(EmotionLog, db)
+
+    async def get_distinct_log_dates(self, user_id: UUID, limit: int = 730) -> List[date]:
+        """Fechas (sin hora) en las que el usuario registró emociones, descendente."""
+        day = cast(EmotionLog.logged_at, Date)
+        stmt = (
+            select(day)
+            .where(EmotionLog.user_id == user_id)
+            .group_by(day)
+            .order_by(day.desc())
+            .limit(limit)
+        )
+        result = await self.db.execute(stmt)
+        return [row[0] for row in result.all()]
 
     async def list_with_filters(
         self,

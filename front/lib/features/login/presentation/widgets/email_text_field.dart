@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:mind_track/app/theme/mt_colors.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:form_builder_validators/form_builder_validators.dart';
 
@@ -34,7 +35,7 @@ class EmailTextField extends StatelessWidget {
           borderSide: BorderSide.none,
         ),
         filled: true,
-        fillColor: Colors.white,
+        fillColor: context.mtColors.card,
         prefixIcon: const Icon(Icons.mail_outline),
       ),
     );

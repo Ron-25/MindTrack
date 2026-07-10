@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:mind_track/app/theme/mt_colors.dart';
 import 'package:mind_track/app/constants/assets.dart';
 import 'package:mind_track/app/routes/route_names.dart';
 import 'package:mind_track/shared/widget/app_primary_button.dart';
@@ -121,7 +122,7 @@ class _OnboarningPageState extends State<OnboarningPage> {
                     Container(
                       padding: const EdgeInsets.all(10),
                       decoration: BoxDecoration(
-                        color: Colors.white,
+                        color: context.mtColors.card,
                         borderRadius: BorderRadius.circular(24),
                         boxShadow: <BoxShadow>[
                           BoxShadow(
@@ -164,7 +165,7 @@ class _OnboarningPageState extends State<OnboarningPage> {
                         descriptions[index],
                         textAlign: TextAlign.center,
                         style: AppTextStyles.bodyMedium.copyWith(
-                          color: AppColors.textSecondary,
+                          color: context.mtColors.textSecondary,
                           height: 1.6,
                         ),
                       ),

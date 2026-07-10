@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:mind_track/app/theme/mt_colors.dart';
 import 'package:mind_track/app/injector.dart';
 import 'package:mind_track/app/routes/route_names.dart';
 import 'package:mind_track/core/services/token_storage_service.dart';
@@ -60,7 +61,7 @@ class _SplashPageState extends State<SplashPage> {
             style: AppTextStyles.headlineMedium.copyWith(
               fontSize: 30,
               fontWeight: FontWeight.w700,
-              color: AppColors.textPrimary,
+              color: context.mtColors.textPrimary,
             ),
           ),
 
@@ -74,7 +75,7 @@ class _SplashPageState extends State<SplashPage> {
               style: AppTextStyles.bodyMedium.copyWith(
                 fontSize: 16,
                 height: 1.7,
-                color: AppColors.textSecondary,
+                color: context.mtColors.textSecondary,
               ),
             ),
           ),
@@ -87,7 +88,7 @@ class _SplashPageState extends State<SplashPage> {
               textAlign: TextAlign.center,
               style: AppTextStyles.bodySmall.copyWith(
                 fontSize: 10,
-                color: AppColors.textSecondary,
+                color: context.mtColors.textSecondary,
               ),
             ),
           ),

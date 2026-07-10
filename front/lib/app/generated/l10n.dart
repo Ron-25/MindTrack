@@ -359,30 +359,30 @@ class S {
     );
   }
 
-  /// `Enter your account email and we will send you instructions to reset your password.`
+  /// `Enter your account email and choose a new password.`
   String get forgot_password_description {
     return Intl.message(
-      'Enter your account email and we will send you instructions to reset your password.',
+      'Enter your account email and choose a new password.',
       name: 'forgot_password_description',
       desc: '',
       args: [],
     );
   }
 
-  /// `Send instructions`
+  /// `Change password`
   String get forgot_password_button {
     return Intl.message(
-      'Send instructions',
+      'Change password',
       name: 'forgot_password_button',
       desc: '',
       args: [],
     );
   }
 
-  /// `Check your email`
+  /// `Password updated`
   String get forgot_password_success_title {
     return Intl.message(
-      'Check your email',
+      'Password updated',
       name: 'forgot_password_success_title',
       desc: '',
       args: [],
@@ -394,6 +394,46 @@ class S {
     return Intl.message(
       'Back to sign in',
       name: 'forgot_password_back_to_login',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `New password`
+  String get new_password {
+    return Intl.message(
+      'New password',
+      name: 'new_password',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Confirm password`
+  String get confirm_password {
+    return Intl.message(
+      'Confirm password',
+      name: 'confirm_password',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Please confirm your password`
+  String get confirm_password_required_error {
+    return Intl.message(
+      'Please confirm your password',
+      name: 'confirm_password_required_error',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Passwords do not match`
+  String get confirm_password_mismatch_error {
+    return Intl.message(
+      'Passwords do not match',
+      name: 'confirm_password_mismatch_error',
       desc: '',
       args: [],
     );
@@ -689,6 +729,46 @@ class S {
     return Intl.message(
       '"Your mood peaks during the weekend.\\nTry to identify why!"',
       name: 'home_weekly_quote',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Streak: {count} day(s)`
+  String home_streak_title(Object count) {
+    return Intl.message(
+      'Streak: $count day(s)',
+      name: 'home_streak_title',
+      desc: '',
+      args: [count],
+    );
+  }
+
+  /// `Best streak: {count} day(s)`
+  String home_streak_best(Object count) {
+    return Intl.message(
+      'Best streak: $count day(s)',
+      name: 'home_streak_best',
+      desc: '',
+      args: [count],
+    );
+  }
+
+  /// `Log today to keep it going`
+  String get home_streak_keep {
+    return Intl.message(
+      'Log today to keep it going',
+      name: 'home_streak_keep',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Log an emotion today to start your streak`
+  String get home_streak_start {
+    return Intl.message(
+      'Log an emotion today to start your streak',
+      name: 'home_streak_start',
       desc: '',
       args: [],
     );

@@ -49,15 +49,19 @@ class MessageLookup extends MessageLookupByLibrary {
 
   static String m12(name) => "Good morning, ${name}";
 
-  static String m13(count, energy) =>
+  static String m13(count) => "Best streak: ${count} day(s)";
+
+  static String m14(count) => "Streak: ${count} day(s)";
+
+  static String m15(count, energy) =>
       "You\'ve logged ${Intl.plural(count, one: '1 entry', other: '${count} entries')} today. Your average energy level is ${energy}.";
 
-  static String m14(completed, target) =>
+  static String m16(completed, target) =>
       "You have not marked this habit today yet. You are at ${completed}/${target} this week.";
 
-  static String m15(name) => "Pending: ${name}";
+  static String m17(name) => "Pending: ${name}";
 
-  static String m16(step, total) =>
+  static String m18(step, total) =>
       "Step ${step} of ${total} • Emotional Awareness";
 
   final messages = _notInlinedMessages(_notInlinedMessages);
@@ -173,6 +177,15 @@ class MessageLookup extends MessageLookupByLibrary {
     "coach_stat_intensity": MessageLookupByLibrary.simpleMessage("Intensity"),
     "coach_stat_logs": MessageLookupByLibrary.simpleMessage("Logs"),
     "coach_title": MessageLookupByLibrary.simpleMessage("MindTrack Coach"),
+    "confirm_password": MessageLookupByLibrary.simpleMessage(
+      "Confirm password",
+    ),
+    "confirm_password_mismatch_error": MessageLookupByLibrary.simpleMessage(
+      "Passwords do not match",
+    ),
+    "confirm_password_required_error": MessageLookupByLibrary.simpleMessage(
+      "Please confirm your password",
+    ),
     "continue_with_google": MessageLookupByLibrary.simpleMessage(
       "Continue with Google",
     ),
@@ -196,13 +209,13 @@ class MessageLookup extends MessageLookupByLibrary {
       "Back to sign in",
     ),
     "forgot_password_button": MessageLookupByLibrary.simpleMessage(
-      "Send instructions",
+      "Change password",
     ),
     "forgot_password_description": MessageLookupByLibrary.simpleMessage(
-      "Enter your account email and we will send you instructions to reset your password.",
+      "Enter your account email and choose a new password.",
     ),
     "forgot_password_success_title": MessageLookupByLibrary.simpleMessage(
-      "Check your email",
+      "Password updated",
     ),
     "forgot_password_title": MessageLookupByLibrary.simpleMessage(
       "Reset password",
@@ -319,6 +332,14 @@ class MessageLookup extends MessageLookupByLibrary {
     "home_status_elevated": MessageLookupByLibrary.simpleMessage("ELEVATED"),
     "home_status_gentle": MessageLookupByLibrary.simpleMessage("GENTLE"),
     "home_status_new_day": MessageLookupByLibrary.simpleMessage("NEW DAY"),
+    "home_streak_best": m13,
+    "home_streak_keep": MessageLookupByLibrary.simpleMessage(
+      "Log today to keep it going",
+    ),
+    "home_streak_start": MessageLookupByLibrary.simpleMessage(
+      "Log an emotion today to start your streak",
+    ),
+    "home_streak_title": m14,
     "home_subtitle_default": MessageLookupByLibrary.simpleMessage(
       "How are you feeling right now?",
     ),
@@ -334,7 +355,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "home_today_empty_title": MessageLookupByLibrary.simpleMessage(
       "No entries yet",
     ),
-    "home_today_entries_description": m13,
+    "home_today_entries_description": m15,
     "home_today_mood_title": MessageLookupByLibrary.simpleMessage(
       "Today\'s Mood",
     ),
@@ -358,6 +379,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "login_subtitle": MessageLookupByLibrary.simpleMessage(
       "Log in to continue your journey towards emotional wellness.",
     ),
+    "new_password": MessageLookupByLibrary.simpleMessage("New password"),
     "next": MessageLookupByLibrary.simpleMessage("Next"),
     "notifications_active_description": MessageLookupByLibrary.simpleMessage(
       "Your reminders are enabled from preferences.",
@@ -391,8 +413,8 @@ class MessageLookup extends MessageLookupByLibrary {
     "notifications_mood_missing_title": MessageLookupByLibrary.simpleMessage(
       "You still need to log how you feel today",
     ),
-    "notifications_pending_description": m14,
-    "notifications_pending_title": m15,
+    "notifications_pending_description": m16,
+    "notifications_pending_title": m17,
     "notifications_title": MessageLookupByLibrary.simpleMessage(
       "Notifications",
     ),
@@ -405,7 +427,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "onboarding_desc_3": MessageLookupByLibrary.simpleMessage(
       "Connect your daily routines with your emotional well-being. Start your journey towards a more balanced life.",
     ),
-    "onboarding_step": m16,
+    "onboarding_step": m18,
     "onboarding_title_1": MessageLookupByLibrary.simpleMessage(
       "Track your daily emotions",
     ),

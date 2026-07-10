@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 
 class AppColors {
-
   // Primary calming blue
   static const Color primary = Color(0xFF5FA8D3);
 
@@ -16,6 +15,14 @@ class AppColors {
 
   // Card white
   static const Color card = Color(0xFFFFFFFF);
+
+  // Dark theme surfaces
+  static const Color darkBackground = Color(0xFF0B1220);
+  static const Color darkSurface = Color(0xFF111C2E);
+  static const Color darkCard = Color(0xFF172337);
+  static const Color darkBorder = Color(0xFF29364A);
+  static const Color darkTextPrimary = Color(0xFFE8EEF7);
+  static const Color darkTextSecondary = Color(0xFF9AA9BD);
 
   // Text colors
   static const Color textPrimary = Color(0xFF1E293B);
@@ -32,12 +39,8 @@ class AppColors {
 
   // Splash gradient (very calm)
   static const LinearGradient splashGradient = LinearGradient(
-    colors: <Color>[
-      Color(0xFFEAF6FB),
-      Color(0xFFFFFFFF),
-    ],
+    colors: <Color>[Color(0xFFEAF6FB), Color(0xFFFFFFFF)],
     begin: Alignment.topCenter,
     end: Alignment.bottomCenter,
   );
-
 }

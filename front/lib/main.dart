@@ -10,6 +10,7 @@ import 'package:mind_track/app/routes/app_router.dart';
 import 'package:mind_track/app/routes/route_names.dart';
 import 'package:mind_track/app/theme/app_colors.dart';
 import 'package:mind_track/app/theme/app_theme.dart';
+import 'package:mind_track/app/theme/theme_controller.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:toastification/toastification.dart';
 
@@ -21,6 +22,7 @@ Future<void> main() async {
         ? HydratedStorage.webStorageDirectory
         : await getTemporaryDirectory(),
   );
+  ThemeController.instance.load();
   SystemChrome.setSystemUIOverlayStyle(
     const SystemUiOverlayStyle(
       statusBarColor: Colors.transparent,
@@ -39,17 +41,26 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      navigatorKey: navigatorKey,
-      title: "MindTrack",
-      debugShowCheckedModeBanner: false,
-      theme: AppTheme.lightTheme,
-      localizationsDelegates: AppLocalizationsSetup.localizationsDelegates,
-      supportedLocales: AppLocalizationsSetup.supportedLocales,
-      initialRoute: RouteNames.splash,
-      onGenerateRoute: AppRouter.onGenerateRoute,
-      builder: (BuildContext context, Widget? child) {
-        return ToastificationWrapper(child: child ?? const SizedBox.shrink());
+    return ValueListenableBuilder<ThemeMode>(
+      valueListenable: ThemeController.instance,
+      builder: (BuildContext context, ThemeMode themeMode, Widget? child) {
+        return MaterialApp(
+          navigatorKey: navigatorKey,
+          title: "MindTrack",
+          debugShowCheckedModeBanner: false,
+          theme: AppTheme.lightTheme,
+          darkTheme: AppTheme.darkTheme,
+          themeMode: themeMode,
+          localizationsDelegates: AppLocalizationsSetup.localizationsDelegates,
+          supportedLocales: AppLocalizationsSetup.supportedLocales,
+          initialRoute: RouteNames.splash,
+          onGenerateRoute: AppRouter.onGenerateRoute,
+          builder: (BuildContext context, Widget? child) {
+            return ToastificationWrapper(
+              child: child ?? const SizedBox.shrink(),
+            );
+          },
+        );
       },
     );
   }

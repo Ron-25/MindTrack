@@ -4,6 +4,7 @@ import 'package:mind_track/features/coach/presentation/pages/coach_page.dart';
 import 'package:mind_track/features/daily_mood/presentation/pages/daily_mood_page.dart';
 import 'package:mind_track/features/emotion_tracker/presentation/pages/add_emotion_page.dart';
 import 'package:mind_track/features/emotion_tracker/presentation/pages/emotion_detail_page.dart';
+import 'package:mind_track/features/login/presentation/pages/forgot_password_page.dart';
 import 'package:mind_track/features/login/presentation/pages/sign_in_page.dart';
 import 'package:mind_track/features/login/presentation/pages/sign_up_page.dart';
 import 'package:mind_track/features/notifications/presentation/pages/notifications_page.dart';
@@ -23,6 +24,8 @@ class AppRouter {
         return _slide(const OnboarningPage());
       case RouteNames.signIn:
         return _slide(const SignInPage());
+      case RouteNames.forgotPassword:
+        return _slide(const ForgotPasswordPage());
       case RouteNames.signUp:
         return _slide(const SignUp());
       case RouteNames.home:

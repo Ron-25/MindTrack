@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:mind_track/app/generated/l10n.dart';
+import 'package:mind_track/app/theme/mt_colors.dart';
 import 'package:mind_track/app/injector.dart';
 import 'package:mind_track/app/routes/route_names.dart';
 import 'package:mind_track/shared/widget/mindtrack_app_bar.dart';
@@ -105,31 +106,31 @@ class _SearchPageState extends State<SearchPage> {
         .toList(growable: false);
 
     return Scaffold(
-      backgroundColor: const Color(0xFFF8FAFC),
+      backgroundColor: Theme.of(context).scaffoldBackgroundColor,
       appBar: MindTrackAppBar(title: S.of(context).search_title),
       body: SafeArea(
         child: RefreshIndicator(
           onRefresh: _loadData,
           child: ListView(
-            physics: const AlwaysScrollableScrollPhysics(),
-            padding: const EdgeInsets.fromLTRB(16, 16, 16, 24),
+            physics: AlwaysScrollableScrollPhysics(),
+            padding: EdgeInsets.fromLTRB(16, 16, 16, 24),
             children: <Widget>[
               TextField(
                 controller: _controller,
                 decoration: InputDecoration(
                   hintText: S.of(context).search_hint,
-                  prefixIcon: const Icon(Icons.search_rounded),
+                  prefixIcon: Icon(Icons.search_rounded),
                   filled: true,
-                  fillColor: Colors.white,
+                  fillColor: context.mtColors.card,
                   border: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(18),
                     borderSide: BorderSide.none,
                   ),
                 ),
               ),
-              const SizedBox(height: 18),
+              SizedBox(height: 18),
               if (_isLoading)
-                const Padding(
+                Padding(
                   padding: EdgeInsets.only(top: 80),
                   child: Center(child: CircularProgressIndicator()),
                 )
@@ -141,7 +142,7 @@ class _SearchPageState extends State<SearchPage> {
                   child: filteredHabits.isEmpty
                       ? Text(
                           S.of(context).search_habits_empty,
-                          style: const TextStyle(color: Color(0xFF64748B)),
+                          style: TextStyle(color: context.mtColors.textSecondary),
                         )
                       : Column(
                           children: filteredHabits
@@ -159,7 +160,7 @@ class _SearchPageState extends State<SearchPage> {
                                           true
                                       ? Text(habit.description!)
                                       : null,
-                                  trailing: const Icon(
+                                  trailing: Icon(
                                     Icons.chevron_right_rounded,
                                   ),
                                   onTap: () {
@@ -172,20 +173,20 @@ class _SearchPageState extends State<SearchPage> {
                               .toList(growable: false),
                         ),
                 ),
-                const SizedBox(height: 16),
+                SizedBox(height: 16),
                 _Section(
                   title: S.of(context).search_emotions_title,
                   child: filteredEntries.isEmpty
                       ? Text(
                           S.of(context).search_emotions_empty,
-                          style: const TextStyle(color: Color(0xFF64748B)),
+                          style: TextStyle(color: context.mtColors.textSecondary),
                         )
                       : Column(
                           children: filteredEntries
                               .map((EmotionEntry entry) {
                                 return ListTile(
                                   contentPadding: EdgeInsets.zero,
-                                  leading: const Icon(Icons.mood_rounded),
+                                  leading: Icon(Icons.mood_rounded),
                                   title: Text(entry.localizedName('es')),
                                   subtitle: Text(
                                     (entry.note?.trim().isNotEmpty == true
@@ -195,7 +196,7 @@ class _SearchPageState extends State<SearchPage> {
                                     maxLines: 1,
                                     overflow: TextOverflow.ellipsis,
                                   ),
-                                  trailing: const Icon(
+                                  trailing: Icon(
                                     Icons.chevron_right_rounded,
                                   ),
                                   onTap: () {
@@ -227,24 +228,24 @@ class _Section extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding: const EdgeInsets.all(18),
+      padding: EdgeInsets.all(18),
       decoration: BoxDecoration(
-        color: Colors.white,
+        color: context.mtColors.card,
         borderRadius: BorderRadius.circular(24),
-        border: Border.all(color: const Color(0xFFE2E8F0)),
+        border: Border.all(color: context.mtColors.border),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: <Widget>[
           Text(
             title,
-            style: const TextStyle(
+            style: TextStyle(
               fontSize: 18,
               fontWeight: FontWeight.w800,
-              color: Color(0xFF0F172A),
+              color: context.mtColors.textPrimary,
             ),
           ),
-          const SizedBox(height: 12),
+          SizedBox(height: 12),
           child,
         ],
       ),
@@ -261,13 +262,13 @@ class _ErrorState extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.only(top: 60),
+      padding: EdgeInsets.only(top: 60),
       child: Center(
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: <Widget>[
             Text(message, textAlign: TextAlign.center),
-            const SizedBox(height: 16),
+            SizedBox(height: 16),
             FilledButton(
               onPressed: onRetry,
               child: Text(S.of(context).home_retry),

@@ -84,3 +84,16 @@ class AuthService:
             access_token=create_access_token(str(user.id)),
             refresh_token=new_raw_refresh,
         )
+
+    async def forgot_password(self, email: str) -> None:
+        """Solicitud de restablecimiento de contraseña.
+
+        Siempre termina sin error, exista o no el correo, para no revelar
+        qué cuentas están registradas.
+        """
+        user = await self.user_repo.get_by_email(email)
+        if user is None or not user.is_active:
+            return
+        # TODO: generar un token de restablecimiento y enviarlo por correo
+        # cuando haya un servicio de email configurado (SMTP/SendGrid).
+        return

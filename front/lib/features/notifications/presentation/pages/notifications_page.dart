@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:mind_track/app/generated/l10n.dart';
+import 'package:mind_track/app/theme/mt_colors.dart';
 import 'package:mind_track/app/injector.dart';
 import 'package:mind_track/shared/widget/mindtrack_app_bar.dart';
 import 'package:mind_track/features/emotion_tracker/domain/entities/emotion_entry.dart';
@@ -84,17 +85,17 @@ class _NotificationsPageState extends State<NotificationsPage> {
         .toList(growable: false);
 
     return Scaffold(
-      backgroundColor: const Color(0xFFF8FAFC),
+      backgroundColor: Theme.of(context).scaffoldBackgroundColor,
       appBar: MindTrackAppBar(title: S.of(context).notifications_title),
       body: SafeArea(
         child: RefreshIndicator(
           onRefresh: _loadData,
           child: ListView(
-            physics: const AlwaysScrollableScrollPhysics(),
-            padding: const EdgeInsets.fromLTRB(16, 16, 16, 24),
+            physics: AlwaysScrollableScrollPhysics(),
+            padding: EdgeInsets.fromLTRB(16, 16, 16, 24),
             children: <Widget>[
               if (_isLoading)
-                const Padding(
+                Padding(
                   padding: EdgeInsets.only(top: 80),
                   child: Center(child: CircularProgressIndicator()),
                 )
@@ -112,10 +113,10 @@ class _NotificationsPageState extends State<NotificationsPage> {
                       ? S.of(context).notifications_active_description
                       : S.of(context).notifications_inactive_description,
                   tone: _profile?.notificationsEnabled == true
-                      ? const Color(0xFF0F766E)
-                      : const Color(0xFFD97706),
+                      ? Color(0xFF0F766E)
+                      : Color(0xFFD97706),
                 ),
-                const SizedBox(height: 14),
+                SizedBox(height: 14),
                 _NotificationCard(
                   icon: hasTodayEmotion
                       ? Icons.check_circle_outline_rounded
@@ -127,10 +128,10 @@ class _NotificationsPageState extends State<NotificationsPage> {
                       ? S.of(context).notifications_mood_logged_description
                       : S.of(context).notifications_mood_missing_description,
                   tone: hasTodayEmotion
-                      ? const Color(0xFF166534)
-                      : const Color(0xFF1D4ED8),
+                      ? Color(0xFF166534)
+                      : Color(0xFF1D4ED8),
                 ),
-                const SizedBox(height: 14),
+                SizedBox(height: 14),
                 if (pendingHabits.isEmpty)
                   _NotificationCard(
                     icon: Icons.checklist_rtl_rounded,
@@ -138,12 +139,12 @@ class _NotificationsPageState extends State<NotificationsPage> {
                     description: S
                         .of(context)
                         .notifications_habits_clear_description,
-                    tone: const Color(0xFF166534),
+                    tone: Color(0xFF166534),
                   )
                 else
                   ...pendingHabits.map((HabitTracker habit) {
                     return Padding(
-                      padding: const EdgeInsets.only(bottom: 14),
+                      padding: EdgeInsets.only(bottom: 14),
                       child: _NotificationCard(
                         icon: Icons.alarm_rounded,
                         title: S
@@ -155,7 +156,7 @@ class _NotificationsPageState extends State<NotificationsPage> {
                               habit.completedDays,
                               habit.targetDaysWeek,
                             ),
-                        tone: const Color(0xFF7C3AED),
+                        tone: Color(0xFF7C3AED),
                       ),
                     );
                   }),
@@ -184,11 +185,11 @@ class _NotificationCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding: const EdgeInsets.all(18),
+      padding: EdgeInsets.all(18),
       decoration: BoxDecoration(
-        color: Colors.white,
+        color: context.mtColors.card,
         borderRadius: BorderRadius.circular(24),
-        border: Border.all(color: const Color(0xFFE2E8F0)),
+        border: Border.all(color: context.mtColors.border),
       ),
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -202,25 +203,25 @@ class _NotificationCard extends StatelessWidget {
             ),
             child: Icon(icon, color: tone),
           ),
-          const SizedBox(width: 14),
+          SizedBox(width: 14),
           Expanded(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: <Widget>[
                 Text(
                   title,
-                  style: const TextStyle(
+                  style: TextStyle(
                     fontSize: 16,
                     fontWeight: FontWeight.w800,
-                    color: Color(0xFF0F172A),
+                    color: context.mtColors.textPrimary,
                   ),
                 ),
-                const SizedBox(height: 6),
+                SizedBox(height: 6),
                 Text(
                   description,
-                  style: const TextStyle(
+                  style: TextStyle(
                     height: 1.45,
-                    color: Color(0xFF64748B),
+                    color: context.mtColors.textSecondary,
                   ),
                 ),
               ],
@@ -241,13 +242,13 @@ class _ErrorState extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.only(top: 60),
+      padding: EdgeInsets.only(top: 60),
       child: Center(
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: <Widget>[
             Text(message, textAlign: TextAlign.center),
-            const SizedBox(height: 16),
+            SizedBox(height: 16),
             FilledButton(
               onPressed: onRetry,
               child: Text(S.of(context).home_retry),

@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/intl.dart' hide TextDirection;
 import 'package:mind_track/app/generated/l10n.dart';
+import 'package:mind_track/app/theme/mt_colors.dart';
 import 'package:mind_track/app/injector.dart';
 import 'package:mind_track/app/routes/route_names.dart';
 import 'package:mind_track/app/theme/app_colors.dart';
@@ -20,13 +21,13 @@ class AnalyticsPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return BlocProvider<AnalyticsCubit>(
       create: (_) => Injector.get<AnalyticsCubit>()..loadSnapshot(),
-      child: const _AnalyticsView(),
+      child: _AnalyticsView(),
     );
   }
 }
 
 class _AnalyticsView extends StatefulWidget {
-  const _AnalyticsView();
+  _AnalyticsView();
 
   @override
   State<_AnalyticsView> createState() => _AnalyticsViewState();
@@ -39,13 +40,13 @@ class _AnalyticsViewState extends State<_AnalyticsView> {
   Widget build(BuildContext context) {
     final S translations = S.of(context);
     return Scaffold(
-      backgroundColor: const Color(0xFFF6F7F8),
+      backgroundColor: Theme.of(context).scaffoldBackgroundColor,
       appBar: MindTrackAppBar(title: translations.analytics_title),
       body: SafeArea(
         child: BlocBuilder<AnalyticsCubit, AnalyticsState>(
           builder: (BuildContext context, AnalyticsState state) {
             if (state.isLoading && state.snapshot == null) {
-              return const Center(child: CircularProgressIndicator());
+              return Center(child: CircularProgressIndicator());
             }
             if (state.errorMessage != null && state.snapshot == null) {
               return _ErrorState(
@@ -59,23 +60,23 @@ class _AnalyticsViewState extends State<_AnalyticsView> {
               color: AppColors.primary,
               onRefresh: context.read<AnalyticsCubit>().loadSnapshot,
               child: ListView(
-                physics: const AlwaysScrollableScrollPhysics(),
-                padding: const EdgeInsets.fromLTRB(16, 24, 16, 32),
+                physics: AlwaysScrollableScrollPhysics(),
+                padding: EdgeInsets.fromLTRB(16, 24, 16, 32),
                 children: <Widget>[
                   _buildRangeSelector(translations),
-                  const SizedBox(height: 32),
+                  SizedBox(height: 32),
                   _TrendsSection(
                     summary: snapshot.weeklySummary,
                     points: snapshot.correlation,
                   ),
-                  const SizedBox(height: 32),
+                  SizedBox(height: 32),
                   _DistributionSection(frequency: snapshot.frequency),
-                  const SizedBox(height: 32),
+                  SizedBox(height: 32),
                   _PatternsSection(
                     summary: snapshot.weeklySummary,
                     points: snapshot.correlation,
                   ),
-                  const SizedBox(height: 32),
+                  SizedBox(height: 32),
                   _InsightCard(summary: snapshot.weeklySummary),
                 ],
               ),
@@ -93,7 +94,7 @@ class _AnalyticsViewState extends State<_AnalyticsView> {
       translations.analytics_range_year,
     ];
     return Container(
-      padding: const EdgeInsets.all(4),
+      padding: EdgeInsets.all(4),
       decoration: BoxDecoration(
         color: AppColors.primary.withValues(alpha: 0.05),
         borderRadius: BorderRadius.circular(24),
@@ -105,13 +106,13 @@ class _AnalyticsViewState extends State<_AnalyticsView> {
             child: GestureDetector(
               onTap: () => setState(() => _selectedRange = index),
               child: AnimatedContainer(
-                duration: const Duration(milliseconds: 200),
-                padding: const EdgeInsets.symmetric(vertical: 8),
+                duration: Duration(milliseconds: 200),
+                padding: EdgeInsets.symmetric(vertical: 8),
                 decoration: BoxDecoration(
                   color: isSelected ? Colors.white : Colors.transparent,
                   borderRadius: BorderRadius.circular(16),
                   boxShadow: isSelected
-                      ? const <BoxShadow>[
+                      ? <BoxShadow>[
                           BoxShadow(
                             color: Color(0x0D000000),
                             blurRadius: 1,
@@ -128,7 +129,7 @@ class _AnalyticsViewState extends State<_AnalyticsView> {
                     fontWeight: isSelected ? FontWeight.w700 : FontWeight.w500,
                     color: isSelected
                         ? AppColors.primary
-                        : const Color(0xFF64748B),
+                        : context.mtColors.textSecondary,
                   ),
                 ),
               ),
@@ -163,22 +164,22 @@ class _TrendsSection extends StatelessWidget {
             Expanded(
               child: Text(
                 translations.analytics_trends_title,
-                style: const TextStyle(
+                style: TextStyle(
                   fontSize: 18,
                   fontWeight: FontWeight.w700,
-                  color: Color(0xFF0F172A),
+                  color: context.mtColors.textPrimary,
                 ),
               ),
             ),
             Container(
-              padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+              padding: EdgeInsets.symmetric(horizontal: 8, vertical: 4),
               decoration: BoxDecoration(
-                color: const Color(0xFFD1FAE5),
+                color: Color(0xFFD1FAE5),
                 borderRadius: BorderRadius.circular(999),
               ),
               child: Text(
                 translations.analytics_records_count(summary.totalLogs),
-                style: const TextStyle(
+                style: TextStyle(
                   fontSize: 12,
                   fontWeight: FontWeight.w600,
                   color: Color(0xFF059669),
@@ -187,41 +188,41 @@ class _TrendsSection extends StatelessWidget {
             ),
           ],
         ),
-        const SizedBox(height: 16),
+        SizedBox(height: 16),
         _FigmaCard(
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: <Widget>[
               Text(
                 translations.analytics_mood_flow_label,
-                style: const TextStyle(
+                style: TextStyle(
                   fontSize: 14,
-                  color: Color(0xFF64748B),
+                  color: context.mtColors.textSecondary,
                 ),
               ),
-              const SizedBox(height: 8),
+              SizedBox(height: 8),
               Text(
                 summary.dominantEmotionName ??
                     translations.analytics_no_dominant_emotion,
-                style: const TextStyle(
+                style: TextStyle(
                   fontSize: 30,
                   height: 1.2,
                   fontWeight: FontWeight.w700,
-                  color: Color(0xFF0F172A),
+                  color: context.mtColors.textPrimary,
                 ),
               ),
-              const SizedBox(height: 6),
+              SizedBox(height: 6),
               Text(
                 isFallback
                     ? translations.analytics_mood_flow_fallback_caption
                     : translations.analytics_mood_flow_caption,
-                style: const TextStyle(
+                style: TextStyle(
                   fontSize: 12,
                   height: 1.35,
-                  color: Color(0xFF94A3B8),
+                  color: context.mtColors.textMuted,
                 ),
               ),
-              const SizedBox(height: 24),
+              SizedBox(height: 24),
               if (series == null)
                 SizedBox(
                   height: 152,
@@ -230,7 +231,7 @@ class _TrendsSection extends StatelessWidget {
                     child: Text(
                       translations.analytics_correlation_empty,
                       textAlign: TextAlign.center,
-                      style: const TextStyle(color: Color(0xFF64748B)),
+                      style: TextStyle(color: context.mtColors.textSecondary),
                     ),
                   ),
                 )
@@ -246,9 +247,9 @@ class _TrendsSection extends StatelessWidget {
                     ),
                   ),
                 ),
-                const SizedBox(height: 12),
+                SizedBox(height: 12),
                 Padding(
-                  padding: const EdgeInsets.only(
+                  padding: EdgeInsets.only(
                     left: _MoodLinePainter.axisWidth,
                     right: 4,
                   ),
@@ -266,7 +267,7 @@ class _TrendsSection extends StatelessWidget {
                           fontWeight: FontWeight.w700,
                           color: isToday
                               ? AppColors.primary
-                              : const Color(0xFF94A3B8),
+                              : context.mtColors.textMuted,
                         ),
                       );
                     }).toList(growable: false),
@@ -344,26 +345,26 @@ class _DistributionSection extends StatelessWidget {
       children: <Widget>[
         Text(
           translations.analytics_distribution_title,
-          style: const TextStyle(
+          style: TextStyle(
             fontSize: 18,
             fontWeight: FontWeight.w700,
-            color: Color(0xFF0F172A),
+            color: context.mtColors.textPrimary,
           ),
         ),
-        const SizedBox(height: 16),
+        SizedBox(height: 16),
         _FigmaCard(
           child: frequency.isEmpty
               ? Text(
                   translations.analytics_frequency_empty,
-                  style: const TextStyle(color: Color(0xFF64748B)),
+                  style: TextStyle(color: context.mtColors.textSecondary),
                 )
-              : _buildDistribution(),
+              : _buildDistribution(context),
         ),
       ],
     );
   }
 
-  Widget _buildDistribution() {
+  Widget _buildDistribution(BuildContext context) {
     final List<EmotionFrequencyItem> items = frequency.take(5).toList();
     final List<Color> colors = List<Color>.generate(items.length, (int index) {
       return _colorFromHex(
@@ -398,20 +399,20 @@ class _DistributionSection extends StatelessWidget {
                   children: <Widget>[
                     Text(
                       '${top.percentage.round()}%',
-                      style: const TextStyle(
+                      style: TextStyle(
                         fontSize: 20,
                         fontWeight: FontWeight.w700,
-                        color: Color(0xFF0F172A),
+                        color: context.mtColors.textPrimary,
                       ),
                     ),
                     Text(
                       top.name,
                       maxLines: 1,
                       overflow: TextOverflow.ellipsis,
-                      style: const TextStyle(
+                      style: TextStyle(
                         fontSize: 10,
                         fontWeight: FontWeight.w500,
-                        color: Color(0xFF94A3B8),
+                        color: context.mtColors.textMuted,
                       ),
                     ),
                   ],
@@ -420,7 +421,7 @@ class _DistributionSection extends StatelessWidget {
             ],
           ),
         ),
-        const SizedBox(width: 32),
+        SizedBox(width: 32),
         Expanded(
           child: Column(
             children: List<Widget>.generate(items.length, (int index) {
@@ -439,25 +440,25 @@ class _DistributionSection extends StatelessWidget {
                         shape: BoxShape.circle,
                       ),
                     ),
-                    const SizedBox(width: 8),
+                    SizedBox(width: 8),
                     Expanded(
                       child: Text(
                         item.name,
                         maxLines: 1,
                         overflow: TextOverflow.ellipsis,
-                        style: const TextStyle(
+                        style: TextStyle(
                           fontSize: 14,
                           fontWeight: FontWeight.w500,
-                          color: Color(0xFF0F172A),
+                          color: context.mtColors.textPrimary,
                         ),
                       ),
                     ),
                     Text(
                       '${item.percentage.round()}%',
-                      style: const TextStyle(
+                      style: TextStyle(
                         fontSize: 14,
                         fontWeight: FontWeight.w700,
-                        color: Color(0xFF0F172A),
+                        color: context.mtColors.textPrimary,
                       ),
                     ),
                   ],
@@ -497,13 +498,13 @@ class _PatternsSection extends StatelessWidget {
       children: <Widget>[
         Text(
           translations.analytics_patterns_title,
-          style: const TextStyle(
+          style: TextStyle(
             fontSize: 18,
             fontWeight: FontWeight.w700,
-            color: Color(0xFF0F172A),
+            color: context.mtColors.textPrimary,
           ),
         ),
-        const SizedBox(height: 16),
+        SizedBox(height: 16),
         SizedBox(
           height: 130,
           child: Row(
@@ -518,13 +519,13 @@ class _PatternsSection extends StatelessWidget {
                   value: _topDayText(context, translations),
                 ),
               ),
-              const SizedBox(width: 16),
+              SizedBox(width: 16),
               Expanded(
                 child: _PatternCard(
-                  backgroundColor: const Color(0xFFFEF3C7),
-                  borderColor: const Color(0x80FDE68A),
+                  backgroundColor: Color(0xFFFEF3C7),
+                  borderColor: Color(0x80FDE68A),
                   icon: Icons.nightlight_round,
-                  iconColor: const Color(0xFFD97706),
+                  iconColor: Color(0xFFD97706),
                   label: translations.analytics_habits_card_label,
                   value: summary.habitsCompletionPct != null
                       ? translations.analytics_habits_card_value(
@@ -593,7 +594,7 @@ class _PatternCard extends StatelessWidget {
         onTap: onTap,
         borderRadius: BorderRadius.circular(24),
         child: Container(
-          padding: const EdgeInsets.all(16),
+          padding: EdgeInsets.all(16),
           decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(24),
             border: Border.all(color: borderColor),
@@ -602,27 +603,27 @@ class _PatternCard extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: <Widget>[
               Icon(icon, size: 22, color: iconColor),
-              const SizedBox(height: 10),
+              SizedBox(height: 10),
               Text(
                 label.toUpperCase(),
-                style: const TextStyle(
+                style: TextStyle(
                   fontSize: 12,
                   fontWeight: FontWeight.w500,
                   letterSpacing: 0.6,
-                  color: Color(0xFF64748B),
+                  color: context.mtColors.textSecondary,
                 ),
               ),
-              const SizedBox(height: 2),
+              SizedBox(height: 2),
               Expanded(
                 child: Text(
                   value,
                   maxLines: 2,
                   overflow: TextOverflow.ellipsis,
-                  style: const TextStyle(
+                  style: TextStyle(
                     fontSize: 16,
                     height: 1.5,
                     fontWeight: FontWeight.w700,
-                    color: Color(0xFF0F172A),
+                    color: context.mtColors.textPrimary,
                   ),
                 ),
               ),
@@ -646,9 +647,9 @@ class _InsightCard extends StatelessWidget {
         ? summary.insightText!
         : translations.analytics_default_insight;
     return Container(
-      padding: const EdgeInsets.all(24),
+      padding: EdgeInsets.all(24),
       decoration: BoxDecoration(
-        color: const Color(0xFF0F172A),
+        color: context.mtColors.textPrimary,
         borderRadius: BorderRadius.circular(16),
       ),
       child: Column(
@@ -663,16 +664,16 @@ class _InsightCard extends StatelessWidget {
                   color: AppColors.primary,
                   borderRadius: BorderRadius.circular(12),
                 ),
-                child: const Icon(
+                child: Icon(
                   Icons.lightbulb_outline_rounded,
                   size: 20,
                   color: Colors.white,
                 ),
               ),
-              const SizedBox(width: 12),
+              SizedBox(width: 12),
               Text(
                 translations.analytics_insight_title,
-                style: const TextStyle(
+                style: TextStyle(
                   fontSize: 18,
                   fontWeight: FontWeight.w700,
                   color: Colors.white,
@@ -680,34 +681,34 @@ class _InsightCard extends StatelessWidget {
               ),
             ],
           ),
-          const SizedBox(height: 12),
+          SizedBox(height: 12),
           Text(
             insight,
-            style: const TextStyle(
+            style: TextStyle(
               fontSize: 14,
               height: 1.625,
-              color: Color(0xFFCBD5E1),
+              color: context.mtColors.controlBorder,
             ),
           ),
-          const SizedBox(height: 8),
+          SizedBox(height: 8),
           InkWell(
             onTap: () => Navigator.of(context).pushNamed(RouteNames.coach),
             borderRadius: BorderRadius.circular(8),
             child: Padding(
-              padding: const EdgeInsets.symmetric(vertical: 4),
+              padding: EdgeInsets.symmetric(vertical: 4),
               child: Row(
                 mainAxisSize: MainAxisSize.min,
                 children: <Widget>[
                   Text(
                     translations.analytics_read_more,
-                    style: const TextStyle(
+                    style: TextStyle(
                       fontSize: 14,
                       fontWeight: FontWeight.w700,
                       color: AppColors.primary,
                     ),
                   ),
-                  const SizedBox(width: 4),
-                  const Icon(
+                  SizedBox(width: 4),
+                  Icon(
                     Icons.arrow_forward_rounded,
                     size: 14,
                     color: AppColors.primary,
@@ -731,12 +732,12 @@ class _FigmaCard extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       width: double.infinity,
-      padding: const EdgeInsets.all(24),
+      padding: EdgeInsets.all(24),
       decoration: BoxDecoration(
-        color: Colors.white,
+        color: context.mtColors.card,
         borderRadius: BorderRadius.circular(24),
         border: Border.all(color: AppColors.primary.withValues(alpha: 0.05)),
-        boxShadow: const <BoxShadow>[
+        boxShadow: <BoxShadow>[
           BoxShadow(
             color: Color(0x0D000000),
             blurRadius: 1,
@@ -1000,12 +1001,12 @@ class _ErrorState extends StatelessWidget {
   Widget build(BuildContext context) {
     return Center(
       child: Padding(
-        padding: const EdgeInsets.all(24),
+        padding: EdgeInsets.all(24),
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: <Widget>[
             Text(message, textAlign: TextAlign.center),
-            const SizedBox(height: 16),
+            SizedBox(height: 16),
             FilledButton(
               onPressed: onRetry,
               child: Text(S.of(context).home_retry),

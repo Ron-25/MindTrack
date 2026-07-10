@@ -15,6 +15,7 @@ class MindTrackBottomNav extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final S translations = S.of(context);
+    final ColorScheme colors = Theme.of(context).colorScheme;
     final List<_NavItem> items = <_NavItem>[
       _NavItem(label: translations.home_nav_home, icon: Icons.home_outlined),
       _NavItem(
@@ -38,12 +39,12 @@ class MindTrackBottomNav extends StatelessWidget {
     return SafeArea(
       top: false,
       child: Container(
-        decoration: const BoxDecoration(
-          color: Colors.white,
-          border: Border(top: BorderSide(color: Color(0xFFE2E8F0))),
-          boxShadow: <BoxShadow>[
+        decoration: BoxDecoration(
+          color: colors.surface,
+          border: Border(top: BorderSide(color: colors.outlineVariant)),
+          boxShadow: const <BoxShadow>[
             BoxShadow(
-              color: Color(0x1A000000),
+              color: Color(0x26000000),
               blurRadius: 20,
               offset: Offset(0, -6),
             ),
@@ -55,7 +56,7 @@ class MindTrackBottomNav extends StatelessWidget {
             final bool isSelected = currentIndex == index;
             final Color color = isSelected
                 ? AppColors.primary
-                : const Color(0xFF94A3B8);
+                : colors.onSurfaceVariant;
             return Expanded(
               child: InkWell(
                 onTap: () => onTap(index),

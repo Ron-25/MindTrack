@@ -14,6 +14,8 @@ abstract class AuthRemoteDataSource {
     required String email,
     required String password,
   });
+
+  Future<String> forgotPassword({required String email});
 }
 
 class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
@@ -49,6 +51,21 @@ class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
         data: <String, String>{'name': name, 'email': email, 'password': password},
       );
       return AuthTokenModel.fromJson(response.data as Map<String, dynamic>);
+    } on DioException catch (e) {
+      throw AuthException(_extractDetail(e));
+    }
+  }
+
+  @override
+  Future<String> forgotPassword({required String email}) async {
+    try {
+      final Response<dynamic> response = await _client.dio.post<dynamic>(
+        '/api/v1/auth/forgot-password',
+        data: <String, String>{'email': email},
+      );
+      final Map<String, dynamic> json = response.data as Map<String, dynamic>;
+      return json['message'] as String? ??
+          'Si el correo está registrado, recibirás instrucciones para restablecer tu contraseña.';
     } on DioException catch (e) {
       throw AuthException(_extractDetail(e));
     }

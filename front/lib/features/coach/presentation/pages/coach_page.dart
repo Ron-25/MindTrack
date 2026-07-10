@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:mind_track/app/generated/l10n.dart';
+import 'package:mind_track/app/theme/mt_colors.dart';
 import 'package:mind_track/app/injector.dart';
 import 'package:mind_track/app/theme/app_colors.dart';
 import 'package:mind_track/shared/widget/mindtrack_app_bar.dart';
@@ -57,19 +58,19 @@ class _CoachPageState extends State<CoachPage> {
     final CoachResponse? response = _response;
 
     return Scaffold(
-      backgroundColor: const Color(0xFFF8FAFC),
+      backgroundColor: Theme.of(context).scaffoldBackgroundColor,
       appBar: MindTrackAppBar(title: S.of(context).coach_title),
       body: SafeArea(
         child: RefreshIndicator(
           onRefresh: _loadData,
           child: ListView(
-            physics: const AlwaysScrollableScrollPhysics(),
-            padding: const EdgeInsets.fromLTRB(16, 16, 16, 24),
+            physics: AlwaysScrollableScrollPhysics(),
+            padding: EdgeInsets.fromLTRB(16, 16, 16, 24),
             children: <Widget>[
               Container(
-                padding: const EdgeInsets.all(22),
+                padding: EdgeInsets.all(22),
                 decoration: BoxDecoration(
-                  gradient: const LinearGradient(
+                  gradient: LinearGradient(
                     colors: <Color>[Color(0xFF5FA9D3), Color(0xFF16324F)],
                     begin: Alignment.topLeft,
                     end: Alignment.bottomRight,
@@ -81,16 +82,16 @@ class _CoachPageState extends State<CoachPage> {
                   children: <Widget>[
                     Text(
                       response?.heroLabel ?? S.of(context).coach_hero_label,
-                      style: const TextStyle(
+                      style: TextStyle(
                         color: Colors.white70,
                         fontWeight: FontWeight.w700,
                       ),
                     ),
-                    const SizedBox(height: 10),
+                    SizedBox(height: 10),
                     Text(
                       response?.heroDescription ??
                           S.of(context).coach_hero_description,
-                      style: const TextStyle(
+                      style: TextStyle(
                         color: Colors.white,
                         fontSize: 24,
                         fontWeight: FontWeight.w800,
@@ -100,20 +101,20 @@ class _CoachPageState extends State<CoachPage> {
                   ],
                 ),
               ),
-              const SizedBox(height: 18),
+              SizedBox(height: 18),
               if (_isLoading)
-                const Padding(
+                Padding(
                   padding: EdgeInsets.only(top: 80),
                   child: Center(child: CircularProgressIndicator()),
                 )
               else if (_errorMessage != null)
                 _ErrorState(message: _errorMessage!, onRetry: _loadData)
               else ...<Widget>[
-                ...(response?.insights ?? const <CoachInsight>[]).map((
+                ...(response?.insights ?? <CoachInsight>[]).map((
                   CoachInsight insight,
                 ) {
                   return Padding(
-                    padding: const EdgeInsets.only(bottom: 14),
+                    padding: EdgeInsets.only(bottom: 14),
                     child: _InsightCard(
                       text: insight.message,
                       priority: insight.priority,
@@ -144,17 +145,17 @@ class _InsightCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final Color tone = switch (priority) {
-      'high' => const Color(0xFFDC2626),
-      'medium' => const Color(0xFFD97706),
+      'high' => Color(0xFFDC2626),
+      'medium' => Color(0xFFD97706),
       _ => AppColors.primary,
     };
 
     return Container(
-      padding: const EdgeInsets.all(18),
+      padding: EdgeInsets.all(18),
       decoration: BoxDecoration(
-        color: Colors.white,
+        color: context.mtColors.card,
         borderRadius: BorderRadius.circular(24),
-        border: Border.all(color: const Color(0xFFE2E8F0)),
+        border: Border.all(color: context.mtColors.border),
       ),
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -168,11 +169,11 @@ class _InsightCard extends StatelessWidget {
             ),
             child: Icon(Icons.tips_and_updates_outlined, color: tone),
           ),
-          const SizedBox(width: 14),
+          SizedBox(width: 14),
           Expanded(
             child: Text(
               text,
-              style: const TextStyle(height: 1.5, color: Color(0xFF334155)),
+              style: TextStyle(height: 1.5, color: Color(0xFF334155)),
             ),
           ),
         ],
@@ -202,14 +203,14 @@ class _QuickStats extends StatelessWidget {
             value: '$totalLogs',
           ),
         ),
-        const SizedBox(width: 12),
+        SizedBox(width: 12),
         Expanded(
           child: _StatTile(
             label: S.of(context).coach_stat_intensity,
             value: avgIntensity?.toStringAsFixed(1) ?? '--',
           ),
         ),
-        const SizedBox(width: 12),
+        SizedBox(width: 12),
         Expanded(
           child: _StatTile(
             label: S.of(context).coach_stat_habits,
@@ -230,26 +231,26 @@ class _StatTile extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 16),
+      padding: EdgeInsets.symmetric(horizontal: 12, vertical: 16),
       decoration: BoxDecoration(
-        color: Colors.white,
+        color: context.mtColors.card,
         borderRadius: BorderRadius.circular(20),
-        border: Border.all(color: const Color(0xFFE2E8F0)),
+        border: Border.all(color: context.mtColors.border),
       ),
       child: Column(
         children: <Widget>[
           Text(
             value,
-            style: const TextStyle(
+            style: TextStyle(
               fontSize: 20,
               fontWeight: FontWeight.w800,
-              color: Color(0xFF0F172A),
+              color: context.mtColors.textPrimary,
             ),
           ),
-          const SizedBox(height: 6),
+          SizedBox(height: 6),
           Text(
             label,
-            style: const TextStyle(fontSize: 12, color: Color(0xFF64748B)),
+            style: TextStyle(fontSize: 12, color: context.mtColors.textSecondary),
           ),
         ],
       ),
@@ -266,13 +267,13 @@ class _ErrorState extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.only(top: 60),
+      padding: EdgeInsets.only(top: 60),
       child: Center(
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: <Widget>[
             Text(message, textAlign: TextAlign.center),
-            const SizedBox(height: 16),
+            SizedBox(height: 16),
             FilledButton(
               onPressed: onRetry,
               child: Text(S.of(context).home_retry),

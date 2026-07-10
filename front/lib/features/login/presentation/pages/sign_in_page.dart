@@ -179,7 +179,9 @@ class _SignInPageState extends State<SignInPage> with WidgetsBindingObserver {
                               ),
                               const Spacer(),
                               TextButton(
-                                onPressed: () {},
+                                onPressed: () => Navigator.of(
+                                  context,
+                                ).pushNamed(RouteNames.forgotPassword),
                                 child: Text(
                                   translations.forgot_password,
                                   style: const TextStyle(

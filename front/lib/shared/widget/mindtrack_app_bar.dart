@@ -23,9 +23,10 @@ class MindTrackAppBar extends StatelessWidget implements PreferredSizeWidget {
   @override
   Widget build(BuildContext context) {
     final String? currentRoute = ModalRoute.of(context)?.settings.name;
+    final ColorScheme colors = Theme.of(context).colorScheme;
 
     return AppBar(
-      backgroundColor: const Color(0xFFF8FAFC),
+      backgroundColor: Theme.of(context).appBarTheme.backgroundColor,
       surfaceTintColor: Colors.transparent,
       titleSpacing: 12,
       title: Row(
@@ -48,11 +49,11 @@ class MindTrackAppBar extends StatelessWidget implements PreferredSizeWidget {
             child: Text(
               title,
               overflow: TextOverflow.ellipsis,
-              style: const TextStyle(
+              style: TextStyle(
                 fontSize: 18,
                 fontWeight: FontWeight.w700,
                 letterSpacing: -0.4,
-                color: Color(0xFF0F172A),
+                color: colors.onSurface,
               ),
             ),
           ),
@@ -64,8 +65,9 @@ class MindTrackAppBar extends StatelessWidget implements PreferredSizeWidget {
                 icon: Icons.notifications_none_rounded,
                 onTap: currentRoute == RouteNames.notifications
                     ? null
-                    : () =>
-                          Navigator.of(context).pushNamed(RouteNames.notifications),
+                    : () => Navigator.of(
+                        context,
+                      ).pushNamed(RouteNames.notifications),
               ),
               const SizedBox(width: 8),
               _AppBarActionButton(
@@ -105,6 +107,7 @@ class _AppBarActionButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final ColorScheme colors = Theme.of(context).colorScheme;
     final Widget button = InkWell(
       onTap: onTap,
       borderRadius: BorderRadius.circular(999),
@@ -112,15 +115,15 @@ class _AppBarActionButton extends StatelessWidget {
         width: 40,
         height: 40,
         decoration: BoxDecoration(
-          color: onTap == null ? const Color(0xFFE2E8F0) : Colors.white,
+          color: onTap == null
+              ? colors.surfaceContainerHighest
+              : colors.surface,
           shape: BoxShape.circle,
-          border: Border.all(color: const Color(0xFFE2E8F0)),
+          border: Border.all(color: colors.outlineVariant),
         ),
         child: Icon(
           icon,
-          color: onTap == null
-              ? const Color(0xFF94A3B8)
-              : const Color(0xFF0F172A),
+          color: onTap == null ? colors.onSurfaceVariant : colors.onSurface,
           size: 20,
         ),
       ),

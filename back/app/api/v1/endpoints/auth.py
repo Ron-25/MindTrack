@@ -4,7 +4,15 @@ from sqlalchemy.ext.asyncio import AsyncSession
 from app.core.database import get_db
 from app.dependencies import get_current_user
 from app.models.user import User
-from app.schemas.auth import LoginRequest, RefreshRequest, RegisterRequest, TokenResponse, UserOut
+from app.schemas.auth import (
+    ForgotPasswordRequest,
+    ForgotPasswordResponse,
+    LoginRequest,
+    RefreshRequest,
+    RegisterRequest,
+    TokenResponse,
+    UserOut,
+)
 from app.services.auth_service import AuthService
 
 router = APIRouter()
@@ -44,6 +52,26 @@ async def logout(
 ) -> None:
     service = AuthService(db)
     await service.logout(body)
+
+
+@router.post(
+    "/forgot-password",
+    response_model=ForgotPasswordResponse,
+    status_code=status.HTTP_200_OK,
+)
+async def forgot_password(
+    body: ForgotPasswordRequest,
+    db: AsyncSession = Depends(get_db),
+) -> ForgotPasswordResponse:
+    service = AuthService(db)
+    await service.forgot_password(body.email)
+    # Respuesta genérica: no revela si el correo está registrado.
+    return ForgotPasswordResponse(
+        message=(
+            "Si el correo está registrado, recibirás instrucciones "
+            "para restablecer tu contraseña."
+        ),
+    )
 
 
 @router.get("/me", response_model=UserOut, status_code=status.HTTP_200_OK)

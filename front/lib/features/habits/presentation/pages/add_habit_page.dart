@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:mind_track/app/generated/l10n.dart';
+import 'package:mind_track/app/theme/mt_colors.dart';
 import 'package:mind_track/app/theme/app_colors.dart';
 import 'package:mind_track/features/habits/domain/entities/habit_tracker.dart';
 
@@ -13,7 +14,7 @@ class _CategoryOption {
   final IconData icon;
 }
 
-const List<_CategoryOption> _categoryOptions = <_CategoryOption>[
+List<_CategoryOption> _categoryOptions = <_CategoryOption>[
   _CategoryOption(key: 'health', icon: Icons.favorite_border_rounded),
   _CategoryOption(key: 'mind', icon: Icons.self_improvement_rounded),
   _CategoryOption(key: 'social', icon: Icons.groups_outlined),
@@ -76,45 +77,45 @@ class _AddHabitPageState extends State<AddHabitPage> {
   Widget build(BuildContext context) {
     final S translations = S.of(context);
     return Scaffold(
-      backgroundColor: Colors.white,
+      backgroundColor: Theme.of(context).colorScheme.surface,
       appBar: AppBar(
-        backgroundColor: Colors.white,
+        backgroundColor: Theme.of(context).colorScheme.surface,
         surfaceTintColor: Colors.transparent,
         elevation: 0,
         centerTitle: true,
         leading: IconButton(
           onPressed: () => Navigator.of(context).pop(),
-          icon: const Icon(
+          icon: Icon(
             Icons.arrow_back_rounded,
-            color: Color(0xFF0F172A),
+            color: context.mtColors.textPrimary,
           ),
         ),
         title: Text(
           _isEditing
               ? translations.habits_edit_title
               : translations.habits_create_title,
-          style: const TextStyle(
+          style: TextStyle(
             fontSize: 18,
             fontWeight: FontWeight.w700,
             letterSpacing: -0.27,
-            color: Color(0xFF0F172A),
+            color: context.mtColors.textPrimary,
           ),
         ),
       ),
       bottomNavigationBar: SafeArea(
         top: false,
         child: Padding(
-          padding: const EdgeInsets.all(16),
+          padding: EdgeInsets.all(16),
           child: SizedBox(
             width: double.infinity,
             child: FilledButton.icon(
               onPressed: _submit,
-              icon: const Icon(Icons.check_circle_outline_rounded, size: 20),
+              icon: Icon(Icons.check_circle_outline_rounded, size: 20),
               label: Text(
                 _isEditing
                     ? translations.habits_save_changes
                     : translations.habits_create_button,
-                style: const TextStyle(
+                style: TextStyle(
                   fontSize: 16,
                   fontWeight: FontWeight.w700,
                 ),
@@ -122,7 +123,7 @@ class _AddHabitPageState extends State<AddHabitPage> {
               style: FilledButton.styleFrom(
                 backgroundColor: AppColors.primary,
                 foregroundColor: Colors.white,
-                padding: const EdgeInsets.symmetric(vertical: 16),
+                padding: EdgeInsets.symmetric(vertical: 16),
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(24),
                 ),
@@ -133,45 +134,45 @@ class _AddHabitPageState extends State<AddHabitPage> {
       ),
       body: SafeArea(
         child: SingleChildScrollView(
-          padding: const EdgeInsets.all(16),
+          padding: EdgeInsets.all(16),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: <Widget>[
               _buildLabel(translations.habits_name_label),
-              const SizedBox(height: 8),
+              SizedBox(height: 8),
               _buildTextInput(
                 controller: _nameController,
                 hint: translations.habits_name_hint,
                 errorText: _nameError,
               ),
-              const SizedBox(height: 24),
+              SizedBox(height: 24),
               _buildLabel(translations.habits_description_label),
-              const SizedBox(height: 8),
+              SizedBox(height: 8),
               _buildTextInput(
                 controller: _descriptionController,
                 hint: '',
               ),
-              const SizedBox(height: 24),
+              SizedBox(height: 24),
               _buildLabel(translations.habits_icon_label),
-              const SizedBox(height: 12),
+              SizedBox(height: 12),
               _buildCategoryGrid(translations),
-              const SizedBox(height: 24),
+              SizedBox(height: 24),
               _buildLabel(translations.habits_frequency_label),
-              const SizedBox(height: 12),
+              SizedBox(height: 12),
               _buildFrequencySegments(translations),
-              const SizedBox(height: 12),
+              SizedBox(height: 12),
               _buildDayCircles(context),
               if (_daysError != null) ...<Widget>[
-                const SizedBox(height: 8),
+                SizedBox(height: 8),
                 Text(
                   _daysError!,
-                  style: const TextStyle(
+                  style: TextStyle(
                     fontSize: 12,
                     color: Color(0xFFEF4444),
                   ),
                 ),
               ],
-              const SizedBox(height: 24),
+              SizedBox(height: 24),
             ],
           ),
         ),
@@ -182,11 +183,11 @@ class _AddHabitPageState extends State<AddHabitPage> {
   Widget _buildLabel(String text) {
     return Text(
       text,
-      style: const TextStyle(
+      style: TextStyle(
         fontSize: 16,
         fontWeight: FontWeight.w600,
         letterSpacing: -0.24,
-        color: Color(0xFF0F172A),
+        color: context.mtColors.textPrimary,
       ),
     );
   }
@@ -202,26 +203,26 @@ class _AddHabitPageState extends State<AddHabitPage> {
         Container(
           height: 56,
           decoration: BoxDecoration(
-            color: Colors.white,
+            color: context.mtColors.card,
             borderRadius: BorderRadius.circular(24),
             border: Border.all(
               color: errorText != null
-                  ? const Color(0xFFEF4444)
-                  : const Color(0xFFE2E8F0),
+                  ? Color(0xFFEF4444)
+                  : context.mtColors.border,
             ),
           ),
           alignment: Alignment.centerLeft,
           child: TextField(
             controller: controller,
-            style: const TextStyle(fontSize: 16, color: Color(0xFF0F172A)),
+            style: TextStyle(fontSize: 16, color: context.mtColors.textPrimary),
             decoration: InputDecoration(
               hintText: hint,
-              hintStyle: const TextStyle(
+              hintStyle: TextStyle(
                 fontSize: 16,
-                color: Color(0xFF94A3B8),
+                color: context.mtColors.textMuted,
               ),
               border: InputBorder.none,
-              contentPadding: const EdgeInsets.symmetric(
+              contentPadding: EdgeInsets.symmetric(
                 horizontal: 16,
                 vertical: 17,
               ),
@@ -229,10 +230,10 @@ class _AddHabitPageState extends State<AddHabitPage> {
           ),
         ),
         if (errorText != null) ...<Widget>[
-          const SizedBox(height: 6),
+          SizedBox(height: 6),
           Text(
             errorText,
-            style: const TextStyle(fontSize: 12, color: Color(0xFFEF4444)),
+            style: TextStyle(fontSize: 12, color: Color(0xFFEF4444)),
           ),
         ],
       ],
@@ -243,7 +244,7 @@ class _AddHabitPageState extends State<AddHabitPage> {
     return GridView.count(
       crossAxisCount: 3,
       shrinkWrap: true,
-      physics: const NeverScrollableScrollPhysics(),
+      physics: NeverScrollableScrollPhysics(),
       mainAxisSpacing: 14,
       crossAxisSpacing: 8,
       childAspectRatio: 1.24,
@@ -252,14 +253,14 @@ class _AddHabitPageState extends State<AddHabitPage> {
         return GestureDetector(
           onTap: () => setState(() => _category = option.key),
           child: AnimatedContainer(
-            duration: const Duration(milliseconds: 150),
+            duration: Duration(milliseconds: 150),
             decoration: BoxDecoration(
               color: isSelected
                   ? AppColors.primary.withValues(alpha: 0.05)
                   : Colors.white,
               borderRadius: BorderRadius.circular(24),
               border: Border.all(
-                color: isSelected ? AppColors.primary : const Color(0xFFE2E8F0),
+                color: isSelected ? AppColors.primary : context.mtColors.border,
                 width: isSelected ? 2 : 1,
               ),
             ),
@@ -271,9 +272,9 @@ class _AddHabitPageState extends State<AddHabitPage> {
                   size: 24,
                   color: isSelected
                       ? AppColors.primary
-                      : const Color(0xFF64748B),
+                      : context.mtColors.textSecondary,
                 ),
-                const SizedBox(height: 8),
+                SizedBox(height: 8),
                 Text(
                   _categoryLabel(translations, option.key),
                   maxLines: 1,
@@ -282,8 +283,8 @@ class _AddHabitPageState extends State<AddHabitPage> {
                     fontSize: 12,
                     fontWeight: FontWeight.w500,
                     color: isSelected
-                        ? const Color(0xFF0F172A)
-                        : const Color(0xFF64748B),
+                        ? context.mtColors.textPrimary
+                        : context.mtColors.textSecondary,
                   ),
                 ),
               ],
@@ -302,9 +303,9 @@ class _AddHabitPageState extends State<AddHabitPage> {
     };
 
     return Container(
-      padding: const EdgeInsets.all(4),
+      padding: EdgeInsets.all(4),
       decoration: BoxDecoration(
-        color: const Color(0xFFF1F5F9),
+        color: context.mtColors.borderSubtle,
         borderRadius: BorderRadius.circular(16),
       ),
       child: Row(
@@ -316,13 +317,13 @@ class _AddHabitPageState extends State<AddHabitPage> {
             child: GestureDetector(
               onTap: () => _selectFrequencyMode(entry.key),
               child: AnimatedContainer(
-                duration: const Duration(milliseconds: 200),
-                padding: const EdgeInsets.symmetric(vertical: 8),
+                duration: Duration(milliseconds: 200),
+                padding: EdgeInsets.symmetric(vertical: 8),
                 decoration: BoxDecoration(
                   color: isSelected ? Colors.white : Colors.transparent,
                   borderRadius: BorderRadius.circular(12),
                   boxShadow: isSelected
-                      ? const <BoxShadow>[
+                      ? <BoxShadow>[
                           BoxShadow(
                             color: Color(0x0D000000),
                             blurRadius: 1,
@@ -341,7 +342,7 @@ class _AddHabitPageState extends State<AddHabitPage> {
                     fontWeight: isSelected ? FontWeight.w600 : FontWeight.w500,
                     color: isSelected
                         ? AppColors.primary
-                        : const Color(0xFF64748B),
+                        : context.mtColors.textSecondary,
                   ),
                 ),
               ),
@@ -366,7 +367,7 @@ class _AddHabitPageState extends State<AddHabitPage> {
         return GestureDetector(
           onTap: () => _toggleDay(index),
           child: AnimatedContainer(
-            duration: const Duration(milliseconds: 150),
+            duration: Duration(milliseconds: 150),
             width: 36,
             height: 36,
             alignment: Alignment.center,
@@ -375,14 +376,14 @@ class _AddHabitPageState extends State<AddHabitPage> {
               shape: BoxShape.circle,
               border: isSelected
                   ? null
-                  : Border.all(color: const Color(0xFFE2E8F0)),
+                  : Border.all(color: context.mtColors.border),
             ),
             child: Text(
               letter,
               style: TextStyle(
                 fontSize: 12,
                 fontWeight: FontWeight.w700,
-                color: isSelected ? Colors.white : const Color(0xFF94A3B8),
+                color: isSelected ? Colors.white : context.mtColors.textMuted,
               ),
             ),
           ),

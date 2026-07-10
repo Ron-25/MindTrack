@@ -27,4 +27,9 @@ class AuthRepositoryImpl implements AuthRepository {
       password: password,
     );
   }
+
+  @override
+  Future<String> forgotPassword({required String email}) {
+    return _remoteDataSource.forgotPassword(email: email);
+  }
 }

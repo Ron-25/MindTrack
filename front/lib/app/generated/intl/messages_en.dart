@@ -192,6 +192,21 @@ class MessageLookup extends MessageLookupByLibrary {
     ),
     "error_title": MessageLookupByLibrary.simpleMessage("Error"),
     "forgot_password": MessageLookupByLibrary.simpleMessage("Forgot password?"),
+    "forgot_password_back_to_login": MessageLookupByLibrary.simpleMessage(
+      "Back to sign in",
+    ),
+    "forgot_password_button": MessageLookupByLibrary.simpleMessage(
+      "Send instructions",
+    ),
+    "forgot_password_description": MessageLookupByLibrary.simpleMessage(
+      "Enter your account email and we will send you instructions to reset your password.",
+    ),
+    "forgot_password_success_title": MessageLookupByLibrary.simpleMessage(
+      "Check your email",
+    ),
+    "forgot_password_title": MessageLookupByLibrary.simpleMessage(
+      "Reset password",
+    ),
     "full_name": MessageLookupByLibrary.simpleMessage("Full Name"),
     "full_name_hint": MessageLookupByLibrary.simpleMessage("John Doe"),
     "full_name_required_error": MessageLookupByLibrary.simpleMessage(

@@ -4,6 +4,7 @@ import 'package:mind_track/app/generated/l10n.dart';
 import 'package:mind_track/app/injector.dart';
 import 'package:mind_track/app/routes/route_names.dart';
 import 'package:mind_track/app/theme/app_colors.dart';
+import 'package:mind_track/app/theme/theme_controller.dart';
 import 'package:mind_track/core/services/device_intent_service.dart';
 import 'package:mind_track/core/services/token_storage_service.dart';
 import 'package:mind_track/core/utils/toast_utils.dart';
@@ -38,7 +39,7 @@ class _ProfileSettingsPageState extends State<ProfileSettingsPage> {
   Widget build(BuildContext context) {
     final S translations = S.of(context);
     return Scaffold(
-      backgroundColor: const Color(0xFFF6F7F8),
+      backgroundColor: Theme.of(context).scaffoldBackgroundColor,
       appBar: MindTrackAppBar(
         title: translations.profile_title,
         showActions: false,
@@ -106,6 +107,33 @@ class _ProfileSettingsPageState extends State<ProfileSettingsPage> {
                               const SizedBox(height: 12),
                               _SettingsCard(
                                 children: <Widget>[
+                                  ValueListenableBuilder<ThemeMode>(
+                                    valueListenable: ThemeController.instance,
+                                    builder:
+                                        (
+                                          BuildContext context,
+                                          ThemeMode mode,
+                                          Widget? child,
+                                        ) {
+                                          final bool isDark =
+                                              mode == ThemeMode.dark;
+                                          return _SettingsTile(
+                                            icon: isDark
+                                                ? Icons.dark_mode_rounded
+                                                : Icons.light_mode_rounded,
+                                            title: 'Modo oscuro',
+                                            trailing: Switch.adaptive(
+                                              value: isDark,
+                                              onChanged: ThemeController
+                                                  .instance
+                                                  .setDarkMode,
+                                            ),
+                                            onTap: () => ThemeController
+                                                .instance
+                                                .setDarkMode(!isDark),
+                                          );
+                                        },
+                                  ),
                                   _SettingsTile(
                                     icon: Icons.tune_rounded,
                                     title: translations.profile_preferences,
@@ -564,11 +592,12 @@ class _SettingsCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final ColorScheme colors = Theme.of(context).colorScheme;
     return DecoratedBox(
       decoration: BoxDecoration(
-        color: Colors.white,
+        color: colors.surface,
         borderRadius: BorderRadius.circular(24),
-        border: Border.all(color: const Color(0xFFF1F5F9)),
+        border: Border.all(color: colors.outlineVariant),
         boxShadow: const <BoxShadow>[
           BoxShadow(
             color: Color(0x0D0F172A),
@@ -588,6 +617,7 @@ class _SettingsTile extends StatelessWidget {
     required this.title,
     required this.onTap,
     this.trailingText,
+    this.trailing,
     this.isLast = false,
   });
 
@@ -595,10 +625,12 @@ class _SettingsTile extends StatelessWidget {
   final String title;
   final VoidCallback onTap;
   final String? trailingText;
+  final Widget? trailing;
   final bool isLast;
 
   @override
   Widget build(BuildContext context) {
+    final ColorScheme colors = Theme.of(context).colorScheme;
     return InkWell(
       onTap: onTap,
       borderRadius: isLast
@@ -626,10 +658,10 @@ class _SettingsTile extends StatelessWidget {
                 Expanded(
                   child: Text(
                     title,
-                    style: const TextStyle(
+                    style: TextStyle(
                       fontSize: 16,
                       fontWeight: FontWeight.w500,
-                      color: Color(0xFF0F172A),
+                      color: colors.onSurface,
                     ),
                   ),
                 ),
@@ -643,17 +675,19 @@ class _SettingsTile extends StatelessWidget {
                   ),
                   const SizedBox(width: 8),
                 ],
-                const Icon(
-                  Icons.chevron_right_rounded,
-                  color: Color(0xFF94A3B8),
-                ),
+                ?trailing,
+                if (trailing == null)
+                  const Icon(
+                    Icons.chevron_right_rounded,
+                    color: Color(0xFF94A3B8),
+                  ),
               ],
             ),
           ),
           if (!isLast)
-            const Padding(
-              padding: EdgeInsets.symmetric(horizontal: 16),
-              child: Divider(height: 1, color: Color(0xFFF1F5F9)),
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 16),
+              child: Divider(height: 1, color: colors.outlineVariant),
             ),
         ],
       ),

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/intl.dart';
 import 'package:mind_track/app/generated/l10n.dart';
+import 'package:mind_track/app/theme/mt_colors.dart';
 import 'package:mind_track/app/injector.dart';
 import 'package:mind_track/app/routes/route_names.dart';
 import 'package:mind_track/app/theme/app_colors.dart';
@@ -78,7 +79,7 @@ class _DailyMoodViewState extends State<_DailyMoodView> {
         }
       },
       child: Scaffold(
-        backgroundColor: const Color(0xFFF6F7F8),
+        backgroundColor: Theme.of(context).scaffoldBackgroundColor,
         appBar: MindTrackAppBar(
           title: widget.searchMode
               ? 'Buscar en historial'
@@ -103,29 +104,29 @@ class _DailyMoodViewState extends State<_DailyMoodView> {
     return Column(
       mainAxisSize: MainAxisSize.min,
       children: <Widget>[
-        const Text(
+        Text(
           'Registrar emoción',
           style: TextStyle(
             fontSize: 18,
             fontWeight: FontWeight.w700,
             letterSpacing: -0.27,
-            color: Color(0xFF0F172A),
+            color: context.mtColors.textPrimary,
           ),
         ),
-        const SizedBox(height: 8),
+        SizedBox(height: 8),
         Material(
           color: Colors.transparent,
           child: InkWell(
             onTap: () => _openComposer(context),
-            customBorder: const CircleBorder(),
+            customBorder: CircleBorder(),
             child: Container(
               width: 56,
               height: 56,
               decoration: BoxDecoration(
                 color: AppColors.primary,
                 shape: BoxShape.circle,
-                border: Border.all(color: const Color(0xFFF6F7F8), width: 4),
-                boxShadow: const <BoxShadow>[
+                border: Border.all(color: Theme.of(context).scaffoldBackgroundColor, width: 4),
+                boxShadow: <BoxShadow>[
                   BoxShadow(
                     color: Color(0x665FA9D3),
                     blurRadius: 15,
@@ -133,7 +134,7 @@ class _DailyMoodViewState extends State<_DailyMoodView> {
                   ),
                 ],
               ),
-              child: const Icon(Icons.add_rounded, color: Colors.white),
+              child: Icon(Icons.add_rounded, color: Colors.white),
             ),
           ),
         ),
@@ -143,37 +144,37 @@ class _DailyMoodViewState extends State<_DailyMoodView> {
 
   Widget _buildBody(BuildContext context, EmotionState state) {
     if (state.isLoading && state.entries.isEmpty) {
-      return const Center(child: CircularProgressIndicator());
+      return Center(child: CircularProgressIndicator());
     }
 
     if (state.errorMessage != null && state.entries.isEmpty) {
       return ListView(
-        physics: const AlwaysScrollableScrollPhysics(),
+        physics: AlwaysScrollableScrollPhysics(),
         children: <Widget>[
           SizedBox(
             height: 420,
             child: Center(
               child: Padding(
-                padding: const EdgeInsets.all(24),
+                padding: EdgeInsets.all(24),
                 child: Column(
                   mainAxisSize: MainAxisSize.min,
                   children: <Widget>[
-                    const Icon(
+                    Icon(
                       Icons.cloud_off_rounded,
                       size: 48,
-                      color: Color(0xFF94A3B8),
+                      color: context.mtColors.textMuted,
                     ),
-                    const SizedBox(height: 16),
+                    SizedBox(height: 16),
                     Text(
                       state.errorMessage!,
                       textAlign: TextAlign.center,
-                      style: const TextStyle(color: Color(0xFF475569)),
+                      style: TextStyle(color: context.mtColors.textSecondary),
                     ),
-                    const SizedBox(height: 16),
+                    SizedBox(height: 16),
                     FilledButton(
                       onPressed: () =>
                           context.read<EmotionCubit>().loadEntries(),
-                      child: const Text('Reintentar'),
+                      child: Text('Reintentar'),
                     ),
                   ],
                 ),
@@ -186,9 +187,9 @@ class _DailyMoodViewState extends State<_DailyMoodView> {
 
     if (state.entries.isEmpty) {
       return ListView(
-        physics: const AlwaysScrollableScrollPhysics(),
-        padding: const EdgeInsets.all(24),
-        children: const <Widget>[
+        physics: AlwaysScrollableScrollPhysics(),
+        padding: EdgeInsets.all(24),
+        children: <Widget>[
           SizedBox(height: 120),
           Icon(
             Icons.psychology_alt_rounded,
@@ -205,7 +206,7 @@ class _DailyMoodViewState extends State<_DailyMoodView> {
           Text(
             'Usa el botón de registrar para empezar a construir tu historial.',
             textAlign: TextAlign.center,
-            style: TextStyle(color: Color(0xFF64748B), height: 1.4),
+            style: TextStyle(color: context.mtColors.textSecondary, height: 1.4),
           ),
         ],
       );
@@ -220,39 +221,39 @@ class _DailyMoodViewState extends State<_DailyMoodView> {
     final List<_DayGroup> groups = _groupByDay(filteredEntries);
 
     return ListView(
-      physics: const AlwaysScrollableScrollPhysics(),
-      padding: const EdgeInsets.fromLTRB(16, 16, 16, 160),
+      physics: AlwaysScrollableScrollPhysics(),
+      padding: EdgeInsets.fromLTRB(16, 16, 16, 160),
       children: <Widget>[
         _buildSearchBar(context),
-        const SizedBox(height: 16),
+        SizedBox(height: 16),
         _buildFilterChips(context, state.entries),
         if (_query.isNotEmpty || _emotionFilter != null) ...<Widget>[
-          const SizedBox(height: 12),
+          SizedBox(height: 12),
           Text(
             '${filteredEntries.length} resultado(s)',
-            style: const TextStyle(
+            style: TextStyle(
               fontSize: 13,
-              color: Color(0xFF64748B),
+              color: context.mtColors.textSecondary,
               fontWeight: FontWeight.w500,
             ),
           ),
         ],
-        const SizedBox(height: 24),
+        SizedBox(height: 24),
         if (filteredEntries.isEmpty)
-          const Padding(
+          Padding(
             padding: EdgeInsets.only(top: 28),
             child: Center(
               child: Text(
                 'No encontramos emociones con esa busqueda.',
                 textAlign: TextAlign.center,
-                style: TextStyle(color: Color(0xFF64748B), height: 1.4),
+                style: TextStyle(color: context.mtColors.textSecondary, height: 1.4),
               ),
             ),
           )
         else
           ...groups.map(
             (_DayGroup group) => Padding(
-              padding: const EdgeInsets.only(bottom: 24),
+              padding: EdgeInsets.only(bottom: 24),
               child: _buildDayGroup(context, group),
             ),
           ),
@@ -265,10 +266,10 @@ class _DailyMoodViewState extends State<_DailyMoodView> {
     return Container(
       height: 48,
       decoration: BoxDecoration(
-        color: Colors.white,
+        color: context.mtColors.card,
         borderRadius: BorderRadius.circular(24),
-        border: Border.all(color: const Color(0xFFE2E8F0)),
-        boxShadow: const <BoxShadow>[
+        border: Border.all(color: context.mtColors.border),
+        boxShadow: <BoxShadow>[
           BoxShadow(
             color: Color(0x0D000000),
             blurRadius: 1,
@@ -279,29 +280,29 @@ class _DailyMoodViewState extends State<_DailyMoodView> {
       child: TextField(
         controller: _searchController,
         autofocus: widget.searchMode,
-        style: const TextStyle(fontSize: 16, color: Color(0xFF0F172A)),
+        style: TextStyle(fontSize: 16, color: context.mtColors.textPrimary),
         decoration: InputDecoration(
           hintText: widget.searchMode
               ? translations.search_hint
               : 'Buscar notas o estados de ánimo',
-          hintStyle: const TextStyle(fontSize: 16, color: Color(0xFF94A3B8)),
-          prefixIcon: const Icon(
+          hintStyle: TextStyle(fontSize: 16, color: context.mtColors.textMuted),
+          prefixIcon: Icon(
             Icons.search_rounded,
             size: 20,
-            color: Color(0xFF94A3B8),
+            color: context.mtColors.textMuted,
           ),
           suffixIcon: _query.isEmpty
               ? null
               : IconButton(
                   onPressed: _searchController.clear,
-                  icon: const Icon(
+                  icon: Icon(
                     Icons.close_rounded,
                     size: 20,
-                    color: Color(0xFF94A3B8),
+                    color: context.mtColors.textMuted,
                   ),
                 ),
           border: InputBorder.none,
-          contentPadding: const EdgeInsets.symmetric(
+          contentPadding: EdgeInsets.symmetric(
             horizontal: 12,
             vertical: 13,
           ),
@@ -332,7 +333,7 @@ class _DailyMoodViewState extends State<_DailyMoodView> {
           ),
           ...emotionNames.map(
             (String name) => Padding(
-              padding: const EdgeInsets.only(left: 8),
+              padding: EdgeInsets.only(left: 8),
               child: _FilterChipButton(
                 label: name,
                 isSelected: _emotionFilter == name,
@@ -353,21 +354,21 @@ class _DailyMoodViewState extends State<_DailyMoodView> {
       children: <Widget>[
         Text(
           _dayLabel(context, group.date).toUpperCase(),
-          style: const TextStyle(
+          style: TextStyle(
             fontSize: 14,
             fontWeight: FontWeight.w600,
             letterSpacing: 0.7,
-            color: Color(0xFF64748B),
+            color: context.mtColors.textSecondary,
           ),
         ),
-        const SizedBox(height: 12),
+        SizedBox(height: 12),
         Stack(
           children: <Widget>[
             Positioned(
               left: 21,
               top: 16,
               bottom: 16,
-              child: Container(width: 2, color: const Color(0xFFE2E8F0)),
+              child: Container(width: 2, color: context.mtColors.border),
             ),
             Column(
               children: List<Widget>.generate(group.entries.length, (
@@ -399,33 +400,33 @@ class _DailyMoodViewState extends State<_DailyMoodView> {
         context.read<EmotionCubit>().deleteEntryFromList(entry.id);
       },
       background: Container(
-        margin: const EdgeInsets.only(left: 40),
+        margin: EdgeInsets.only(left: 40),
         decoration: BoxDecoration(
-          color: const Color(0xFFEF4444),
+          color: Color(0xFFEF4444),
           borderRadius: BorderRadius.circular(24),
         ),
-        padding: const EdgeInsets.symmetric(horizontal: 20),
+        padding: EdgeInsets.symmetric(horizontal: 20),
         alignment: Alignment.centerRight,
-        child: const Icon(Icons.delete_outline_rounded, color: Colors.white),
+        child: Icon(Icons.delete_outline_rounded, color: Colors.white),
       ),
       child: Stack(
         clipBehavior: Clip.none,
         children: <Widget>[
           Padding(
-            padding: const EdgeInsets.only(left: 40),
+            padding: EdgeInsets.only(left: 40),
             child: Material(
-              color: Colors.white,
+              color: context.mtColors.card,
               borderRadius: BorderRadius.circular(24),
               child: InkWell(
                 borderRadius: BorderRadius.circular(24),
                 onTap: () => _openDetail(context, entry.id),
                 child: Container(
                   width: double.infinity,
-                  padding: const EdgeInsets.all(16),
+                  padding: EdgeInsets.all(16),
                   decoration: BoxDecoration(
                     borderRadius: BorderRadius.circular(24),
-                    border: Border.all(color: const Color(0xFFF1F5F9)),
-                    boxShadow: const <BoxShadow>[
+                    border: Border.all(color: context.mtColors.borderSubtle),
+                    boxShadow: <BoxShadow>[
                       BoxShadow(
                         color: Color(0x0D000000),
                         blurRadius: 1,
@@ -445,49 +446,49 @@ class _DailyMoodViewState extends State<_DailyMoodView> {
                               children: <Widget>[
                                 Text(
                                   entry.localizedName(locale),
-                                  style: const TextStyle(
+                                  style: TextStyle(
                                     fontSize: 16,
                                     fontWeight: FontWeight.w700,
-                                    color: Color(0xFF0F172A),
+                                    color: context.mtColors.textPrimary,
                                   ),
                                 ),
                                 Text(
                                   _formatTime(context, entry.loggedAt),
-                                  style: const TextStyle(
+                                  style: TextStyle(
                                     fontSize: 12,
-                                    color: Color(0xFF64748B),
+                                    color: context.mtColors.textSecondary,
                                   ),
                                 ),
                               ],
                             ),
                           ),
-                          const SizedBox(width: 12),
+                          SizedBox(width: 12),
                           Column(
                             crossAxisAlignment: CrossAxisAlignment.end,
                             children: <Widget>[
-                              const Text(
+                              Text(
                                 'INTENSIDAD',
                                 style: TextStyle(
                                   fontSize: 10,
                                   fontWeight: FontWeight.w700,
-                                  color: Color(0xFF94A3B8),
+                                  color: context.mtColors.textMuted,
                                 ),
                               ),
-                              const SizedBox(height: 4),
+                              SizedBox(height: 4),
                               _IntensityBars(intensity: entry.intensity),
                             ],
                           ),
                         ],
                       ),
-                      const SizedBox(height: 8),
+                      SizedBox(height: 8),
                       Text(
                         _subtitle(entry),
                         maxLines: 2,
                         overflow: TextOverflow.ellipsis,
-                        style: const TextStyle(
+                        style: TextStyle(
                           fontSize: 14,
                           height: 1.45,
-                          color: Color(0xFF475569),
+                          color: context.mtColors.textSecondary,
                         ),
                       ),
                     ],
@@ -508,7 +509,7 @@ class _DailyMoodViewState extends State<_DailyMoodView> {
                   Colors.white,
                 ),
                 shape: BoxShape.circle,
-                border: Border.all(color: const Color(0xFFF6F7F8), width: 4),
+                border: Border.all(color: Theme.of(context).scaffoldBackgroundColor, width: 4),
               ),
               child: Icon(_iconForEmotion(entry), size: 20, color: accent),
             ),
@@ -572,7 +573,7 @@ class _DailyMoodViewState extends State<_DailyMoodView> {
     if (date == today) {
       return 'Hoy';
     }
-    if (date == today.subtract(const Duration(days: 1))) {
+    if (date == today.subtract(Duration(days: 1))) {
       return 'Ayer';
     }
     final String locale = Localizations.localeOf(context).languageCode;
@@ -616,18 +617,18 @@ class _DailyMoodViewState extends State<_DailyMoodView> {
           context: context,
           builder: (BuildContext context) {
             return AlertDialog(
-              title: const Text('Eliminar registro'),
-              content: const Text(
+              title: Text('Eliminar registro'),
+              content: Text(
                 'Esta acción quitará la emoción de tu historial.',
               ),
               actions: <Widget>[
                 TextButton(
                   onPressed: () => Navigator.of(context).pop(false),
-                  child: const Text('Cancelar'),
+                  child: Text('Cancelar'),
                 ),
                 FilledButton(
                   onPressed: () => Navigator.of(context).pop(true),
-                  child: const Text('Eliminar'),
+                  child: Text('Eliminar'),
                 ),
               ],
             );
@@ -712,20 +713,20 @@ class _FilterChipButton extends StatelessWidget {
         onTap: onTap,
         borderRadius: BorderRadius.circular(999),
         child: Container(
-          padding: const EdgeInsets.symmetric(horizontal: 16),
+          padding: EdgeInsets.symmetric(horizontal: 16),
           alignment: Alignment.center,
           decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(999),
             border: isSelected
                 ? null
-                : Border.all(color: const Color(0xFFE2E8F0)),
+                : Border.all(color: context.mtColors.border),
           ),
           child: Text(
             label,
             style: TextStyle(
               fontSize: 14,
               fontWeight: FontWeight.w500,
-              color: isSelected ? Colors.white : const Color(0xFF0F172A),
+              color: isSelected ? Colors.white : context.mtColors.textPrimary,
             ),
           ),
         ),
@@ -754,7 +755,7 @@ class _IntensityBars extends StatelessWidget {
             decoration: BoxDecoration(
               color: index < filled
                   ? AppColors.primary
-                  : const Color(0xFFE2E8F0),
+                  : context.mtColors.border,
               borderRadius: BorderRadius.circular(999),
             ),
           ),

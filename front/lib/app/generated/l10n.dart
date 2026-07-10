@@ -349,6 +349,56 @@ class S {
     );
   }
 
+  /// `Reset password`
+  String get forgot_password_title {
+    return Intl.message(
+      'Reset password',
+      name: 'forgot_password_title',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Enter your account email and we will send you instructions to reset your password.`
+  String get forgot_password_description {
+    return Intl.message(
+      'Enter your account email and we will send you instructions to reset your password.',
+      name: 'forgot_password_description',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Send instructions`
+  String get forgot_password_button {
+    return Intl.message(
+      'Send instructions',
+      name: 'forgot_password_button',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Check your email`
+  String get forgot_password_success_title {
+    return Intl.message(
+      'Check your email',
+      name: 'forgot_password_success_title',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Back to sign in`
+  String get forgot_password_back_to_login {
+    return Intl.message(
+      'Back to sign in',
+      name: 'forgot_password_back_to_login',
+      desc: '',
+      args: [],
+    );
+  }
+
   /// `Create Account`
   String get create_account {
     return Intl.message(

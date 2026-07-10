@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:mind_track/app/injector.dart';
+import 'package:mind_track/app/theme/mt_colors.dart';
 import 'package:mind_track/app/theme/app_colors.dart';
 import 'package:mind_track/features/emotion_tracker/domain/entities/emotion_entry.dart';
 import 'package:mind_track/features/emotion_tracker/presentation/cubit/emotion_cubit.dart';
@@ -21,13 +22,13 @@ class EmotionDetailPage extends StatelessWidget {
         }
         return cubit;
       },
-      child: const _EmotionDetailView(),
+      child: _EmotionDetailView(),
     );
   }
 }
 
 class _EmotionDetailView extends StatefulWidget {
-  const _EmotionDetailView();
+  _EmotionDetailView();
 
   @override
   State<_EmotionDetailView> createState() => _EmotionDetailViewState();
@@ -72,10 +73,10 @@ class _EmotionDetailViewState extends State<_EmotionDetailView> {
           }
         },
         child: Scaffold(
-          backgroundColor: const Color(0xFFF8FAFC),
+          backgroundColor: Theme.of(context).scaffoldBackgroundColor,
           appBar: AppBar(
-            title: const Text('Detalle de emoción'),
-            backgroundColor: const Color(0xFFF8FAFC),
+            title: Text('Detalle de emoción'),
+            backgroundColor: Theme.of(context).scaffoldBackgroundColor,
             actions: <Widget>[
               BlocBuilder<EmotionCubit, EmotionState>(
                 builder: (BuildContext context, EmotionState state) {
@@ -85,12 +86,12 @@ class _EmotionDetailViewState extends State<_EmotionDetailView> {
                         ? null
                         : () => _openEditSheet(context),
                     icon: state.isSaving
-                        ? const SizedBox(
+                        ? SizedBox(
                             width: 20,
                             height: 20,
                             child: CircularProgressIndicator(strokeWidth: 2),
                           )
-                        : const Icon(Icons.edit_outlined),
+                        : Icon(Icons.edit_outlined),
                   );
                 },
               ),
@@ -102,12 +103,12 @@ class _EmotionDetailViewState extends State<_EmotionDetailView> {
                         ? null
                         : () => _delete(context),
                     icon: state.isDeleting
-                        ? const SizedBox(
+                        ? SizedBox(
                             width: 20,
                             height: 20,
                             child: CircularProgressIndicator(strokeWidth: 2),
                           )
-                        : const Icon(Icons.delete_outline_rounded),
+                        : Icon(Icons.delete_outline_rounded),
                   );
                 },
               ),
@@ -145,8 +146,8 @@ class _EmotionDetailViewState extends State<_EmotionDetailView> {
         await showModalBottomSheet<UpdateEmotionEntryInput>(
           context: context,
           isScrollControlled: true,
-          backgroundColor: Colors.white,
-          shape: const RoundedRectangleBorder(
+          backgroundColor: Theme.of(context).colorScheme.surface,
+          shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.vertical(top: Radius.circular(28)),
           ),
           builder: (BuildContext context) => _EditEmotionSheet(entry: entry),
@@ -160,22 +161,22 @@ class _EmotionDetailViewState extends State<_EmotionDetailView> {
 
   Widget _buildBody(BuildContext context, EmotionState state) {
     if (state.isLoading) {
-      return const Center(child: CircularProgressIndicator());
+      return Center(child: CircularProgressIndicator());
     }
     if (state.errorMessage != null && state.selectedEntry == null) {
       return ListView(
-        physics: const AlwaysScrollableScrollPhysics(),
+        physics: AlwaysScrollableScrollPhysics(),
         children: <Widget>[
           SizedBox(
             height: 420,
             child: Center(
               child: Padding(
-                padding: const EdgeInsets.all(24),
+                padding: EdgeInsets.all(24),
                 child: Column(
                   mainAxisSize: MainAxisSize.min,
                   children: <Widget>[
                     Text(state.errorMessage!, textAlign: TextAlign.center),
-                    const SizedBox(height: 16),
+                    SizedBox(height: 16),
                     FilledButton(
                       onPressed: () {
                         final EmotionDetailPage? widget = context
@@ -185,7 +186,7 @@ class _EmotionDetailViewState extends State<_EmotionDetailView> {
                           context.read<EmotionCubit>().loadEntry(emotionId);
                         }
                       },
-                      child: const Text('Reintentar'),
+                      child: Text('Reintentar'),
                     ),
                   ],
                 ),
@@ -199,15 +200,15 @@ class _EmotionDetailViewState extends State<_EmotionDetailView> {
     final EmotionEntry entry = state.selectedEntry!;
     final Color accent = _colorFromHex(entry.colorHex);
     return ListView(
-      physics: const AlwaysScrollableScrollPhysics(),
-      padding: const EdgeInsets.fromLTRB(16, 16, 16, 32),
+      physics: AlwaysScrollableScrollPhysics(),
+      padding: EdgeInsets.fromLTRB(16, 16, 16, 32),
       children: <Widget>[
         Container(
-          padding: const EdgeInsets.all(20),
+          padding: EdgeInsets.all(20),
           decoration: BoxDecoration(
-            color: Colors.white,
+            color: context.mtColors.card,
             borderRadius: BorderRadius.circular(28),
-            border: Border.all(color: const Color(0xFFE2E8F0)),
+            border: Border.all(color: context.mtColors.border),
           ),
           child: Column(
             children: <Widget>[
@@ -220,63 +221,63 @@ class _EmotionDetailViewState extends State<_EmotionDetailView> {
                 ),
                 child: Icon(_iconForEmotion(entry), size: 34, color: accent),
               ),
-              const SizedBox(height: 16),
+              SizedBox(height: 16),
               Text(
                 entry.localizedName('es'),
                 textAlign: TextAlign.center,
-                style: const TextStyle(
+                style: TextStyle(
                   fontSize: 24,
                   fontWeight: FontWeight.w800,
-                  color: Color(0xFF0F172A),
+                  color: context.mtColors.textPrimary,
                 ),
               ),
-              const SizedBox(height: 8),
+              SizedBox(height: 8),
               Text(
                 'Intensidad ${entry.intensity}/10',
-                style: const TextStyle(
+                style: TextStyle(
                   fontSize: 15,
                   fontWeight: FontWeight.w700,
                   color: AppColors.primary,
                 ),
               ),
-              const SizedBox(height: 10),
+              SizedBox(height: 10),
               Text(
                 _formatDateTime(entry.loggedAt),
-                style: const TextStyle(color: Color(0xFF64748B)),
+                style: TextStyle(color: context.mtColors.textSecondary),
               ),
             ],
           ),
         ),
-        const SizedBox(height: 16),
+        SizedBox(height: 16),
         _DetailCard(
           title: 'Notas',
           content: entry.note?.trim().isNotEmpty == true
               ? entry.note!
               : 'No agregaste una nota para este registro.',
         ),
-        const SizedBox(height: 16),
+        SizedBox(height: 16),
         _DetailCard(title: 'Contexto', content: _buildContextText(entry)),
         if (entry.tags.isNotEmpty) ...<Widget>[
-          const SizedBox(height: 16),
+          SizedBox(height: 16),
           Container(
-            padding: const EdgeInsets.all(16),
+            padding: EdgeInsets.all(16),
             decoration: BoxDecoration(
-              color: Colors.white,
+              color: context.mtColors.card,
               borderRadius: BorderRadius.circular(24),
-              border: Border.all(color: const Color(0xFFE2E8F0)),
+              border: Border.all(color: context.mtColors.border),
             ),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: <Widget>[
-                const Text(
+                Text(
                   'Tags',
                   style: TextStyle(
                     fontSize: 16,
                     fontWeight: FontWeight.w700,
-                    color: Color(0xFF0F172A),
+                    color: context.mtColors.textPrimary,
                   ),
                 ),
-                const SizedBox(height: 12),
+                SizedBox(height: 12),
                 Wrap(
                   spacing: 10,
                   runSpacing: 10,
@@ -284,7 +285,7 @@ class _EmotionDetailViewState extends State<_EmotionDetailView> {
                       .map((EmotionTag tag) {
                         final Color tagAccent = _colorFromHex(tag.colorHex);
                         return Container(
-                          padding: const EdgeInsets.symmetric(
+                          padding: EdgeInsets.symmetric(
                             horizontal: 12,
                             vertical: 8,
                           ),
@@ -317,18 +318,18 @@ class _EmotionDetailViewState extends State<_EmotionDetailView> {
           context: context,
           builder: (BuildContext context) {
             return AlertDialog(
-              title: const Text('Eliminar emoción'),
-              content: const Text(
+              title: Text('Eliminar emoción'),
+              content: Text(
                 'Este registro se borrará del historial y no se podrá recuperar.',
               ),
               actions: <Widget>[
                 TextButton(
                   onPressed: () => Navigator.of(context).pop(false),
-                  child: const Text('Cancelar'),
+                  child: Text('Cancelar'),
                 ),
                 FilledButton(
                   onPressed: () => Navigator.of(context).pop(true),
-                  child: const Text('Eliminar'),
+                  child: Text('Eliminar'),
                 ),
               ],
             );
@@ -433,25 +434,25 @@ class _EditEmotionSheetState extends State<_EditEmotionSheet> {
           mainAxisSize: MainAxisSize.min,
           crossAxisAlignment: CrossAxisAlignment.start,
           children: <Widget>[
-            const Text(
+            Text(
               'Editar registro',
               style: TextStyle(
                 fontSize: 20,
                 fontWeight: FontWeight.w800,
-                color: Color(0xFF0F172A),
+                color: context.mtColors.textPrimary,
               ),
             ),
-            const SizedBox(height: 4),
+            SizedBox(height: 4),
             Text(
               widget.entry.localizedName('es'),
-              style: const TextStyle(fontSize: 14, color: Color(0xFF64748B)),
+              style: TextStyle(fontSize: 14, color: context.mtColors.textSecondary),
             ),
-            const SizedBox(height: 20),
+            SizedBox(height: 20),
             Text(
               'Intensidad: ${_intensity.round()}/10',
-              style: const TextStyle(
+              style: TextStyle(
                 fontWeight: FontWeight.w700,
-                color: Color(0xFF0F172A),
+                color: context.mtColors.textPrimary,
               ),
             ),
             Slider(
@@ -465,7 +466,7 @@ class _EditEmotionSheetState extends State<_EditEmotionSheet> {
                 setState(() => _intensity = value);
               },
             ),
-            const SizedBox(height: 12),
+            SizedBox(height: 12),
             TextField(
               controller: _noteController,
               maxLines: 3,
@@ -473,28 +474,28 @@ class _EditEmotionSheetState extends State<_EditEmotionSheet> {
                 labelText: 'Nota',
                 hintText: 'Escribe una nota para este registro',
                 filled: true,
-                fillColor: const Color(0xFFF8FAFC),
+                fillColor: context.mtColors.surfaceSubtle,
                 border: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(16),
                 ),
               ),
             ),
-            const SizedBox(height: 20),
+            SizedBox(height: 20),
             Row(
               children: <Widget>[
                 Expanded(
                   child: OutlinedButton(
                     onPressed: () => Navigator.of(context).pop(),
                     style: OutlinedButton.styleFrom(
-                      padding: const EdgeInsets.symmetric(vertical: 14),
+                      padding: EdgeInsets.symmetric(vertical: 14),
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(16),
                       ),
                     ),
-                    child: const Text('Cancelar'),
+                    child: Text('Cancelar'),
                   ),
                 ),
-                const SizedBox(width: 12),
+                SizedBox(width: 12),
                 Expanded(
                   child: FilledButton(
                     onPressed: () {
@@ -507,12 +508,12 @@ class _EditEmotionSheetState extends State<_EditEmotionSheet> {
                     },
                     style: FilledButton.styleFrom(
                       backgroundColor: AppColors.primary,
-                      padding: const EdgeInsets.symmetric(vertical: 14),
+                      padding: EdgeInsets.symmetric(vertical: 14),
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(16),
                       ),
                     ),
-                    child: const Text('Guardar cambios'),
+                    child: Text('Guardar cambios'),
                   ),
                 ),
               ],
@@ -533,27 +534,27 @@ class _DetailCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding: const EdgeInsets.all(16),
+      padding: EdgeInsets.all(16),
       decoration: BoxDecoration(
-        color: Colors.white,
+        color: context.mtColors.card,
         borderRadius: BorderRadius.circular(24),
-        border: Border.all(color: const Color(0xFFE2E8F0)),
+        border: Border.all(color: context.mtColors.border),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: <Widget>[
           Text(
             title,
-            style: const TextStyle(
+            style: TextStyle(
               fontSize: 16,
               fontWeight: FontWeight.w700,
-              color: Color(0xFF0F172A),
+              color: context.mtColors.textPrimary,
             ),
           ),
-          const SizedBox(height: 12),
+          SizedBox(height: 12),
           Text(
             content,
-            style: const TextStyle(height: 1.5, color: Color(0xFF475569)),
+            style: TextStyle(height: 1.5, color: context.mtColors.textSecondary),
           ),
         ],
       ),

@@ -165,7 +165,8 @@ class CoachService:
         payload = {
             "model": settings.openai_model,
             "messages": messages,
-            "max_completion_tokens": 500,
+            "max_completion_tokens": 800,
+            "reasoning_effort": "minimal",
         }
 
         try:

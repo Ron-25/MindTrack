@@ -6,6 +6,7 @@ class ProfileState extends Equatable {
     this.isLoading = false,
     this.isSaving = false,
     this.profile,
+    this.localAvatarPath,
     this.errorMessage,
     this.successMessage,
   });
@@ -13,6 +14,10 @@ class ProfileState extends Equatable {
   final bool isLoading;
   final bool isSaving;
   final ProfileSettingsData? profile;
+
+  /// Ruta del archivo de la foto de perfil guardada localmente en el
+  /// dispositivo (null si el usuario no ha elegido ninguna).
+  final String? localAvatarPath;
   final String? errorMessage;
   final String? successMessage;
 
@@ -20,15 +25,20 @@ class ProfileState extends Equatable {
     bool? isLoading,
     bool? isSaving,
     ProfileSettingsData? profile,
+    String? localAvatarPath,
     String? errorMessage,
     String? successMessage,
     bool clearError = false,
     bool clearSuccess = false,
+    bool clearLocalAvatar = false,
   }) {
     return ProfileState(
       isLoading: isLoading ?? this.isLoading,
       isSaving: isSaving ?? this.isSaving,
       profile: profile ?? this.profile,
+      localAvatarPath: clearLocalAvatar
+          ? null
+          : (localAvatarPath ?? this.localAvatarPath),
       errorMessage: clearError ? null : (errorMessage ?? this.errorMessage),
       successMessage: clearSuccess
           ? null
@@ -41,6 +51,7 @@ class ProfileState extends Equatable {
     isLoading,
     isSaving,
     profile,
+    localAvatarPath,
     errorMessage,
     successMessage,
   ];

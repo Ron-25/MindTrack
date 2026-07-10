@@ -1,5 +1,8 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:mind_track/app/generated/l10n.dart';
 import 'package:mind_track/app/injector.dart';
 import 'package:mind_track/app/routes/route_names.dart';
@@ -99,7 +102,11 @@ class _ProfileSettingsPageState extends State<ProfileSettingsPage> {
                           padding: const EdgeInsets.fromLTRB(16, 24, 16, 120),
                           sliver: SliverList(
                             delegate: SliverChildListDelegate(<Widget>[
-                              _buildProfileHero(context, profile),
+                              _buildProfileHero(
+                                context,
+                                profile,
+                                state.localAvatarPath,
+                              ),
                               const SizedBox(height: 28),
                               _buildSectionLabel(
                                 translations.profile_account_settings,
@@ -230,7 +237,14 @@ class _ProfileSettingsPageState extends State<ProfileSettingsPage> {
     );
   }
 
-  Widget _buildProfileHero(BuildContext context, ProfileSettingsData profile) {
+  Widget _buildProfileHero(
+    BuildContext context,
+    ProfileSettingsData profile,
+    String? localAvatarPath,
+  ) {
+    final File? avatarFile = localAvatarPath != null
+        ? File(localAvatarPath)
+        : null;
     return Column(
       children: <Widget>[
         Stack(
@@ -254,32 +268,43 @@ class _ProfileSettingsPageState extends State<ProfileSettingsPage> {
                   begin: Alignment.topCenter,
                   end: Alignment.bottomCenter,
                 ),
+                image: avatarFile != null
+                    ? DecorationImage(
+                        image: FileImage(avatarFile),
+                        fit: BoxFit.cover,
+                      )
+                    : null,
               ),
               alignment: Alignment.center,
-              child: Text(
-                _initials(profile.name),
-                style: const TextStyle(
-                  fontSize: 34,
-                  fontWeight: FontWeight.w700,
-                  color: Color(0xFF475569),
-                ),
-              ),
+              child: avatarFile != null
+                  ? null
+                  : Text(
+                      _initials(profile.name),
+                      style: const TextStyle(
+                        fontSize: 34,
+                        fontWeight: FontWeight.w700,
+                        color: Color(0xFF475569),
+                      ),
+                    ),
             ),
             Positioned(
               right: 4,
               bottom: 4,
-              child: Container(
-                width: 28,
-                height: 28,
-                decoration: BoxDecoration(
-                  color: AppColors.primary,
-                  shape: BoxShape.circle,
-                  border: Border.all(color: Colors.white, width: 2),
-                ),
-                child: const Icon(
-                  Icons.edit_rounded,
-                  size: 14,
-                  color: Colors.white,
+              child: GestureDetector(
+                onTap: () => _showAvatarPicker(context, avatarFile != null),
+                child: Container(
+                  width: 28,
+                  height: 28,
+                  decoration: BoxDecoration(
+                    color: AppColors.primary,
+                    shape: BoxShape.circle,
+                    border: Border.all(color: Colors.white, width: 2),
+                  ),
+                  child: const Icon(
+                    Icons.edit_rounded,
+                    size: 14,
+                    color: Colors.white,
+                  ),
                 ),
               ),
             ),
@@ -433,7 +458,17 @@ class _ProfileSettingsPageState extends State<ProfileSettingsPage> {
                               }
                             },
                     ),
-                    const SizedBox(height: 16),
+                    Align(
+                      alignment: Alignment.centerLeft,
+                      child: TextButton.icon(
+                        onPressed: _openSystemNotificationSettings,
+                        icon: const Icon(Icons.settings_outlined, size: 18),
+                        label: const Text(
+                          'Ajustes de notificaciones del sistema',
+                        ),
+                      ),
+                    ),
+                    const SizedBox(height: 8),
                     Row(
                       children: <Widget>[
                         Expanded(
@@ -488,6 +523,67 @@ class _ProfileSettingsPageState extends State<ProfileSettingsPage> {
       return null;
     }
     return TimeOfDay(hour: hour, minute: minute);
+  }
+
+  /// Hoja para elegir/cambiar la foto de perfil, guardada localmente en el
+  /// dispositivo (no se envía al backend).
+  Future<void> _showAvatarPicker(BuildContext context, bool hasAvatar) async {
+    final ImageSource? source = await showModalBottomSheet<ImageSource>(
+      context: context,
+      backgroundColor: Theme.of(context).colorScheme.surface,
+      shape: const RoundedRectangleBorder(
+        borderRadius: BorderRadius.vertical(top: Radius.circular(28)),
+      ),
+      builder: (BuildContext sheetContext) {
+        return SafeArea(
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: <Widget>[
+              ListTile(
+                leading: const Icon(Icons.photo_camera_outlined),
+                title: const Text('Tomar foto'),
+                onTap: () =>
+                    Navigator.of(sheetContext).pop(ImageSource.camera),
+              ),
+              ListTile(
+                leading: const Icon(Icons.photo_library_outlined),
+                title: const Text('Elegir de galería'),
+                onTap: () =>
+                    Navigator.of(sheetContext).pop(ImageSource.gallery),
+              ),
+              if (hasAvatar)
+                ListTile(
+                  leading: const Icon(
+                    Icons.delete_outline_rounded,
+                    color: Color(0xFFEF4444),
+                  ),
+                  title: const Text(
+                    'Eliminar foto',
+                    style: TextStyle(color: Color(0xFFEF4444)),
+                  ),
+                  onTap: () {
+                    Navigator.of(sheetContext).pop();
+                    _profileCubit.removeAvatar();
+                  },
+                ),
+              const SizedBox(height: 8),
+            ],
+          ),
+        );
+      },
+    );
+    if (source == null) {
+      return;
+    }
+    final XFile? picked = await ImagePicker().pickImage(
+      source: source,
+      imageQuality: 80,
+      maxWidth: 1024,
+    );
+    if (picked == null) {
+      return;
+    }
+    await _profileCubit.updateAvatar(File(picked.path));
   }
 
   Future<void> _editProfileName(
@@ -665,6 +761,18 @@ class _ProfileSettingsPageState extends State<ProfileSettingsPage> {
       languageCode: result.languageCode,
       notificationsEnabled: result.notificationsEnabled,
     );
+  }
+
+  /// Intent explícito: abre los ajustes de notificaciones de la app
+  /// en Android. En iOS se informa que la opción es solo de Android.
+  Future<void> _openSystemNotificationSettings() async {
+    final bool launched = await _deviceIntentService.openNotificationSettings();
+    if (!mounted) {
+      return;
+    }
+    if (!launched) {
+      _showIntentUnavailableToast(S.of(context).profile_intent_android_only);
+    }
   }
 
   Future<void> _openPrivacyPolicy() async {

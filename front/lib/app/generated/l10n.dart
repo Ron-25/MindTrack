@@ -2113,6 +2113,976 @@ class S {
       args: [],
     );
   }
+
+  /// `Cancel`
+  String get common_cancel {
+    return Intl.message('Cancel', name: 'common_cancel', desc: '', args: []);
+  }
+
+  /// `Delete`
+  String get common_delete {
+    return Intl.message('Delete', name: 'common_delete', desc: '', args: []);
+  }
+
+  /// `Could not connect to the server.`
+  String get err_connection {
+    return Intl.message(
+      'Could not connect to the server.',
+      name: 'err_connection',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `The request timed out.`
+  String get err_timeout {
+    return Intl.message(
+      'The request timed out.',
+      name: 'err_timeout',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Network error. Try again.`
+  String get err_network {
+    return Intl.message(
+      'Network error. Try again.',
+      name: 'err_network',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Unknown error`
+  String get err_unknown {
+    return Intl.message(
+      'Unknown error',
+      name: 'err_unknown',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Session expired`
+  String get err_session_expired_title {
+    return Intl.message(
+      'Session expired',
+      name: 'err_session_expired_title',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Please sign in again.`
+  String get err_session_expired_desc {
+    return Intl.message(
+      'Please sign in again.',
+      name: 'err_session_expired_desc',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `How are you feeling today?`
+  String get reminder_notif_title {
+    return Intl.message(
+      'How are you feeling today?',
+      name: 'reminder_notif_title',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Take a minute to log your emotion in MindTrack.`
+  String get reminder_notif_body {
+    return Intl.message(
+      'Take a minute to log your emotion in MindTrack.',
+      name: 'reminder_notif_body',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Daily reminder`
+  String get reminder_channel_name {
+    return Intl.message(
+      'Daily reminder',
+      name: 'reminder_channel_name',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Daily alert to log your emotions and habits.`
+  String get reminder_channel_desc {
+    return Intl.message(
+      'Daily alert to log your emotions and habits.',
+      name: 'reminder_channel_desc',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Could not load analytics.`
+  String get err_load_analytics {
+    return Intl.message(
+      'Could not load analytics.',
+      name: 'err_load_analytics',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Could not load habits.`
+  String get err_load_habits {
+    return Intl.message(
+      'Could not load habits.',
+      name: 'err_load_habits',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Could not load your dashboard.`
+  String get err_load_dashboard {
+    return Intl.message(
+      'Could not load your dashboard.',
+      name: 'err_load_dashboard',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Could not load your profile.`
+  String get err_load_profile {
+    return Intl.message(
+      'Could not load your profile.',
+      name: 'err_load_profile',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Your session expired. Please sign in again.`
+  String get err_session_expired_full {
+    return Intl.message(
+      'Your session expired. Please sign in again.',
+      name: 'err_session_expired_full',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Keep noticing what influences your mood during the day.`
+  String get home_insight_fallback_day {
+    return Intl.message(
+      'Keep noticing what influences your mood during the day.',
+      name: 'home_insight_fallback_day',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Your week is still taking shape. Keep logging to see patterns.`
+  String get home_insight_fallback_week {
+    return Intl.message(
+      'Your week is still taking shape. Keep logging to see patterns.',
+      name: 'home_insight_fallback_week',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `The assistant returned an empty reply.`
+  String get err_chat_empty {
+    return Intl.message(
+      'The assistant returned an empty reply.',
+      name: 'err_chat_empty',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Could not send the message.`
+  String get err_chat_send {
+    return Intl.message(
+      'Could not send the message.',
+      name: 'err_chat_send',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Could not load the coach.`
+  String get err_load_coach {
+    return Intl.message(
+      'Could not load the coach.',
+      name: 'err_load_coach',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Hi! I'm MindtrackBot, your wellbeing coach. I can help you understand your emotions, improve your habits, or simply listen. How are you feeling today?`
+  String get chat_greeting {
+    return Intl.message(
+      'Hi! I\'m MindtrackBot, your wellbeing coach. I can help you understand your emotions, improve your habits, or simply listen. How are you feeling today?',
+      name: 'chat_greeting',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Online`
+  String get chat_online {
+    return Intl.message('Online', name: 'chat_online', desc: '', args: []);
+  }
+
+  /// `Typing…`
+  String get chat_typing {
+    return Intl.message('Typing…', name: 'chat_typing', desc: '', args: []);
+  }
+
+  /// `Restart conversation`
+  String get chat_restart {
+    return Intl.message(
+      'Restart conversation',
+      name: 'chat_restart',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Write a message...`
+  String get chat_input_hint {
+    return Intl.message(
+      'Write a message...',
+      name: 'chat_input_hint',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Today`
+  String get chat_today {
+    return Intl.message('Today', name: 'chat_today', desc: '', args: []);
+  }
+
+  /// `Search history`
+  String get history_search_title {
+    return Intl.message(
+      'Search history',
+      name: 'history_search_title',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Emotion history`
+  String get history_title {
+    return Intl.message(
+      'Emotion history',
+      name: 'history_title',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Log emotion`
+  String get history_log_button {
+    return Intl.message(
+      'Log emotion',
+      name: 'history_log_button',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `You have no logged emotions yet.`
+  String get history_empty_title {
+    return Intl.message(
+      'You have no logged emotions yet.',
+      name: 'history_empty_title',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Use the log button to start building your history.`
+  String get history_empty_desc {
+    return Intl.message(
+      'Use the log button to start building your history.',
+      name: 'history_empty_desc',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `No emotions match your search.`
+  String get history_no_results {
+    return Intl.message(
+      'No emotions match your search.',
+      name: 'history_no_results',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Search notes or moods`
+  String get history_search_hint {
+    return Intl.message(
+      'Search notes or moods',
+      name: 'history_search_hint',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Delete entry`
+  String get history_delete_title {
+    return Intl.message(
+      'Delete entry',
+      name: 'history_delete_title',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `This will remove the emotion from your history.`
+  String get history_delete_desc {
+    return Intl.message(
+      'This will remove the emotion from your history.',
+      name: 'history_delete_desc',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `All`
+  String get history_all_filter {
+    return Intl.message('All', name: 'history_all_filter', desc: '', args: []);
+  }
+
+  /// `INTENSITY`
+  String get history_intensity_label {
+    return Intl.message(
+      'INTENSITY',
+      name: 'history_intensity_label',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `{count} result(s)`
+  String history_results(Object count) {
+    return Intl.message(
+      '$count result(s)',
+      name: 'history_results',
+      desc: '',
+      args: [count],
+    );
+  }
+
+  /// `Today`
+  String get history_today {
+    return Intl.message('Today', name: 'history_today', desc: '', args: []);
+  }
+
+  /// `Yesterday`
+  String get history_yesterday {
+    return Intl.message(
+      'Yesterday',
+      name: 'history_yesterday',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Save entry`
+  String get emotion_save_button {
+    return Intl.message(
+      'Save entry',
+      name: 'emotion_save_button',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Which emotion do you want to log?`
+  String get emotion_question {
+    return Intl.message(
+      'Which emotion do you want to log?',
+      name: 'emotion_question',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Fill in the details to connect how you felt with the context.`
+  String get emotion_details_desc {
+    return Intl.message(
+      'Fill in the details to connect how you felt with the context.',
+      name: 'emotion_details_desc',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Main emotion`
+  String get emotion_primary_label {
+    return Intl.message(
+      'Main emotion',
+      name: 'emotion_primary_label',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `E.g. meeting, exercise, rest`
+  String get emotion_activity_hint {
+    return Intl.message(
+      'E.g. meeting, exercise, rest',
+      name: 'emotion_activity_hint',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `E.g. home, office, university`
+  String get emotion_place_hint {
+    return Intl.message(
+      'E.g. home, office, university',
+      name: 'emotion_place_hint',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `E.g. alone, friends, family`
+  String get emotion_people_hint {
+    return Intl.message(
+      'E.g. alone, friends, family',
+      name: 'emotion_people_hint',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Describe what happened or what triggered this emotion.`
+  String get emotion_note_hint {
+    return Intl.message(
+      'Describe what happened or what triggered this emotion.',
+      name: 'emotion_note_hint',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Select an emotion to continue.`
+  String get emotion_select_error {
+    return Intl.message(
+      'Select an emotion to continue.',
+      name: 'emotion_select_error',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Emotion detail`
+  String get detail_title {
+    return Intl.message(
+      'Emotion detail',
+      name: 'detail_title',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Edit entry`
+  String get detail_edit_tooltip {
+    return Intl.message(
+      'Edit entry',
+      name: 'detail_edit_tooltip',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Intensity {value}/10`
+  String detail_intensity(Object value) {
+    return Intl.message(
+      'Intensity $value/10',
+      name: 'detail_intensity',
+      desc: '',
+      args: [value],
+    );
+  }
+
+  /// `You didn't add a note to this entry.`
+  String get detail_no_note {
+    return Intl.message(
+      'You didn\'t add a note to this entry.',
+      name: 'detail_no_note',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Delete emotion`
+  String get detail_delete_title {
+    return Intl.message(
+      'Delete emotion',
+      name: 'detail_delete_title',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `This entry will be deleted from your history and cannot be recovered.`
+  String get detail_delete_desc {
+    return Intl.message(
+      'This entry will be deleted from your history and cannot be recovered.',
+      name: 'detail_delete_desc',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Activity: {value}`
+  String detail_activity(Object value) {
+    return Intl.message(
+      'Activity: $value',
+      name: 'detail_activity',
+      desc: '',
+      args: [value],
+    );
+  }
+
+  /// `Place: {value}`
+  String detail_place(Object value) {
+    return Intl.message(
+      'Place: $value',
+      name: 'detail_place',
+      desc: '',
+      args: [value],
+    );
+  }
+
+  /// `People: {value}`
+  String detail_people(Object value) {
+    return Intl.message(
+      'People: $value',
+      name: 'detail_people',
+      desc: '',
+      args: [value],
+    );
+  }
+
+  /// `You didn't log context for this emotion.`
+  String get detail_no_context {
+    return Intl.message(
+      'You didn\'t log context for this emotion.',
+      name: 'detail_no_context',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Notes`
+  String get detail_notes {
+    return Intl.message('Notes', name: 'detail_notes', desc: '', args: []);
+  }
+
+  /// `Context`
+  String get detail_context {
+    return Intl.message('Context', name: 'detail_context', desc: '', args: []);
+  }
+
+  /// `Note`
+  String get detail_note_label {
+    return Intl.message('Note', name: 'detail_note_label', desc: '', args: []);
+  }
+
+  /// `Write a note for this entry`
+  String get detail_note_hint {
+    return Intl.message(
+      'Write a note for this entry',
+      name: 'detail_note_hint',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Intensity: {value}/10`
+  String detail_edit_intensity(Object value) {
+    return Intl.message(
+      'Intensity: $value/10',
+      name: 'detail_edit_intensity',
+      desc: '',
+      args: [value],
+    );
+  }
+
+  /// `Could not load the history.`
+  String get err_load_history {
+    return Intl.message(
+      'Could not load the history.',
+      name: 'err_load_history',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Could not load the emotion detail.`
+  String get err_load_emotion_detail {
+    return Intl.message(
+      'Could not load the emotion detail.',
+      name: 'err_load_emotion_detail',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Could not load the emotion types.`
+  String get err_load_emotion_types {
+    return Intl.message(
+      'Could not load the emotion types.',
+      name: 'err_load_emotion_types',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Could not load the tags.`
+  String get err_load_tags {
+    return Intl.message(
+      'Could not load the tags.',
+      name: 'err_load_tags',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Could not save the emotion entry.`
+  String get err_save_emotion {
+    return Intl.message(
+      'Could not save the emotion entry.',
+      name: 'err_save_emotion',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Could not update the emotion entry.`
+  String get err_update_emotion {
+    return Intl.message(
+      'Could not update the emotion entry.',
+      name: 'err_update_emotion',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Could not delete the emotion entry.`
+  String get err_delete_emotion {
+    return Intl.message(
+      'Could not delete the emotion entry.',
+      name: 'err_delete_emotion',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Emotion entry saved.`
+  String get msg_emotion_saved {
+    return Intl.message(
+      'Emotion entry saved.',
+      name: 'msg_emotion_saved',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Entry updated.`
+  String get msg_emotion_updated {
+    return Intl.message(
+      'Entry updated.',
+      name: 'msg_emotion_updated',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Entry deleted.`
+  String get msg_emotion_deleted {
+    return Intl.message(
+      'Entry deleted.',
+      name: 'msg_emotion_deleted',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Habit marked as completed.`
+  String get msg_habit_done {
+    return Intl.message(
+      'Habit marked as completed.',
+      name: 'msg_habit_done',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Habit marked as pending.`
+  String get msg_habit_pending {
+    return Intl.message(
+      'Habit marked as pending.',
+      name: 'msg_habit_pending',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Habit created successfully.`
+  String get msg_habit_created {
+    return Intl.message(
+      'Habit created successfully.',
+      name: 'msg_habit_created',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Habit updated successfully.`
+  String get msg_habit_updated {
+    return Intl.message(
+      'Habit updated successfully.',
+      name: 'msg_habit_updated',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Profile photo updated.`
+  String get msg_photo_updated {
+    return Intl.message(
+      'Profile photo updated.',
+      name: 'msg_photo_updated',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Profile photo removed.`
+  String get msg_photo_deleted {
+    return Intl.message(
+      'Profile photo removed.',
+      name: 'msg_photo_deleted',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Profile updated successfully.`
+  String get msg_profile_updated {
+    return Intl.message(
+      'Profile updated successfully.',
+      name: 'msg_profile_updated',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Preferences updated.`
+  String get msg_prefs_updated {
+    return Intl.message(
+      'Preferences updated.',
+      name: 'msg_prefs_updated',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Dark mode`
+  String get profile_dark_mode {
+    return Intl.message(
+      'Dark mode',
+      name: 'profile_dark_mode',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Device language`
+  String get profile_device_language {
+    return Intl.message(
+      'Device language',
+      name: 'profile_device_language',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Daily · {time}`
+  String profile_reminder_trailing(Object time) {
+    return Intl.message(
+      'Daily · $time',
+      name: 'profile_reminder_trailing',
+      desc: '',
+      args: [time],
+    );
+  }
+
+  /// `Off`
+  String get profile_reminder_off {
+    return Intl.message(
+      'Off',
+      name: 'profile_reminder_off',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Edit profile`
+  String get profile_edit_button {
+    return Intl.message(
+      'Edit profile',
+      name: 'profile_edit_button',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Daily reminder`
+  String get reminder_sheet_title {
+    return Intl.message(
+      'Daily reminder',
+      name: 'reminder_sheet_title',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `One alert a day to log how you feel.`
+  String get reminder_sheet_desc {
+    return Intl.message(
+      'One alert a day to log how you feel.',
+      name: 'reminder_sheet_desc',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Enable reminder`
+  String get reminder_enable {
+    return Intl.message(
+      'Enable reminder',
+      name: 'reminder_enable',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Alert time`
+  String get reminder_time_label {
+    return Intl.message(
+      'Alert time',
+      name: 'reminder_time_label',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `System notification settings`
+  String get reminder_system_settings {
+    return Intl.message(
+      'System notification settings',
+      name: 'reminder_system_settings',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Take photo`
+  String get profile_take_photo {
+    return Intl.message(
+      'Take photo',
+      name: 'profile_take_photo',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Choose from gallery`
+  String get profile_pick_gallery {
+    return Intl.message(
+      'Choose from gallery',
+      name: 'profile_pick_gallery',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Remove photo`
+  String get profile_delete_photo {
+    return Intl.message(
+      'Remove photo',
+      name: 'profile_delete_photo',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Edit name`
+  String get profile_edit_name {
+    return Intl.message(
+      'Edit name',
+      name: 'profile_edit_name',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Turn app reminders on or off.`
+  String get profile_notif_toggle_desc {
+    return Intl.message(
+      'Turn app reminders on or off.',
+      name: 'profile_notif_toggle_desc',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `If the email is registered, your password was updated.`
+  String get msg_password_updated {
+    return Intl.message(
+      'If the email is registered, your password was updated.',
+      name: 'msg_password_updated',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Request timed out. Check your connection.`
+  String get err_timeout_conn {
+    return Intl.message(
+      'Request timed out. Check your connection.',
+      name: 'err_timeout_conn',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Connection error. Check your network.`
+  String get err_connection_check {
+    return Intl.message(
+      'Connection error. Check your network.',
+      name: 'err_connection_check',
+      desc: '',
+      args: [],
+    );
+  }
 }
 
 class AppLocalizationDelegate extends LocalizationsDelegate<S> {

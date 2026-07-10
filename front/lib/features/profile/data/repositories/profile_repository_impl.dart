@@ -1,4 +1,5 @@
 import 'package:mind_track/app/injector.dart';
+import 'package:mind_track/app/l10n/locale_controller.dart';
 import 'package:mind_track/core/services/reminder_service.dart';
 import 'package:mind_track/features/profile/data/datasources/profile_remote_datasource.dart';
 import 'package:mind_track/features/profile/domain/entities/profile_settings_data.dart';
@@ -37,9 +38,11 @@ class ProfileRepositoryImpl implements ProfileRepository {
     return profile;
   }
 
-  /// Mantiene la notificación local alineada con las preferencias guardadas.
-  /// Nunca falla el flujo de perfil por un problema de notificaciones.
+  /// Mantiene el idioma y la notificación local alineados con las
+  /// preferencias guardadas. Nunca falla el flujo de perfil por esto.
   Future<void> _syncReminder(ProfileSettingsData profile) async {
+    // El idioma guardado se aplica de inmediato en toda la app.
+    await LocaleController.instance.setLanguage(profile.languageCode);
     try {
       await Injector.get<ReminderService>().syncDailyReminder(
         enabled: profile.notificationsEnabled,

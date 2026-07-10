@@ -5,6 +5,7 @@ import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:mind_track/app/injector.dart';
 import 'package:hydrated_bloc/hydrated_bloc.dart';
 import 'package:mind_track/app/l10n/app_localitazion_setup.dart';
+import 'package:mind_track/app/l10n/locale_controller.dart';
 import 'package:mind_track/app/navigation_service.dart';
 import 'package:mind_track/app/routes/app_router.dart';
 import 'package:mind_track/app/routes/route_names.dart';
@@ -23,6 +24,7 @@ Future<void> main() async {
         : await getTemporaryDirectory(),
   );
   await ThemeController.instance.load();
+  await LocaleController.instance.load();
   SystemChrome.setSystemUIOverlayStyle(
     const SystemUiOverlayStyle(
       statusBarColor: Colors.transparent,
@@ -44,20 +46,27 @@ class MyApp extends StatelessWidget {
     return ValueListenableBuilder<ThemeMode>(
       valueListenable: ThemeController.instance,
       builder: (BuildContext context, ThemeMode themeMode, Widget? child) {
-        return MaterialApp(
-          navigatorKey: navigatorKey,
-          title: "MindTrack",
-          debugShowCheckedModeBanner: false,
-          theme: AppTheme.lightTheme,
-          darkTheme: AppTheme.darkTheme,
-          themeMode: themeMode,
-          localizationsDelegates: AppLocalizationsSetup.localizationsDelegates,
-          supportedLocales: AppLocalizationsSetup.supportedLocales,
-          initialRoute: RouteNames.splash,
-          onGenerateRoute: AppRouter.onGenerateRoute,
-          builder: (BuildContext context, Widget? child) {
-            return ToastificationWrapper(
-              child: child ?? const SizedBox.shrink(),
+        return ValueListenableBuilder<Locale?>(
+          valueListenable: LocaleController.instance,
+          builder: (BuildContext context, Locale? locale, Widget? child) {
+            return MaterialApp(
+              navigatorKey: navigatorKey,
+              title: "MindTrack",
+              debugShowCheckedModeBanner: false,
+              theme: AppTheme.lightTheme,
+              darkTheme: AppTheme.darkTheme,
+              themeMode: themeMode,
+              locale: locale,
+              localizationsDelegates:
+                  AppLocalizationsSetup.localizationsDelegates,
+              supportedLocales: AppLocalizationsSetup.supportedLocales,
+              initialRoute: RouteNames.splash,
+              onGenerateRoute: AppRouter.onGenerateRoute,
+              builder: (BuildContext context, Widget? child) {
+                return ToastificationWrapper(
+                  child: child ?? const SizedBox.shrink(),
+                );
+              },
             );
           },
         );

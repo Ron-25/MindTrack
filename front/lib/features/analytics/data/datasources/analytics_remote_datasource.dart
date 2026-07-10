@@ -1,4 +1,5 @@
 import 'package:dio/dio.dart';
+import 'package:mind_track/app/generated/l10n.dart';
 import 'package:mind_track/core/network/api_client.dart';
 import 'package:mind_track/features/analytics/domain/entities/analytics_snapshot.dart';
 
@@ -97,8 +98,8 @@ class AnalyticsRemoteDataSourceImpl implements AnalyticsRemoteDataSource {
       }
     }
     if (error.type == DioExceptionType.connectionError) {
-      return 'No se pudo conectar con el servidor.';
+      return S.current.err_connection;
     }
-    return 'No se pudieron cargar las analíticas.';
+    return S.current.err_load_analytics;
   }
 }

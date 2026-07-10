@@ -1,4 +1,5 @@
 import 'package:dio/dio.dart';
+import 'package:mind_track/app/generated/l10n.dart';
 import 'package:mind_track/core/network/api_client.dart';
 import 'package:mind_track/features/emotion_tracker/domain/entities/emotion_entry.dart';
 
@@ -37,7 +38,7 @@ class EmotionRemoteDataSourceImpl implements EmotionRemoteDataSource {
           .toList(growable: false);
     } on DioException catch (error) {
       throw Exception(
-        _extractMessage(error, 'No se pudo cargar el historial.'),
+        _extractMessage(error, S.current.err_load_history),
       );
     }
   }
@@ -51,7 +52,7 @@ class EmotionRemoteDataSourceImpl implements EmotionRemoteDataSource {
       return _mapEmotionEntry(response.data as Map<String, dynamic>);
     } on DioException catch (error) {
       throw Exception(
-        _extractMessage(error, 'No se pudo cargar el detalle de la emoción.'),
+        _extractMessage(error, S.current.err_load_emotion_detail),
       );
     }
   }
@@ -69,7 +70,7 @@ class EmotionRemoteDataSourceImpl implements EmotionRemoteDataSource {
           .toList(growable: false);
     } on DioException catch (error) {
       throw Exception(
-        _extractMessage(error, 'No se pudieron cargar los tipos de emoción.'),
+        _extractMessage(error, S.current.err_load_emotion_types),
       );
     }
   }
@@ -87,7 +88,7 @@ class EmotionRemoteDataSourceImpl implements EmotionRemoteDataSource {
           .toList(growable: false);
     } on DioException catch (error) {
       throw Exception(
-        _extractMessage(error, 'No se pudieron cargar las tags.'),
+        _extractMessage(error, S.current.err_load_tags),
       );
     }
   }
@@ -111,7 +112,7 @@ class EmotionRemoteDataSourceImpl implements EmotionRemoteDataSource {
       return _mapEmotionEntry(response.data as Map<String, dynamic>);
     } on DioException catch (error) {
       throw Exception(
-        _extractMessage(error, 'No se pudo guardar el registro emocional.'),
+        _extractMessage(error, S.current.err_save_emotion),
       );
     }
   }
@@ -133,7 +134,7 @@ class EmotionRemoteDataSourceImpl implements EmotionRemoteDataSource {
       return _mapEmotionEntry(response.data as Map<String, dynamic>);
     } on DioException catch (error) {
       throw Exception(
-        _extractMessage(error, 'No se pudo actualizar el registro emocional.'),
+        _extractMessage(error, S.current.err_update_emotion),
       );
     }
   }
@@ -144,7 +145,7 @@ class EmotionRemoteDataSourceImpl implements EmotionRemoteDataSource {
       await _client.dio.delete<void>('/api/v1/emotions/$id');
     } on DioException catch (error) {
       throw Exception(
-        _extractMessage(error, 'No se pudo eliminar el registro emocional.'),
+        _extractMessage(error, S.current.err_delete_emotion),
       );
     }
   }
@@ -206,11 +207,11 @@ class EmotionRemoteDataSourceImpl implements EmotionRemoteDataSource {
       }
     }
     if (error.type == DioExceptionType.connectionError) {
-      return 'No se pudo conectar con el servidor.';
+      return S.current.err_connection;
     }
     if (error.type == DioExceptionType.connectionTimeout ||
         error.type == DioExceptionType.receiveTimeout) {
-      return 'La solicitud tardó demasiado.';
+      return S.current.err_timeout;
     }
     return fallback;
   }

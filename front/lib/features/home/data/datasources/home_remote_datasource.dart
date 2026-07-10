@@ -1,4 +1,5 @@
 import 'package:dio/dio.dart';
+import 'package:mind_track/app/generated/l10n.dart';
 import 'package:mind_track/core/network/api_client.dart';
 import 'package:mind_track/features/home/domain/entities/home_dashboard.dart';
 
@@ -172,7 +173,7 @@ class HomeRemoteDataSourceImpl implements HomeRemoteDataSource {
           (weeklySummaryJson['insight_text'] as String?)?.trim().isNotEmpty ==
               true
           ? weeklySummaryJson['insight_text'] as String
-          : 'Keep noticing what influences your mood during the day.',
+          : S.current.home_insight_fallback_day,
       totalEntries: todayEntries.length,
       energyLevelKey: _energyLevelText(averageIntensity),
       colorHex: dominantEmotion['color_hex'] as String?,
@@ -235,7 +236,7 @@ class HomeRemoteDataSourceImpl implements HomeRemoteDataSource {
           (weeklySummaryJson['insight_text'] as String?)?.trim().isNotEmpty ==
               true
           ? weeklySummaryJson['insight_text'] as String
-          : 'Your week is still taking shape. Keep logging to see patterns.',
+          : S.current.home_insight_fallback_week,
     );
   }
 
@@ -336,18 +337,18 @@ class HomeRemoteDataSourceImpl implements HomeRemoteDataSource {
   String _extractMessage(DioException error) {
     final dynamic data = error.response?.data;
     if (data is Map<String, dynamic>) {
-      return (data['detail'] as String?) ?? 'Could not load your dashboard.';
+      return (data['detail'] as String?) ?? S.current.err_load_dashboard;
     }
     if (error.type == DioExceptionType.connectionError) {
-      return 'Could not connect to the server.';
+      return S.current.err_connection;
     }
     if (error.type == DioExceptionType.connectionTimeout ||
         error.type == DioExceptionType.receiveTimeout) {
-      return 'The request timed out.';
+      return S.current.err_timeout;
     }
     if (error.response?.statusCode == 401) {
-      return 'Your session expired. Please sign in again.';
+      return S.current.err_session_expired_full;
     }
-    return 'Could not load your dashboard.';
+    return S.current.err_load_dashboard;
   }
 }

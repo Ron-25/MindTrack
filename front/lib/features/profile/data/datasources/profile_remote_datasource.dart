@@ -1,4 +1,5 @@
 import 'package:dio/dio.dart';
+import 'package:mind_track/app/generated/l10n.dart';
 import 'package:mind_track/core/network/api_client.dart';
 import 'package:mind_track/features/profile/domain/entities/profile_settings_data.dart';
 
@@ -101,15 +102,15 @@ class ProfileRemoteDataSourceImpl implements ProfileRemoteDataSource {
   String _extractMessage(DioException error) {
     final dynamic data = error.response?.data;
     if (data is Map<String, dynamic>) {
-      return (data['detail'] as String?) ?? 'Could not load your profile.';
+      return (data['detail'] as String?) ?? S.current.err_load_profile;
     }
     if (error.type == DioExceptionType.connectionError) {
-      return 'Could not connect to the server.';
+      return S.current.err_connection;
     }
     if (error.type == DioExceptionType.connectionTimeout ||
         error.type == DioExceptionType.receiveTimeout) {
-      return 'The request timed out.';
+      return S.current.err_timeout;
     }
-    return 'Could not load your profile.';
+    return S.current.err_load_profile;
   }
 }

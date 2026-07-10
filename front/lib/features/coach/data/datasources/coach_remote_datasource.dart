@@ -1,4 +1,5 @@
 import 'package:dio/dio.dart';
+import 'package:mind_track/app/generated/l10n.dart';
 import 'package:mind_track/core/network/api_client.dart';
 import 'package:mind_track/features/coach/domain/entities/coach_response.dart';
 
@@ -80,19 +81,19 @@ class CoachRemoteDataSourceImpl implements CoachRemoteDataSource {
       final Map<String, dynamic> json = response.data as Map<String, dynamic>;
       final String reply = json['reply'] as String? ?? '';
       if (reply.trim().isEmpty) {
-        throw Exception('El asistente devolvió una respuesta vacía.');
+        throw Exception(S.current.err_chat_empty);
       }
       return reply;
     } on DioException catch (error) {
       throw Exception(
-        _extractMessage(error, fallback: 'No se pudo enviar el mensaje.'),
+        _extractMessage(error, fallback: S.current.err_chat_send),
       );
     }
   }
 
   String _extractMessage(
     DioException error, {
-    String fallback = 'No se pudo cargar el coach.',
+    String fallback = S.current.err_load_coach,
   }) {
     final dynamic data = error.response?.data;
     if (data is Map) {
@@ -106,7 +107,7 @@ class CoachRemoteDataSourceImpl implements CoachRemoteDataSource {
       return '$fallback (error $statusCode).';
     }
     if (error.type == DioExceptionType.connectionError) {
-      return 'No se pudo conectar con el servidor.';
+      return S.current.err_connection;
     }
     return fallback;
   }

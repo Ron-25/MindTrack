@@ -1,4 +1,5 @@
 import 'package:dio/dio.dart';
+import 'package:mind_track/app/generated/l10n.dart';
 import 'package:mind_track/core/network/api_client.dart';
 import 'package:mind_track/features/login/domain/exceptions/auth_exception.dart';
 import '../models/auth_token_model.dart';
@@ -75,7 +76,7 @@ class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
       );
       final Map<String, dynamic> json = response.data as Map<String, dynamic>;
       return json['message'] as String? ??
-          'Si el correo está registrado, tu contraseña fue actualizada.';
+          S.current.msg_password_updated;
     } on DioException catch (e) {
       throw AuthException(_extractDetail(e));
     }
@@ -84,15 +85,15 @@ class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
   String _extractDetail(DioException e) {
     final dynamic data = e.response?.data;
     if (data is Map<String, dynamic>) {
-      return (data['detail'] as String?) ?? 'Error desconocido';
+      return (data['detail'] as String?) ?? S.current.err_unknown;
     }
     if (e.type == DioExceptionType.connectionTimeout ||
         e.type == DioExceptionType.receiveTimeout) {
-      return 'Tiempo de espera agotado. Verifica tu conexión.';
+      return S.current.err_timeout_conn;
     }
     if (e.type == DioExceptionType.connectionError) {
-      return 'No se pudo conectar al servidor.';
+      return S.current.err_connection;
     }
-    return 'Error de red. Inténtalo de nuevo.';
+    return S.current.err_network;
   }
 }

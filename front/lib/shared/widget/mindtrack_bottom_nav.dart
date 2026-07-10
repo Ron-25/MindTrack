@@ -38,19 +38,20 @@ class MindTrackBottomNav extends StatelessWidget {
 
     return SafeArea(
       top: false,
+      minimum: const EdgeInsets.fromLTRB(16, 0, 16, 12),
       child: Container(
         decoration: BoxDecoration(
           color: colors.surface,
-          border: Border(top: BorderSide(color: colors.outlineVariant)),
+          borderRadius: BorderRadius.circular(28),
           boxShadow: const <BoxShadow>[
             BoxShadow(
-              color: Color(0x26000000),
-              blurRadius: 20,
-              offset: Offset(0, -6),
+              color: Color(0x1F000000),
+              blurRadius: 24,
+              offset: Offset(0, 10),
             ),
           ],
         ),
-        padding: const EdgeInsets.fromLTRB(16, 12, 16, 12),
+        padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 10),
         child: Row(
           children: List<Widget>.generate(items.length, (int index) {
             final bool isSelected = currentIndex == index;
@@ -60,26 +61,37 @@ class MindTrackBottomNav extends StatelessWidget {
             return Expanded(
               child: InkWell(
                 onTap: () => onTap(index),
-                borderRadius: BorderRadius.circular(16),
-                child: Padding(
-                  padding: const EdgeInsets.symmetric(vertical: 4),
-                  child: Column(
-                    mainAxisSize: MainAxisSize.min,
-                    children: <Widget>[
-                      Icon(items[index].icon, size: 20, color: color),
-                      const SizedBox(height: 4),
-                      Text(
-                        items[index].label,
-                        textAlign: TextAlign.center,
-                        style: TextStyle(
-                          fontSize: 10,
-                          fontWeight: FontWeight.w700,
-                          letterSpacing: -0.3,
-                          color: color,
-                        ),
+                borderRadius: BorderRadius.circular(20),
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: <Widget>[
+                    AnimatedContainer(
+                      duration: const Duration(milliseconds: 200),
+                      curve: Curves.easeOut,
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: 14,
+                        vertical: 6,
                       ),
-                    ],
-                  ),
+                      decoration: BoxDecoration(
+                        color: isSelected
+                            ? AppColors.primary.withValues(alpha: 0.14)
+                            : Colors.transparent,
+                        borderRadius: BorderRadius.circular(16),
+                      ),
+                      child: Icon(items[index].icon, size: 20, color: color),
+                    ),
+                    const SizedBox(height: 4),
+                    Text(
+                      items[index].label,
+                      textAlign: TextAlign.center,
+                      style: TextStyle(
+                        fontSize: 10,
+                        fontWeight: FontWeight.w700,
+                        letterSpacing: -0.3,
+                        color: color,
+                      ),
+                    ),
+                  ],
                 ),
               ),
             );

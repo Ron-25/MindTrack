@@ -5,6 +5,7 @@ import 'package:mind_track/core/local_database/daos/daily_moods_dao.dart';
 import 'package:mind_track/core/network/api_client.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:mind_track/core/services/device_intent_service.dart';
+import 'package:mind_track/core/services/local_avatar_service.dart';
 import 'package:mind_track/core/services/reminder_service.dart';
 import 'package:mind_track/core/services/token_storage_service.dart';
 import 'package:mind_track/features/daily_mood/data/datasources/daily_mood_local_datasource.dart';
@@ -90,6 +91,7 @@ class Injector {
     registerLazySingleton<ReminderService>(
       () => ReminderService(FlutterLocalNotificationsPlugin()),
     );
+    registerLazySingleton<LocalAvatarService>(() => const LocalAvatarService());
   }
 
   static void _registerRepository() {
@@ -158,7 +160,10 @@ class Injector {
       () => HomeCubit(homeRepository: Injector.get<HomeRepository>()),
     );
     registerFactory<ProfileCubit>(
-      () => ProfileCubit(profileRepository: Injector.get<ProfileRepository>()),
+      () => ProfileCubit(
+        profileRepository: Injector.get<ProfileRepository>(),
+        avatarService: Injector.get<LocalAvatarService>(),
+      ),
     );
     registerFactory<EmotionCubit>(
       () => EmotionCubit(emotionRepository: Injector.get<EmotionRepository>()),

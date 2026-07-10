@@ -1,4 +1,5 @@
 import 'package:dio/dio.dart';
+import 'package:mind_track/app/generated/l10n.dart';
 import 'package:mind_track/core/network/api_client.dart';
 import 'package:mind_track/features/habits/domain/entities/habit_tracker.dart';
 
@@ -147,8 +148,8 @@ class HabitRemoteDataSourceImpl implements HabitRemoteDataSource {
       }
     }
     if (error.type == DioExceptionType.connectionError) {
-      return 'No se pudo conectar con el servidor.';
+      return S.current.err_connection;
     }
-    return 'No se pudieron cargar los hábitos.';
+    return S.current.err_load_habits;
   }
 }

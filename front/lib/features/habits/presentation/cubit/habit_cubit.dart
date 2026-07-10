@@ -1,4 +1,5 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:mind_track/app/generated/l10n.dart';
 import 'package:mind_track/features/habits/domain/entities/habit_tracker.dart';
 import 'package:mind_track/features/habits/domain/repositories/habit_repository.dart';
 import 'package:mind_track/features/habits/presentation/cubit/habit_state.dart';
@@ -39,8 +40,8 @@ class HabitCubit extends Cubit<HabitState> {
           isSaving: false,
           habits: habits,
           successMessage: !habit.completedToday
-              ? 'Hábito marcado como completado.'
-              : 'Hábito marcado como pendiente.',
+              ? S.current.msg_habit_done
+              : S.current.msg_habit_pending,
           clearError: true,
         ),
       );
@@ -64,7 +65,7 @@ class HabitCubit extends Cubit<HabitState> {
         state.copyWith(
           isSaving: false,
           habits: habits,
-          successMessage: 'Hábito creado correctamente.',
+          successMessage: S.current.msg_habit_created,
           clearError: true,
         ),
       );
@@ -88,7 +89,7 @@ class HabitCubit extends Cubit<HabitState> {
         state.copyWith(
           isSaving: false,
           habits: habits,
-          successMessage: 'Hábito actualizado correctamente.',
+          successMessage: S.current.msg_habit_updated,
           clearError: true,
         ),
       );

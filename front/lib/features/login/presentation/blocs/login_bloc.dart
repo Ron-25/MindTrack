@@ -1,4 +1,5 @@
 import 'package:hydrated_bloc/hydrated_bloc.dart';
+import 'package:mind_track/app/generated/l10n.dart';
 import 'package:mind_track/core/services/token_storage_service.dart';
 import 'package:mind_track/features/login/domain/entities/auth_token.dart';
 import 'package:mind_track/features/login/domain/exceptions/auth_exception.dart';
@@ -85,7 +86,7 @@ class LoginBloc extends HydratedBloc<LoginEvent, LoginState> {
           isFailure: true,
           logIn: false,
           signUp: false,
-          errorMessage: 'Error de conexión. Verifica tu red.',
+          errorMessage: S.current.err_connection_check,
         ),
       );
     }
@@ -141,7 +142,7 @@ class LoginBloc extends HydratedBloc<LoginEvent, LoginState> {
           isFailure: true,
           logIn: false,
           signUp: false,
-          errorMessage: 'Error de conexión. Verifica tu red.',
+          errorMessage: S.current.err_connection_check,
         ),
       );
     }

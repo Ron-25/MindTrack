@@ -1,12 +1,13 @@
 import 'package:flutter/material.dart';
+import 'package:mind_track/app/generated/l10n.dart';
 import 'package:mind_track/app/injector.dart';
 import 'package:mind_track/app/theme/mt_colors.dart';
 import 'package:mind_track/features/coach/domain/entities/coach_response.dart';
 import 'package:mind_track/features/coach/domain/repositories/coach_repository.dart';
 
-const Color _botPrimary = Color(0xFF2B6579);
-const Color _botBubble = Color(0xFFA0D8EF);
-const Color _botBubbleText = Color(0xFF235F73);
+Color _botPrimary = Color(0xFF2B6579);
+Color _botBubble = Color(0xFFA0D8EF);
+Color _botBubbleText = Color(0xFF235F73);
 
 /// Chat con MindtrackBot (Gemini) siguiendo el diseño "ChatBot" de Figma.
 class ChatBotPage extends StatefulWidget {
@@ -40,10 +41,7 @@ class _ChatBotPageState extends State<ChatBotPage> {
   CoachChatMessage _greetingMessage() {
     return CoachChatMessage(
       role: 'model',
-      content:
-          '¡Hola! Soy MindtrackBot, tu coach de bienestar. Puedo ayudarte a '
-          'entender tus emociones, mejorar tus hábitos o simplemente '
-          'escucharte. ¿Cómo te sientes hoy?',
+      content: S.current.chat_greeting,
       sentAt: DateTime.now(),
     );
   }
@@ -59,7 +57,7 @@ class _ChatBotPageState extends State<ChatBotPage> {
             Expanded(
               child: ListView.builder(
                 controller: _scrollController,
-                padding: const EdgeInsets.fromLTRB(12, 12, 12, 16),
+                padding: EdgeInsets.fromLTRB(12, 12, 12, 16),
                 itemCount: _messages.length + (_isSending ? 2 : 1),
                 itemBuilder: (BuildContext context, int index) {
                   if (index == 0) {
@@ -67,7 +65,7 @@ class _ChatBotPageState extends State<ChatBotPage> {
                   }
                   final int messageIndex = index - 1;
                   if (messageIndex >= _messages.length) {
-                    return const _TypingBubble();
+                    return _TypingBubble();
                   }
                   return _MessageBubble(message: _messages[messageIndex]);
                 },
@@ -83,7 +81,7 @@ class _ChatBotPageState extends State<ChatBotPage> {
   Widget _buildHeader(BuildContext context) {
     return Container(
       color: context.mtColors.surfaceSubtle,
-      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+      padding: EdgeInsets.symmetric(horizontal: 12, vertical: 8),
       child: Row(
         children: <Widget>[
           IconButton(
@@ -97,22 +95,22 @@ class _ChatBotPageState extends State<ChatBotPage> {
           Container(
             width: 40,
             height: 40,
-            decoration: const BoxDecoration(
+            decoration: BoxDecoration(
               color: _botBubble,
               shape: BoxShape.circle,
             ),
-            child: const Icon(
+            child: Icon(
               Icons.smart_toy_outlined,
               size: 22,
               color: _botPrimary,
             ),
           ),
-          const SizedBox(width: 8),
+          SizedBox(width: 8),
           Expanded(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: <Widget>[
-                const Text(
+                Text(
                   'MindtrackBot',
                   style: TextStyle(
                     fontSize: 22,
@@ -121,8 +119,8 @@ class _ChatBotPageState extends State<ChatBotPage> {
                   ),
                 ),
                 Text(
-                  _isSending ? 'Escribiendo…' : 'En línea',
-                  style: const TextStyle(
+                  _isSending ? S.current.chat_typing : S.current.chat_online,
+                  style: TextStyle(
                     fontSize: 12,
                     fontWeight: FontWeight.w600,
                     letterSpacing: 0.6,
@@ -133,7 +131,7 @@ class _ChatBotPageState extends State<ChatBotPage> {
             ),
           ),
           IconButton(
-            tooltip: 'Reiniciar conversación',
+            tooltip: S.current.chat_restart,
             onPressed: _isSending
                 ? null
                 : () {
@@ -157,14 +155,14 @@ class _ChatBotPageState extends State<ChatBotPage> {
   Widget _buildDateChip() {
     return Center(
       child: Container(
-        margin: const EdgeInsets.only(bottom: 16),
-        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
+        margin: EdgeInsets.only(bottom: 16),
+        padding: EdgeInsets.symmetric(horizontal: 16, vertical: 4),
         decoration: BoxDecoration(
           color: context.mtColors.borderSubtle,
           borderRadius: BorderRadius.circular(999),
         ),
         child: Text(
-          'Hoy',
+          S.current.chat_today,
           style: TextStyle(
             fontSize: 12,
             fontWeight: FontWeight.w600,
@@ -178,13 +176,13 @@ class _ChatBotPageState extends State<ChatBotPage> {
 
   Widget _buildInputBar(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.fromLTRB(12, 4, 12, 12),
+      padding: EdgeInsets.fromLTRB(12, 4, 12, 12),
       child: Container(
-        padding: const EdgeInsets.fromLTRB(16, 4, 6, 4),
+        padding: EdgeInsets.fromLTRB(16, 4, 6, 4),
         decoration: BoxDecoration(
           color: context.mtColors.card,
           borderRadius: BorderRadius.circular(999),
-          boxShadow: const <BoxShadow>[
+          boxShadow: <BoxShadow>[
             BoxShadow(
               color: Color(0x0D000000),
               blurRadius: 1,
@@ -205,21 +203,21 @@ class _ChatBotPageState extends State<ChatBotPage> {
                   fontSize: 14,
                   color: context.mtColors.textPrimary,
                 ),
-                decoration: const InputDecoration(
-                  hintText: 'Escribe un mensaje...',
+                decoration: InputDecoration(
+                  hintText: S.current.chat_input_hint,
                   hintStyle: TextStyle(fontSize: 14, color: Color(0xFFC0C8CC)),
                   border: InputBorder.none,
                 ),
               ),
             ),
-            const SizedBox(width: 8),
+            SizedBox(width: 8),
             Material(
-              color: _isSending ? const Color(0xFFC0C8CC) : _botPrimary,
-              shape: const CircleBorder(),
+              color: _isSending ? Color(0xFFC0C8CC) : _botPrimary,
+              shape: CircleBorder(),
               child: InkWell(
                 onTap: _isSending ? null : _sendMessage,
-                customBorder: const CircleBorder(),
-                child: const SizedBox(
+                customBorder: CircleBorder(),
+                child: SizedBox(
                   width: 40,
                   height: 40,
                   child: Icon(
@@ -291,7 +289,7 @@ class _ChatBotPageState extends State<ChatBotPage> {
       if (_scrollController.hasClients) {
         _scrollController.animateTo(
           _scrollController.position.maxScrollExtent,
-          duration: const Duration(milliseconds: 250),
+          duration: Duration(milliseconds: 250),
           curve: Curves.easeOut,
         );
       }
@@ -324,8 +322,8 @@ class _MessageBubble extends StatelessWidget {
               : CrossAxisAlignment.start,
           children: <Widget>[
             Container(
-              margin: const EdgeInsets.only(bottom: 4),
-              padding: const EdgeInsets.all(16),
+              margin: EdgeInsets.only(bottom: 4),
+              padding: EdgeInsets.all(16),
               decoration: BoxDecoration(
                 color: isUser ? context.mtColors.card : _botBubble,
                 borderRadius: BorderRadius.circular(12),
@@ -333,7 +331,7 @@ class _MessageBubble extends StatelessWidget {
                   BoxShadow(
                     color: Colors.black.withValues(alpha: isUser ? 0.04 : 0.02),
                     blurRadius: 10,
-                    offset: const Offset(0, 4),
+                    offset: Offset(0, 4),
                   ),
                 ],
               ),
@@ -347,7 +345,7 @@ class _MessageBubble extends StatelessWidget {
               ),
             ),
             Padding(
-              padding: const EdgeInsets.only(left: 4, right: 4, bottom: 12),
+              padding: EdgeInsets.only(left: 4, right: 4, bottom: 12),
               child: Text(
                 time,
                 style: TextStyle(
@@ -366,20 +364,20 @@ class _MessageBubble extends StatelessWidget {
 }
 
 class _TypingBubble extends StatelessWidget {
-  const _TypingBubble();
+  _TypingBubble();
 
   @override
   Widget build(BuildContext context) {
     return Align(
       alignment: Alignment.centerLeft,
       child: Container(
-        margin: const EdgeInsets.only(bottom: 12),
-        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
+        margin: EdgeInsets.only(bottom: 12),
+        padding: EdgeInsets.symmetric(horizontal: 16, vertical: 14),
         decoration: BoxDecoration(
           color: _botBubble,
           borderRadius: BorderRadius.circular(12),
         ),
-        child: const SizedBox(
+        child: SizedBox(
           width: 32,
           height: 12,
           child: Row(
@@ -393,14 +391,14 @@ class _TypingBubble extends StatelessWidget {
 }
 
 class _TypingDot extends StatelessWidget {
-  const _TypingDot();
+  _TypingDot();
 
   @override
   Widget build(BuildContext context) {
     return Container(
       width: 6,
       height: 6,
-      decoration: const BoxDecoration(
+      decoration: BoxDecoration(
         color: _botBubbleText,
         shape: BoxShape.circle,
       ),

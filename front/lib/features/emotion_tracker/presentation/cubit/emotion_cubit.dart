@@ -1,4 +1,5 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:mind_track/app/generated/l10n.dart';
 import 'package:mind_track/features/emotion_tracker/domain/entities/emotion_entry.dart';
 import 'package:mind_track/features/emotion_tracker/domain/repositories/emotion_repository.dart';
 import 'package:mind_track/features/emotion_tracker/presentation/cubit/emotion_state.dart';
@@ -117,7 +118,7 @@ class EmotionCubit extends Cubit<EmotionState> {
           isSaving: false,
           selectedEntry: entry,
           lastCreatedEntryId: entry.id,
-          successMessage: 'Registro emocional guardado.',
+          successMessage: S.current.msg_emotion_saved,
           clearError: true,
         ),
       );
@@ -151,7 +152,7 @@ class EmotionCubit extends Cubit<EmotionState> {
           isSaving: false,
           selectedEntry: updated,
           entries: updatedEntries,
-          successMessage: 'Registro actualizado.',
+          successMessage: S.current.msg_emotion_updated,
           clearError: true,
         ),
       );
@@ -180,7 +181,7 @@ class EmotionCubit extends Cubit<EmotionState> {
         state.copyWith(
           isDeleting: false,
           clearSelectedEntry: true,
-          successMessage: 'Registro eliminado.',
+          successMessage: S.current.msg_emotion_deleted,
           clearError: true,
         ),
       );
@@ -208,7 +209,7 @@ class EmotionCubit extends Cubit<EmotionState> {
         state.copyWith(
           isDeleting: false,
           entries: updatedEntries,
-          successMessage: 'Registro eliminado.',
+          successMessage: S.current.msg_emotion_deleted,
           clearError: true,
         ),
       );

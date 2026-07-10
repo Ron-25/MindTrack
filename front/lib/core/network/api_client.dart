@@ -1,4 +1,5 @@
 import 'package:dio/dio.dart';
+import 'package:mind_track/app/generated/l10n.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:mind_track/app/navigation_service.dart';
@@ -35,8 +36,8 @@ class ApiClient {
             toastification.show(
               context: navigatorKey.currentContext,
               type: ToastificationType.warning,
-              title: const Text('Sesión expirada'),
-              description: const Text('Por favor inicia sesión nuevamente.'),
+              title: Text(S.current.err_session_expired_title),
+              description: Text(S.current.err_session_expired_desc),
               autoCloseDuration: const Duration(seconds: 4),
               alignment: Alignment.topRight,
               showProgressBar: true,

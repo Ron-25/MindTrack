@@ -1,4 +1,5 @@
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
+import 'package:mind_track/app/generated/l10n.dart';
 import 'package:flutter_timezone/flutter_timezone.dart';
 import 'package:timezone/data/latest_all.dart' as tzdata;
 import 'package:timezone/timezone.dart' as tz;
@@ -24,16 +25,16 @@ class ReminderService {
     } catch (_) {
       // Si no se puede resolver la zona horaria se usa la predeterminada.
     }
-    const AndroidInitializationSettings androidSettings =
+    AndroidInitializationSettings androidSettings =
         AndroidInitializationSettings('@mipmap/ic_launcher');
-    const DarwinInitializationSettings iosSettings =
+    DarwinInitializationSettings iosSettings =
         DarwinInitializationSettings(
           requestAlertPermission: false,
           requestBadgePermission: false,
           requestSoundPermission: false,
         );
     await _plugin.initialize(
-      const InitializationSettings(
+      InitializationSettings(
         android: androidSettings,
         iOS: iosSettings,
       ),
@@ -82,20 +83,20 @@ class ReminderService {
       minute,
     );
     if (!scheduled.isAfter(now)) {
-      scheduled = scheduled.add(const Duration(days: 1));
+      scheduled = scheduled.add(Duration(days: 1));
     }
 
     await _plugin.zonedSchedule(
       _dailyReminderId,
-      '¿Cómo te sientes hoy?',
-      'Tómate un minuto para registrar tu emoción en MindTrack.',
+      S.current.reminder_notif_title,
+      S.current.reminder_notif_body,
       scheduled,
-      const NotificationDetails(
+      NotificationDetails(
         android: AndroidNotificationDetails(
           'daily_reminder',
-          'Recordatorio diario',
+          S.current.reminder_channel_name,
           channelDescription:
-              'Aviso diario para registrar tus emociones y hábitos.',
+              S.current.reminder_channel_desc,
           importance: Importance.high,
           priority: Priority.high,
         ),

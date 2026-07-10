@@ -129,20 +129,21 @@ class _ForgotPasswordPageState extends State<ForgotPasswordPage> {
             obscureText: _obscureConfirmPassword,
             textInputAction: TextInputAction.done,
             onTapOutside: (_) => FocusScope.of(context).unfocus(),
-            validator: FormBuilderValidators.compose(<FormFieldValidator<String>>[
-              FormBuilderValidators.required(
-                errorText: translations.confirm_password_required_error,
-              ),
-              (String? value) {
-                final String newPassword =
-                    _formKey.currentState?.fields['new_password']?.value
-                        as String? ??
-                    '';
-                return value == newPassword
-                    ? null
-                    : translations.confirm_password_mismatch_error;
-              },
-            ]),
+            validator:
+                FormBuilderValidators.compose(<FormFieldValidator<String>>[
+                  FormBuilderValidators.required(
+                    errorText: translations.confirm_password_required_error,
+                  ),
+                  (String? value) {
+                    final String newPassword =
+                        _formKey.currentState?.fields['new_password']?.value
+                            as String? ??
+                        '';
+                    return value == newPassword
+                        ? null
+                        : translations.confirm_password_mismatch_error;
+                  },
+                ]),
             decoration: InputDecoration(
               hintText: translations.confirm_password,
               border: OutlineInputBorder(

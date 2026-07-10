@@ -75,8 +75,7 @@ class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
         data: <String, String>{'email': email, 'new_password': newPassword},
       );
       final Map<String, dynamic> json = response.data as Map<String, dynamic>;
-      return json['message'] as String? ??
-          S.current.msg_password_updated;
+      return json['message'] as String? ?? S.current.msg_password_updated;
     } on DioException catch (e) {
       throw AuthException(_extractDetail(e));
     }

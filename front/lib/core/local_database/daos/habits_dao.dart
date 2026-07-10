@@ -13,14 +13,19 @@ class HabitsDao extends DatabaseAccessor<AppDatabase> with _$HabitsDaoMixin {
   Stream<List<Habit>> watchAllHabits() => select(habits).watch();
 
   Future<Habit?> getHabitById(String id) {
-    return (select(habits)..where(($HabitsTable tbl) => tbl.id.equals(id))).getSingleOrNull();
+    return (select(
+      habits,
+    )..where(($HabitsTable tbl) => tbl.id.equals(id))).getSingleOrNull();
   }
 
   Future<int> createHabit(HabitsCompanion habit) => into(habits).insert(habit);
 
-  Future<bool> updateHabit(HabitsCompanion habit) => update(habits).replace(habit);
+  Future<bool> updateHabit(HabitsCompanion habit) =>
+      update(habits).replace(habit);
 
   Future<int> deleteHabit(String id) {
-    return (delete(habits)..where(($HabitsTable tbl) => tbl.id.equals(id))).go();
+    return (delete(
+      habits,
+    )..where(($HabitsTable tbl) => tbl.id.equals(id))).go();
   }
 }

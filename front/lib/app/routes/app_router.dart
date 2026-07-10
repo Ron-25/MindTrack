@@ -31,15 +31,21 @@ class AppRouter {
       case RouteNames.home:
         return _fade(const MainShellPage());
       case RouteNames.profile:
-        return _fade(const MainShellPage(initialIndex: MainShellPage.profileTab));
+        return _fade(
+          const MainShellPage(initialIndex: MainShellPage.profileTab),
+        );
       case RouteNames.dailyMood:
-        return _fade(const MainShellPage(initialIndex: MainShellPage.historyTab));
+        return _fade(
+          const MainShellPage(initialIndex: MainShellPage.historyTab),
+        );
       case RouteNames.analytics:
         return _fade(
           const MainShellPage(initialIndex: MainShellPage.analyticsTab),
         );
       case RouteNames.habits:
-        return _fade(const MainShellPage(initialIndex: MainShellPage.habitsTab));
+        return _fade(
+          const MainShellPage(initialIndex: MainShellPage.habitsTab),
+        );
       case RouteNames.search:
         return _slide(const DailyMoodPage(searchMode: true));
       case RouteNames.notifications:

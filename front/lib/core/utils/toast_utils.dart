@@ -67,9 +67,11 @@ class ThToast {
     final BuildContext? safeContext = context.mounted ? context : null;
     final ThemeData? theme = safeContext != null ? Theme.of(safeContext) : null;
     final ColorScheme? scheme = theme?.colorScheme;
-    final Color resolvedBackground = backgroundColor ??  Colors.white;
-    final Color resolvedForeground = foregroundColor ?? scheme?.onSurface ?? Colors.white;
-    final EdgeInsetsGeometry resolvedMargin = margin ?? const EdgeInsets.only(left: 60, right: 20);
+    final Color resolvedBackground = backgroundColor ?? Colors.white;
+    final Color resolvedForeground =
+        foregroundColor ?? scheme?.onSurface ?? Colors.white;
+    final EdgeInsetsGeometry resolvedMargin =
+        margin ?? const EdgeInsets.only(left: 60, right: 20);
 
     final ThToast toast = ThToast(
       context: safeContext,
@@ -79,7 +81,12 @@ class ThToast {
       type: ToastificationType.success,
       autoCloseDuration: const Duration(seconds: 3),
       alignment: Alignment.topRight,
-      icon: Icon(Icons.check_circle, color: (theme?.brightness == Brightness.dark) ? Colors.greenAccent : Colors.green),
+      icon: Icon(
+        Icons.check_circle,
+        color: (theme?.brightness == Brightness.dark)
+            ? Colors.greenAccent
+            : Colors.green,
+      ),
       showIcon: true,
       dismissDirection: DismissDirection.horizontal,
       closeButton: closeButton ?? const ToastCloseButton(),
@@ -140,7 +147,8 @@ class ThToast {
     final ThemeData? theme = safeContext != null ? Theme.of(safeContext) : null;
     final ColorScheme? scheme = theme?.colorScheme;
     final Color resolvedBackground = backgroundColor ?? Colors.white;
-    final Color resolvedForeground = foregroundColor ?? scheme?.onSurface ?? Colors.white;
+    final Color resolvedForeground =
+        foregroundColor ?? scheme?.onSurface ?? Colors.white;
 
     final ThToast toast = ThToast(
       context: safeContext,
@@ -210,8 +218,10 @@ class ThToast {
     final BuildContext? safeContext = context.mounted ? context : null;
     final ThemeData? theme = safeContext != null ? Theme.of(safeContext) : null;
     final ColorScheme? scheme = theme?.colorScheme;
-    final Color resolvedBackground = backgroundColor ?? scheme?.tertiaryContainer ?? Colors.black87;
-    final Color resolvedForeground = foregroundColor ?? scheme?.onSurface ?? Colors.white;
+    final Color resolvedBackground =
+        backgroundColor ?? scheme?.tertiaryContainer ?? Colors.black87;
+    final Color resolvedForeground =
+        foregroundColor ?? scheme?.onSurface ?? Colors.white;
 
     final ThToast toast = ThToast(
       context: safeContext,
@@ -281,8 +291,10 @@ class ThToast {
     final BuildContext? safeContext = context.mounted ? context : null;
     final ThemeData? theme = safeContext != null ? Theme.of(safeContext) : null;
     final ColorScheme? scheme = theme?.colorScheme;
-    final Color resolvedBackground = backgroundColor ?? scheme?.tertiaryContainer ?? Colors.black87;
-    final Color resolvedForeground = foregroundColor ?? scheme?.onSurface ?? Colors.white;
+    final Color resolvedBackground =
+        backgroundColor ?? scheme?.tertiaryContainer ?? Colors.black87;
+    final Color resolvedForeground =
+        foregroundColor ?? scheme?.onSurface ?? Colors.white;
 
     final ThToast toast = ThToast(
       context: safeContext,

@@ -10,18 +10,14 @@ class DailyMoodsDao extends DatabaseAccessor<AppDatabase>
   DailyMoodsDao(super.db);
 
   Stream<List<DailyMood>> watchAll() =>
-      (select(dailyMoods)
-            ..orderBy(
-              <OrderingTerm Function($DailyMoodsTable)>[
-                ($DailyMoodsTable t) => OrderingTerm.desc(t.createdAt),
-              ],
-            ))
+      (select(dailyMoods)..orderBy(<OrderingTerm Function($DailyMoodsTable)>[
+            ($DailyMoodsTable t) => OrderingTerm.desc(t.createdAt),
+          ]))
           .watch();
 
   Future<int> insertEntry(DailyMoodsCompanion entry) =>
       into(dailyMoods).insert(entry);
 
   Future<int> deleteEntry(String id) =>
-      (delete(dailyMoods)..where(($DailyMoodsTable t) => t.id.equals(id)))
-          .go();
+      (delete(dailyMoods)..where(($DailyMoodsTable t) => t.id.equals(id))).go();
 }

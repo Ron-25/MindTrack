@@ -25,19 +25,16 @@ class ReminderService {
     } catch (_) {
       // Si no se puede resolver la zona horaria se usa la predeterminada.
     }
-    AndroidInitializationSettings androidSettings =
-        AndroidInitializationSettings('@mipmap/ic_launcher');
-    DarwinInitializationSettings iosSettings =
-        DarwinInitializationSettings(
+    final AndroidInitializationSettings androidSettings =
+        const AndroidInitializationSettings('@mipmap/ic_launcher');
+    final DarwinInitializationSettings iosSettings =
+        const DarwinInitializationSettings(
           requestAlertPermission: false,
           requestBadgePermission: false,
           requestSoundPermission: false,
         );
     await _plugin.initialize(
-      InitializationSettings(
-        android: androidSettings,
-        iOS: iosSettings,
-      ),
+      InitializationSettings(android: androidSettings, iOS: iosSettings),
     );
     _initialized = true;
   }
@@ -58,10 +55,7 @@ class ReminderService {
 
   /// Sincroniza la notificación programada con las preferencias: cancela la
   /// existente y, si está activado, programa el aviso diario a [time] "HH:MM".
-  Future<void> syncDailyReminder({
-    required bool enabled,
-    String? time,
-  }) async {
+  Future<void> syncDailyReminder({required bool enabled, String? time}) async {
     await init();
     await _plugin.cancel(_dailyReminderId);
     if (!enabled) {
@@ -83,7 +77,7 @@ class ReminderService {
       minute,
     );
     if (!scheduled.isAfter(now)) {
-      scheduled = scheduled.add(Duration(days: 1));
+      scheduled = scheduled.add(const Duration(days: 1));
     }
 
     await _plugin.zonedSchedule(
@@ -95,12 +89,11 @@ class ReminderService {
         android: AndroidNotificationDetails(
           'daily_reminder',
           S.current.reminder_channel_name,
-          channelDescription:
-              S.current.reminder_channel_desc,
+          channelDescription: S.current.reminder_channel_desc,
           importance: Importance.high,
           priority: Priority.high,
         ),
-        iOS: DarwinNotificationDetails(),
+        iOS: const DarwinNotificationDetails(),
       ),
       // Modo inexacto: no requiere el permiso especial de alarmas exactas.
       androidScheduleMode: AndroidScheduleMode.inexactAllowWhileIdle,

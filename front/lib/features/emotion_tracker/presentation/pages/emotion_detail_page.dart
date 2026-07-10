@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:mind_track/app/generated/l10n.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:mind_track/app/injector.dart';
 import 'package:mind_track/app/theme/mt_colors.dart';
@@ -75,13 +76,13 @@ class _EmotionDetailViewState extends State<_EmotionDetailView> {
         child: Scaffold(
           backgroundColor: Theme.of(context).scaffoldBackgroundColor,
           appBar: AppBar(
-            title: const Text('Detalle de emoción'),
+            title: Text(S.current.detail_title),
             backgroundColor: Theme.of(context).scaffoldBackgroundColor,
             actions: <Widget>[
               BlocBuilder<EmotionCubit, EmotionState>(
                 builder: (BuildContext context, EmotionState state) {
                   return IconButton(
-                    tooltip: 'Editar registro',
+                    tooltip: S.current.detail_edit_tooltip,
                     onPressed: state.selectedEntry == null || state.isSaving
                         ? null
                         : () => _openEditSheet(context),
@@ -98,7 +99,7 @@ class _EmotionDetailViewState extends State<_EmotionDetailView> {
               BlocBuilder<EmotionCubit, EmotionState>(
                 builder: (BuildContext context, EmotionState state) {
                   return IconButton(
-                    tooltip: 'Eliminar registro',
+                    tooltip: S.current.history_delete_title,
                     onPressed: state.selectedEntry == null || state.isDeleting
                         ? null
                         : () => _delete(context),
@@ -186,7 +187,7 @@ class _EmotionDetailViewState extends State<_EmotionDetailView> {
                           context.read<EmotionCubit>().loadEntry(emotionId);
                         }
                       },
-                      child: const Text('Reintentar'),
+                      child: Text(S.current.home_retry),
                     ),
                   ],
                 ),
@@ -233,7 +234,7 @@ class _EmotionDetailViewState extends State<_EmotionDetailView> {
               ),
               const SizedBox(height: 8),
               Text(
-                'Intensidad ${entry.intensity}/10',
+                S.current.detail_intensity(entry.intensity),
                 style: const TextStyle(
                   fontSize: 15,
                   fontWeight: FontWeight.w700,
@@ -250,13 +251,16 @@ class _EmotionDetailViewState extends State<_EmotionDetailView> {
         ),
         const SizedBox(height: 16),
         _DetailCard(
-          title: 'Notas',
+          title: S.current.detail_notes,
           content: entry.note?.trim().isNotEmpty == true
               ? entry.note!
-              : 'No agregaste una nota para este registro.',
+              : S.current.detail_no_note,
         ),
         const SizedBox(height: 16),
-        _DetailCard(title: 'Contexto', content: _buildContextText(entry)),
+        _DetailCard(
+          title: S.current.detail_context,
+          content: _buildContextText(entry),
+        ),
         if (entry.tags.isNotEmpty) ...<Widget>[
           const SizedBox(height: 16),
           Container(
@@ -318,18 +322,16 @@ class _EmotionDetailViewState extends State<_EmotionDetailView> {
           context: context,
           builder: (BuildContext context) {
             return AlertDialog(
-              title: const Text('Eliminar emoción'),
-              content: const Text(
-                'Este registro se borrará del historial y no se podrá recuperar.',
-              ),
+              title: Text(S.current.detail_delete_title),
+              content: Text(S.current.detail_delete_desc),
               actions: <Widget>[
                 TextButton(
                   onPressed: () => Navigator.of(context).pop(false),
-                  child: const Text('Cancelar'),
+                  child: Text(S.current.common_cancel),
                 ),
                 FilledButton(
                   onPressed: () => Navigator.of(context).pop(true),
-                  child: const Text('Eliminar'),
+                  child: Text(S.current.common_delete),
                 ),
               ],
             );
@@ -345,14 +347,14 @@ class _EmotionDetailViewState extends State<_EmotionDetailView> {
   String _buildContextText(EmotionEntry entry) {
     final List<String> pieces = <String>[
       if (entry.contextActivity?.trim().isNotEmpty == true)
-        'Actividad: ${entry.contextActivity}',
+        S.current.detail_activity(entry.contextActivity!),
       if (entry.contextPlace?.trim().isNotEmpty == true)
-        'Lugar: ${entry.contextPlace}',
+        S.current.detail_place(entry.contextPlace!),
       if (entry.contextPeople?.trim().isNotEmpty == true)
-        'Personas: ${entry.contextPeople}',
+        S.current.detail_people(entry.contextPeople!),
     ];
     if (pieces.isEmpty) {
-      return 'No registraste contexto para esta emoción.';
+      return S.current.detail_no_context;
     }
     return pieces.join('\n');
   }
@@ -435,7 +437,7 @@ class _EditEmotionSheetState extends State<_EditEmotionSheet> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: <Widget>[
             Text(
-              'Editar registro',
+              S.current.detail_edit_tooltip,
               style: TextStyle(
                 fontSize: 20,
                 fontWeight: FontWeight.w800,
@@ -452,7 +454,7 @@ class _EditEmotionSheetState extends State<_EditEmotionSheet> {
             ),
             const SizedBox(height: 20),
             Text(
-              'Intensidad: ${_intensity.round()}/10',
+              S.current.detail_edit_intensity(_intensity.round()),
               style: TextStyle(
                 fontWeight: FontWeight.w700,
                 color: context.mtColors.textPrimary,
@@ -474,8 +476,8 @@ class _EditEmotionSheetState extends State<_EditEmotionSheet> {
               controller: _noteController,
               maxLines: 3,
               decoration: InputDecoration(
-                labelText: 'Nota',
-                hintText: 'Escribe una nota para este registro',
+                labelText: S.current.detail_note_label,
+                hintText: S.current.detail_note_hint,
                 filled: true,
                 fillColor: context.mtColors.surfaceSubtle,
                 border: OutlineInputBorder(
@@ -495,7 +497,7 @@ class _EditEmotionSheetState extends State<_EditEmotionSheet> {
                         borderRadius: BorderRadius.circular(16),
                       ),
                     ),
-                    child: const Text('Cancelar'),
+                    child: Text(S.current.common_cancel),
                   ),
                 ),
                 const SizedBox(width: 12),
@@ -516,7 +518,7 @@ class _EditEmotionSheetState extends State<_EditEmotionSheet> {
                         borderRadius: BorderRadius.circular(16),
                       ),
                     ),
-                    child: const Text('Guardar cambios'),
+                    child: Text(S.current.habits_save_changes),
                   ),
                 ),
               ],

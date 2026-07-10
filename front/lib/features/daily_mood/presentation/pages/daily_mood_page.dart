@@ -113,12 +113,12 @@ class _DailyMoodViewState extends State<_DailyMoodView> {
             color: context.mtColors.textPrimary,
           ),
         ),
-        SizedBox(height: 8),
+        const SizedBox(height: 8),
         Material(
           color: Colors.transparent,
           child: InkWell(
             onTap: () => _openComposer(context),
-            customBorder: CircleBorder(),
+            customBorder: const CircleBorder(),
             child: Container(
               width: 56,
               height: 56,
@@ -129,7 +129,7 @@ class _DailyMoodViewState extends State<_DailyMoodView> {
                   color: Theme.of(context).scaffoldBackgroundColor,
                   width: 4,
                 ),
-                boxShadow: <BoxShadow>[
+                boxShadow: const <BoxShadow>[
                   BoxShadow(
                     color: Color(0x665FA9D3),
                     blurRadius: 15,
@@ -137,7 +137,7 @@ class _DailyMoodViewState extends State<_DailyMoodView> {
                   ),
                 ],
               ),
-              child: Icon(Icons.add_rounded, color: Colors.white),
+              child: const Icon(Icons.add_rounded, color: Colors.white),
             ),
           ),
         ),
@@ -147,18 +147,18 @@ class _DailyMoodViewState extends State<_DailyMoodView> {
 
   Widget _buildBody(BuildContext context, EmotionState state) {
     if (state.isLoading && state.entries.isEmpty) {
-      return Center(child: CircularProgressIndicator());
+      return const Center(child: CircularProgressIndicator());
     }
 
     if (state.errorMessage != null && state.entries.isEmpty) {
       return ListView(
-        physics: AlwaysScrollableScrollPhysics(),
+        physics: const AlwaysScrollableScrollPhysics(),
         children: <Widget>[
           SizedBox(
             height: 420,
             child: Center(
               child: Padding(
-                padding: EdgeInsets.all(24),
+                padding: const EdgeInsets.all(24),
                 child: Column(
                   mainAxisSize: MainAxisSize.min,
                   children: <Widget>[
@@ -167,13 +167,13 @@ class _DailyMoodViewState extends State<_DailyMoodView> {
                       size: 48,
                       color: context.mtColors.textMuted,
                     ),
-                    SizedBox(height: 16),
+                    const SizedBox(height: 16),
                     Text(
                       state.errorMessage!,
                       textAlign: TextAlign.center,
                       style: TextStyle(color: context.mtColors.textSecondary),
                     ),
-                    SizedBox(height: 16),
+                    const SizedBox(height: 16),
                     FilledButton(
                       onPressed: () =>
                           context.read<EmotionCubit>().loadEntries(),
@@ -190,22 +190,22 @@ class _DailyMoodViewState extends State<_DailyMoodView> {
 
     if (state.entries.isEmpty) {
       return ListView(
-        physics: AlwaysScrollableScrollPhysics(),
-        padding: EdgeInsets.all(24),
+        physics: const AlwaysScrollableScrollPhysics(),
+        padding: const EdgeInsets.all(24),
         children: <Widget>[
-          SizedBox(height: 120),
-          Icon(
+          const SizedBox(height: 120),
+          const Icon(
             Icons.psychology_alt_rounded,
             size: 56,
             color: AppColors.primary,
           ),
-          SizedBox(height: 16),
+          const SizedBox(height: 16),
           Text(
             S.current.history_empty_title,
             textAlign: TextAlign.center,
-            style: TextStyle(fontSize: 18, fontWeight: FontWeight.w700),
+            style: const TextStyle(fontSize: 18, fontWeight: FontWeight.w700),
           ),
-          SizedBox(height: 8),
+          const SizedBox(height: 8),
           Text(
             S.current.history_empty_desc,
             textAlign: TextAlign.center,
@@ -226,14 +226,14 @@ class _DailyMoodViewState extends State<_DailyMoodView> {
     final List<_DayGroup> groups = _groupByDay(filteredEntries);
 
     return ListView(
-      physics: AlwaysScrollableScrollPhysics(),
-      padding: EdgeInsets.fromLTRB(16, 16, 16, 160),
+      physics: const AlwaysScrollableScrollPhysics(),
+      padding: const EdgeInsets.fromLTRB(16, 16, 16, 160),
       children: <Widget>[
         _buildSearchBar(context),
-        SizedBox(height: 16),
+        const SizedBox(height: 16),
         _buildFilterChips(context, state.entries),
         if (_query.isNotEmpty || _emotionFilter != null) ...<Widget>[
-          SizedBox(height: 12),
+          const SizedBox(height: 12),
           Text(
             S.current.history_results(filteredEntries.length),
             style: TextStyle(
@@ -243,10 +243,10 @@ class _DailyMoodViewState extends State<_DailyMoodView> {
             ),
           ),
         ],
-        SizedBox(height: 24),
+        const SizedBox(height: 24),
         if (filteredEntries.isEmpty)
           Padding(
-            padding: EdgeInsets.only(top: 28),
+            padding: const EdgeInsets.only(top: 28),
             child: Center(
               child: Text(
                 S.current.history_no_results,
@@ -261,7 +261,7 @@ class _DailyMoodViewState extends State<_DailyMoodView> {
         else
           ...groups.map(
             (_DayGroup group) => Padding(
-              padding: EdgeInsets.only(bottom: 24),
+              padding: const EdgeInsets.only(bottom: 24),
               child: _buildDayGroup(context, group),
             ),
           ),
@@ -277,7 +277,7 @@ class _DailyMoodViewState extends State<_DailyMoodView> {
         color: context.mtColors.card,
         borderRadius: BorderRadius.circular(24),
         border: Border.all(color: context.mtColors.border),
-        boxShadow: <BoxShadow>[
+        boxShadow: const <BoxShadow>[
           BoxShadow(
             color: Color(0x0D000000),
             blurRadius: 1,
@@ -310,7 +310,7 @@ class _DailyMoodViewState extends State<_DailyMoodView> {
                   ),
                 ),
           border: InputBorder.none,
-          contentPadding: EdgeInsets.symmetric(
+          contentPadding: const EdgeInsets.symmetric(
             horizontal: 12,
             vertical: 13,
           ),
@@ -341,7 +341,7 @@ class _DailyMoodViewState extends State<_DailyMoodView> {
           ),
           ...emotionNames.map(
             (String name) => Padding(
-              padding: EdgeInsets.only(left: 8),
+              padding: const EdgeInsets.only(left: 8),
               child: _FilterChipButton(
                 label: name,
                 isSelected: _emotionFilter == name,
@@ -369,7 +369,7 @@ class _DailyMoodViewState extends State<_DailyMoodView> {
             color: context.mtColors.textSecondary,
           ),
         ),
-        SizedBox(height: 12),
+        const SizedBox(height: 12),
         Stack(
           children: <Widget>[
             Positioned(
@@ -408,20 +408,20 @@ class _DailyMoodViewState extends State<_DailyMoodView> {
         context.read<EmotionCubit>().deleteEntryFromList(entry.id);
       },
       background: Container(
-        margin: EdgeInsets.only(left: 40),
+        margin: const EdgeInsets.only(left: 40),
         decoration: BoxDecoration(
-          color: Color(0xFFEF4444),
+          color: const Color(0xFFEF4444),
           borderRadius: BorderRadius.circular(24),
         ),
-        padding: EdgeInsets.symmetric(horizontal: 20),
+        padding: const EdgeInsets.symmetric(horizontal: 20),
         alignment: Alignment.centerRight,
-        child: Icon(Icons.delete_outline_rounded, color: Colors.white),
+        child: const Icon(Icons.delete_outline_rounded, color: Colors.white),
       ),
       child: Stack(
         clipBehavior: Clip.none,
         children: <Widget>[
           Padding(
-            padding: EdgeInsets.only(left: 40),
+            padding: const EdgeInsets.only(left: 40),
             child: Material(
               color: context.mtColors.card,
               borderRadius: BorderRadius.circular(24),
@@ -430,11 +430,11 @@ class _DailyMoodViewState extends State<_DailyMoodView> {
                 onTap: () => _openDetail(context, entry.id),
                 child: Container(
                   width: double.infinity,
-                  padding: EdgeInsets.all(16),
+                  padding: const EdgeInsets.all(16),
                   decoration: BoxDecoration(
                     borderRadius: BorderRadius.circular(24),
                     border: Border.all(color: context.mtColors.borderSubtle),
-                    boxShadow: <BoxShadow>[
+                    boxShadow: const <BoxShadow>[
                       BoxShadow(
                         color: Color(0x0D000000),
                         blurRadius: 1,
@@ -470,7 +470,7 @@ class _DailyMoodViewState extends State<_DailyMoodView> {
                               ],
                             ),
                           ),
-                          SizedBox(width: 12),
+                          const SizedBox(width: 12),
                           Column(
                             crossAxisAlignment: CrossAxisAlignment.end,
                             children: <Widget>[
@@ -482,13 +482,13 @@ class _DailyMoodViewState extends State<_DailyMoodView> {
                                   color: context.mtColors.textMuted,
                                 ),
                               ),
-                              SizedBox(height: 4),
+                              const SizedBox(height: 4),
                               _IntensityBars(intensity: entry.intensity),
                             ],
                           ),
                         ],
                       ),
-                      SizedBox(height: 8),
+                      const SizedBox(height: 8),
                       Text(
                         _subtitle(entry),
                         maxLines: 2,
@@ -584,7 +584,7 @@ class _DailyMoodViewState extends State<_DailyMoodView> {
     if (date == today) {
       return S.current.history_today;
     }
-    if (date == today.subtract(Duration(days: 1))) {
+    if (date == today.subtract(const Duration(days: 1))) {
       return S.current.history_yesterday;
     }
     final String locale = Localizations.localeOf(context).languageCode;
@@ -629,9 +629,7 @@ class _DailyMoodViewState extends State<_DailyMoodView> {
           builder: (BuildContext context) {
             return AlertDialog(
               title: Text(S.current.history_delete_title),
-              content: Text(
-                S.current.history_delete_desc,
-              ),
+              content: Text(S.current.history_delete_desc),
               actions: <Widget>[
                 TextButton(
                   onPressed: () => Navigator.of(context).pop(false),
@@ -724,7 +722,7 @@ class _FilterChipButton extends StatelessWidget {
         onTap: onTap,
         borderRadius: BorderRadius.circular(999),
         child: Container(
-          padding: EdgeInsets.symmetric(horizontal: 16),
+          padding: const EdgeInsets.symmetric(horizontal: 16),
           alignment: Alignment.center,
           decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(999),

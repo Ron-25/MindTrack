@@ -91,10 +91,8 @@ class CoachRemoteDataSourceImpl implements CoachRemoteDataSource {
     }
   }
 
-  String _extractMessage(
-    DioException error, {
-    String fallback = S.current.err_load_coach,
-  }) {
+  String _extractMessage(DioException error, {String? fallback}) {
+    final String resolvedFallback = fallback ?? S.current.err_load_coach;
     final dynamic data = error.response?.data;
     if (data is Map) {
       final dynamic detail = data['detail'];
@@ -104,11 +102,11 @@ class CoachRemoteDataSourceImpl implements CoachRemoteDataSource {
     }
     final int? statusCode = error.response?.statusCode;
     if (statusCode != null) {
-      return '$fallback (error $statusCode).';
+      return '$resolvedFallback (error $statusCode).';
     }
     if (error.type == DioExceptionType.connectionError) {
       return S.current.err_connection;
     }
-    return fallback;
+    return resolvedFallback;
   }
 }

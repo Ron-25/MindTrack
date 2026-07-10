@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:mind_track/app/generated/l10n.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:mind_track/app/injector.dart';
 import 'package:mind_track/app/theme/mt_colors.dart';
@@ -71,7 +72,7 @@ class _AddEmotionViewState extends State<_AddEmotionView> {
       child: Scaffold(
         backgroundColor: Theme.of(context).scaffoldBackgroundColor,
         appBar: AppBar(
-          title: const Text('Registrar emoción'),
+          title: Text(S.current.history_log_button),
           backgroundColor: Theme.of(context).scaffoldBackgroundColor,
         ),
         body: BlocBuilder<EmotionCubit, EmotionState>(
@@ -106,7 +107,7 @@ class _AddEmotionViewState extends State<_AddEmotionView> {
                             color: Colors.white,
                           ),
                         )
-                      : const Text('Guardar registro'),
+                      : Text(S.current.emotion_save_button),
                 );
               },
             ),
@@ -146,7 +147,7 @@ class _AddEmotionViewState extends State<_AddEmotionView> {
       padding: const EdgeInsets.fromLTRB(16, 12, 16, 24),
       children: <Widget>[
         Text(
-          '¿Qué emoción quieres registrar?',
+          S.current.emotion_question,
           style: TextStyle(
             fontSize: 22,
             fontWeight: FontWeight.w800,
@@ -155,12 +156,12 @@ class _AddEmotionViewState extends State<_AddEmotionView> {
         ),
         const SizedBox(height: 8),
         Text(
-          'Completa los detalles para relacionar cómo te sentiste con el contexto.',
+          S.current.emotion_details_desc,
           style: TextStyle(color: context.mtColors.textSecondary, height: 1.45),
         ),
         const SizedBox(height: 20),
         _SectionCard(
-          title: 'Emoción principal',
+          title: S.current.emotion_primary_label,
           child: Wrap(
             spacing: 10,
             runSpacing: 10,
@@ -232,21 +233,21 @@ class _AddEmotionViewState extends State<_AddEmotionView> {
               _AppField(
                 controller: _activityController,
                 label: 'Actividad',
-                hint: 'Ej. reunión, ejercicio, descanso',
+                hint: S.current.emotion_activity_hint,
                 icon: Icons.local_activity_outlined,
               ),
               const SizedBox(height: 12),
               _AppField(
                 controller: _placeController,
                 label: 'Lugar',
-                hint: 'Ej. casa, oficina, universidad',
+                hint: S.current.emotion_place_hint,
                 icon: Icons.place_outlined,
               ),
               const SizedBox(height: 12),
               _AppField(
                 controller: _peopleController,
                 label: 'Personas',
-                hint: 'Ej. solo, amigos, familia',
+                hint: S.current.emotion_people_hint,
                 icon: Icons.groups_outlined,
               ),
             ],
@@ -258,9 +259,9 @@ class _AddEmotionViewState extends State<_AddEmotionView> {
           child: TextField(
             controller: _noteController,
             maxLines: 4,
-            decoration: const InputDecoration(
-              hintText: 'Describe qué pasó o qué te disparó esta emoción.',
-              border: OutlineInputBorder(),
+            decoration: InputDecoration(
+              hintText: S.current.emotion_note_hint,
+              border: const OutlineInputBorder(),
             ),
           ),
         ),
@@ -302,9 +303,9 @@ class _AddEmotionViewState extends State<_AddEmotionView> {
 
   void _submit() {
     if (_selectedEmotion == null) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Selecciona una emoción para continuar.')),
-      );
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(SnackBar(content: Text(S.current.emotion_select_error)));
       return;
     }
     context.read<EmotionCubit>().createEntry(

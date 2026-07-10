@@ -12,16 +12,8 @@ import 'tables/tables.dart';
 part 'app_database.g.dart';
 
 @DriftDatabase(
-  tables: <Type>[
-    DailyMoods,
-    EmotionEntries,
-    Habits,
-  ],
-  daos: <Type>[
-    DailyMoodsDao,
-    EmotionEntriesDao,
-    HabitsDao,
-  ],
+  tables: <Type>[DailyMoods, EmotionEntries, Habits],
+  daos: <Type>[DailyMoodsDao, EmotionEntriesDao, HabitsDao],
 )
 class AppDatabase extends _$AppDatabase {
   AppDatabase() : super(_openConnection());
@@ -31,12 +23,12 @@ class AppDatabase extends _$AppDatabase {
 
   @override
   MigrationStrategy get migration => MigrationStrategy(
-        onUpgrade: (Migrator m, int from, int to) async {
-          if (from < 2) {
-            await m.createTable(dailyMoods);
-          }
-        },
-      );
+    onUpgrade: (Migrator m, int from, int to) async {
+      if (from < 2) {
+        await m.createTable(dailyMoods);
+      }
+    },
+  );
 }
 
 LazyDatabase _openConnection() {

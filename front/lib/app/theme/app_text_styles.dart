@@ -3,7 +3,6 @@ import 'package:google_fonts/google_fonts.dart';
 import 'app_colors.dart';
 
 class AppTextStyles {
-
   /// Large titles (Splash / big headers)
   static final TextStyle headlineLarge = GoogleFonts.inter(
     fontSize: 32,

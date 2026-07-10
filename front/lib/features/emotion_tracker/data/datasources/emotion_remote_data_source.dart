@@ -37,9 +37,7 @@ class EmotionRemoteDataSourceImpl implements EmotionRemoteDataSource {
           .map(_mapEmotionEntry)
           .toList(growable: false);
     } on DioException catch (error) {
-      throw Exception(
-        _extractMessage(error, S.current.err_load_history),
-      );
+      throw Exception(_extractMessage(error, S.current.err_load_history));
     }
   }
 
@@ -69,9 +67,7 @@ class EmotionRemoteDataSourceImpl implements EmotionRemoteDataSource {
           .map(_mapEmotionType)
           .toList(growable: false);
     } on DioException catch (error) {
-      throw Exception(
-        _extractMessage(error, S.current.err_load_emotion_types),
-      );
+      throw Exception(_extractMessage(error, S.current.err_load_emotion_types));
     }
   }
 
@@ -87,9 +83,7 @@ class EmotionRemoteDataSourceImpl implements EmotionRemoteDataSource {
           .map(_mapEmotionTag)
           .toList(growable: false);
     } on DioException catch (error) {
-      throw Exception(
-        _extractMessage(error, S.current.err_load_tags),
-      );
+      throw Exception(_extractMessage(error, S.current.err_load_tags));
     }
   }
 
@@ -111,9 +105,7 @@ class EmotionRemoteDataSourceImpl implements EmotionRemoteDataSource {
       );
       return _mapEmotionEntry(response.data as Map<String, dynamic>);
     } on DioException catch (error) {
-      throw Exception(
-        _extractMessage(error, S.current.err_save_emotion),
-      );
+      throw Exception(_extractMessage(error, S.current.err_save_emotion));
     }
   }
 
@@ -133,9 +125,7 @@ class EmotionRemoteDataSourceImpl implements EmotionRemoteDataSource {
       );
       return _mapEmotionEntry(response.data as Map<String, dynamic>);
     } on DioException catch (error) {
-      throw Exception(
-        _extractMessage(error, S.current.err_update_emotion),
-      );
+      throw Exception(_extractMessage(error, S.current.err_update_emotion));
     }
   }
 
@@ -144,9 +134,7 @@ class EmotionRemoteDataSourceImpl implements EmotionRemoteDataSource {
     try {
       await _client.dio.delete<void>('/api/v1/emotions/$id');
     } on DioException catch (error) {
-      throw Exception(
-        _extractMessage(error, S.current.err_delete_emotion),
-      );
+      throw Exception(_extractMessage(error, S.current.err_delete_emotion));
     }
   }
 

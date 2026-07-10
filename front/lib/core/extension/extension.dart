@@ -1,5 +1,3 @@
-
-
 import 'dart:ui';
 
 extension ThColorOpacity on Color {

@@ -128,7 +128,7 @@ class _ProfileSettingsPageState extends State<ProfileSettingsPage> {
                                             icon: isDark
                                                 ? Icons.dark_mode_rounded
                                                 : Icons.light_mode_rounded,
-                                            title: 'Modo oscuro',
+                                            title: S.current.profile_dark_mode,
                                             trailing: Switch.adaptive(
                                               value: isDark,
                                               onChanged: ThemeController
@@ -152,8 +152,10 @@ class _ProfileSettingsPageState extends State<ProfileSettingsPage> {
                                     title: translations
                                         .profile_notification_settings,
                                     trailingText: profile.notificationsEnabled
-                                        ? 'Diario · ${profile.notificationTime ?? '20:00'}'
-                                        : 'Desactivados',
+                                        ? S.current.profile_reminder_trailing(
+                                            profile.notificationTime ?? '20:00',
+                                          )
+                                        : S.current.profile_reminder_off,
                                     onTap: () =>
                                         _editReminder(context, profile),
                                   ),
@@ -335,7 +337,7 @@ class _ProfileSettingsPageState extends State<ProfileSettingsPage> {
         OutlinedButton.icon(
           onPressed: () => _editProfileName(context, profile),
           icon: const Icon(Icons.edit_outlined),
-          label: const Text('Editar perfil'),
+          label: Text(S.current.profile_edit_button),
           style: OutlinedButton.styleFrom(
             shape: RoundedRectangleBorder(
               borderRadius: BorderRadius.circular(18),
@@ -406,16 +408,16 @@ class _ProfileSettingsPageState extends State<ProfileSettingsPage> {
                   mainAxisSize: MainAxisSize.min,
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: <Widget>[
-                    const Text(
-                      'Recordatorio diario',
-                      style: TextStyle(
+                    Text(
+                      S.current.reminder_sheet_title,
+                      style: const TextStyle(
                         fontSize: 20,
                         fontWeight: FontWeight.w800,
                       ),
                     ),
                     const SizedBox(height: 4),
                     Text(
-                      'Un aviso al día para registrar cómo te sientes.',
+                      S.current.reminder_sheet_desc,
                       style: TextStyle(
                         fontSize: 14,
                         color: Theme.of(context).colorScheme.onSurfaceVariant,
@@ -424,7 +426,7 @@ class _ProfileSettingsPageState extends State<ProfileSettingsPage> {
                     const SizedBox(height: 12),
                     SwitchListTile.adaptive(
                       contentPadding: EdgeInsets.zero,
-                      title: const Text('Activar recordatorio'),
+                      title: Text(S.current.reminder_enable),
                       value: enabled,
                       activeColor: AppColors.primary,
                       onChanged: (bool value) {
@@ -435,7 +437,7 @@ class _ProfileSettingsPageState extends State<ProfileSettingsPage> {
                       contentPadding: EdgeInsets.zero,
                       enabled: enabled,
                       leading: const Icon(Icons.schedule_rounded),
-                      title: const Text('Hora del aviso'),
+                      title: Text(S.current.reminder_time_label),
                       trailing: Text(
                         selected.format(context),
                         style: TextStyle(
@@ -463,9 +465,7 @@ class _ProfileSettingsPageState extends State<ProfileSettingsPage> {
                       child: TextButton.icon(
                         onPressed: _openSystemNotificationSettings,
                         icon: const Icon(Icons.settings_outlined, size: 18),
-                        label: const Text(
-                          'Ajustes de notificaciones del sistema',
-                        ),
+                        label: Text(S.current.reminder_system_settings),
                       ),
                     ),
                     const SizedBox(height: 8),
@@ -475,7 +475,7 @@ class _ProfileSettingsPageState extends State<ProfileSettingsPage> {
                           child: OutlinedButton(
                             onPressed: () =>
                                 Navigator.of(sheetContext).pop(false),
-                            child: const Text('Cancelar'),
+                            child: Text(S.current.common_cancel),
                           ),
                         ),
                         const SizedBox(width: 12),
@@ -486,7 +486,7 @@ class _ProfileSettingsPageState extends State<ProfileSettingsPage> {
                             ),
                             onPressed: () =>
                                 Navigator.of(sheetContext).pop(true),
-                            child: const Text('Guardar'),
+                            child: Text(S.current.habits_save),
                           ),
                         ),
                       ],
@@ -541,13 +541,12 @@ class _ProfileSettingsPageState extends State<ProfileSettingsPage> {
             children: <Widget>[
               ListTile(
                 leading: const Icon(Icons.photo_camera_outlined),
-                title: const Text('Tomar foto'),
-                onTap: () =>
-                    Navigator.of(sheetContext).pop(ImageSource.camera),
+                title: Text(S.current.profile_take_photo),
+                onTap: () => Navigator.of(sheetContext).pop(ImageSource.camera),
               ),
               ListTile(
                 leading: const Icon(Icons.photo_library_outlined),
-                title: const Text('Elegir de galería'),
+                title: Text(S.current.profile_pick_gallery),
                 onTap: () =>
                     Navigator.of(sheetContext).pop(ImageSource.gallery),
               ),
@@ -557,9 +556,9 @@ class _ProfileSettingsPageState extends State<ProfileSettingsPage> {
                     Icons.delete_outline_rounded,
                     color: Color(0xFFEF4444),
                   ),
-                  title: const Text(
-                    'Eliminar foto',
-                    style: TextStyle(color: Color(0xFFEF4444)),
+                  title: Text(
+                    S.current.profile_delete_photo,
+                    style: const TextStyle(color: Color(0xFFEF4444)),
                   ),
                   onTap: () {
                     Navigator.of(sheetContext).pop();
@@ -615,9 +614,12 @@ class _ProfileSettingsPageState extends State<ProfileSettingsPage> {
               mainAxisSize: MainAxisSize.min,
               crossAxisAlignment: CrossAxisAlignment.start,
               children: <Widget>[
-                const Text(
-                  'Editar nombre',
-                  style: TextStyle(fontSize: 20, fontWeight: FontWeight.w800),
+                Text(
+                  S.current.profile_edit_name,
+                  style: const TextStyle(
+                    fontSize: 20,
+                    fontWeight: FontWeight.w800,
+                  ),
                 ),
                 const SizedBox(height: 16),
                 TextFormField(
@@ -628,7 +630,7 @@ class _ProfileSettingsPageState extends State<ProfileSettingsPage> {
                   ),
                   validator: (String? value) {
                     if (value == null || value.trim().isEmpty) {
-                      return 'Ingresa un nombre.';
+                      return S.current.habits_name_error;
                     }
                     return null;
                   },
@@ -643,7 +645,7 @@ class _ProfileSettingsPageState extends State<ProfileSettingsPage> {
                       }
                       Navigator.of(context).pop(controller.text.trim());
                     },
-                    child: const Text('Guardar'),
+                    child: Text(S.current.habits_save),
                   ),
                 ),
               ],
@@ -730,9 +732,7 @@ class _ProfileSettingsPageState extends State<ProfileSettingsPage> {
                           setModalState(() => notificationsEnabled = value);
                         },
                         title: const Text('Notificaciones'),
-                        subtitle: const Text(
-                          'Activa o desactiva recordatorios de la app.',
-                        ),
+                        subtitle: Text(S.current.profile_notif_toggle_desc),
                       ),
                       const SizedBox(height: 12),
                       SizedBox(
@@ -744,7 +744,7 @@ class _ProfileSettingsPageState extends State<ProfileSettingsPage> {
                               notificationsEnabled: notificationsEnabled,
                             ));
                           },
-                          child: const Text('Guardar cambios'),
+                          child: Text(S.current.habits_save_changes),
                         ),
                       ),
                     ],
